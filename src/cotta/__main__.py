@@ -53,7 +53,7 @@ if __name__ == "__main__":
         g1.serialize(args.arg3)
 
     elif args.operation == 'cotta2rdf' or args.operation == 'rdf2cotta':
-        g = Graph(triplestore='temp_graph.duckdb')
+        g = Graph()
         g.parse(args.arg1)
         g.serialize(args.arg2)
 

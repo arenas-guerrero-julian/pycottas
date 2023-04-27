@@ -13,17 +13,15 @@ import pandas as pd
 from random import randint
 
 from .term import *
-from .parser.nquads import parse_nquads
-from .parser.parquet import parse_parquet
-from .serializer.nquads import serialize_nquads
-from .serializer.parquet import serialize_parquet
+from .parser import parse_cotta, parse_rdf, parse_nquads
+from .serializer import serialize_cotta, serialize_rdf
 
 
 class Graph:
 
     # TODO: https://docs.python.org/3/reference/datamodel.html
 
-    def __init__(self, triplestore='temp1.duckdb', read_only=False):
+    def __init__(self, triplestore=':memory:', read_only=False):
         self.triplestore = duckdb.connect(database=triplestore, read_only=read_only)
         self.triplestore.execute('CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)')
 
@@ -185,22 +183,20 @@ class Graph:
     def parse(self, filepath):
         file_extension = os.path.splitext(filepath)[1].lower()
 
-        if file_extension == '.nt' or file_extension == '.nq':
-            self.triplestore = parse_nquads(self, filepath, file_extension)
-        elif file_extension == '.cotta':
-            self.triplestore = parse_parquet(self, filepath, file_extension)
+        if file_extension == '.cotta' or file_extension == '.parquet':
+            self.triplestore = parse_cotta(self, filepath)
+        elif file_extension == '.nq':
+            self.triplestore = parse_nquads(self, filepath)
         else:
-            ValueError('The file format is not supported.')
+            self.triplestore = parse_rdf(self, filepath)
 
     def serialize(self, filepath, codec='ZSTD', chunksize=250000):
         file_extension = os.path.splitext(filepath)[1].lower()
 
-        if file_extension == '.cotta':
-            serialize_parquet(self, filepath, file_extension, codec)
-        elif file_extension == '.nt' or file_extension == '.nq':
-            serialize_nquads(self, filepath, file_extension, chunksize)
+        if file_extension == '.cotta' or file_extension == '.parquet':
+            serialize_cotta(self, filepath, file_extension, codec)
         else:
-            print(f'The file extension `{file_extension}` is not valid.')
+            serialize_rdf(self, filepath, file_extension, chunksize)
 
     def sort(self, inplace=True):
         pass

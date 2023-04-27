@@ -6,7 +6,12 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
-def serialize_nquads(graph, filepath, file_extension, chunksize=1000000):
+
+def serialize_cotta(graph, filepath, file_extension, codec='SNAPPY'):
+    graph.triplestore.execute(f"COPY quads TO '{filepath}' (FORMAT 'PARQUET', CODEC '{codec}')")
+    
+
+def serialize_rdf(graph, filepath, file_extension, chunksize=1000000):
     f = open(filepath, 'w')
 
     for i in range((len(graph) // chunksize) + 1):

@@ -37,6 +37,7 @@ dynamic = ['version']
 dependencies = [
   'pandas==2.0.0, <3.0.0',
   'duckdb>=0.7.0, <2.0.0',
+  'lightrdf>=0.3.1'
 ]
 
 [tool.hatch.version]

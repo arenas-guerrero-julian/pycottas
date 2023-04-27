@@ -6,6 +6,46 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
+import lightrdf
+
+from random import randint
+
+
+def parse_cotta(graph, filepath):
+    temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
+    graph.triplestore.execute(f"CREATE TABLE {temporal_table} AS SELECT * FROM parquet_scan('{filepath}')")
+
+    if len(graph.triplestore.execute(f"DESCRIBE {temporal_table}").fetchall()) == 3:
+        # add empty named graphs column
+        graph.triplestore.execute(f"ALTER TABLE {temporal_table} ADD COLUMN g TEXT DEFAULT ''")
+
+    graph.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table} EXCEPT SELECT * FROM quads)')
+    graph.triplestore.execute(f'DROP TABLE {temporal_table}')
+
+    return graph.triplestore
+
+
+def parse_rdf(graph, filepath):
+    parser = lightrdf.Parser()
+
+    triples = []
+    i = 0
+    for triple in parser.parse(filepath, base_iri=None):
+        triple = list(triple)
+        triple.append('')   # for empty quad
+        triples.append(triple)
+
+        if i == 100000000:
+            graph.bulk_add(triples)
+            triples = []
+            i = 0
+        else:
+            i += 1
+    graph.bulk_add(triples)
+
+    return graph.triplestore
+
+
 def _line_has_quad(line):
     line = line.strip()
 
@@ -18,7 +58,7 @@ def _line_has_quad(line):
     return True
 
 
-def _quad_from_line(line, file_extension):
+def _quad_from_line(line):
     quad = []
 
     line = line.strip()
@@ -43,12 +83,7 @@ def _quad_from_line(line, file_extension):
     # OBJECT and NAMED GRAPH
     line = line.strip()
 
-    if file_extension == '.nt':
-        quad.append(line)   # object
-        quad.append('')     # quad
-        return quad
-
-    is_quad = False     # file_extension == '.nq' check if it is a triple or a quad
+    is_quad = False     # check if it is a triple or a quad
     if line.endswith('>'):
         if line.startswith('<') and ' ' in line:
             is_quad = True
@@ -68,7 +103,7 @@ def _quad_from_line(line, file_extension):
     return quad
 
 
-def parse_nquads(graph, filepath, file_extension):
+def parse_nquads(graph, filepath):
     file = open(filepath)
 
     while 1:
@@ -76,7 +111,7 @@ def parse_nquads(graph, filepath, file_extension):
         if not lines:
             break
 
-        quads = [_quad_from_line(line, file_extension) for line in lines if _line_has_quad(line)]
+        quads = [_quad_from_line(line) for line in lines if _line_has_quad(line)]
         graph.bulk_add(quads)
 
     file.close()
