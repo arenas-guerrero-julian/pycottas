@@ -194,9 +194,11 @@ class Graph:
         file_extension = os.path.splitext(filepath)[1].lower()
 
         if file_extension == '.cotta' or file_extension == '.parquet':
-            serialize_cotta(self, filepath, file_extension, codec)
+            serialize_cotta(self, filepath, codec)
+        elif file_extension == '.nt' or '.nq':
+            serialize_rdf(self, filepath, chunksize)
         else:
-            serialize_rdf(self, filepath, file_extension, chunksize)
+            print('Invalid serialization file extension. Valid values: `.cotta`, `.parquet`, `.nt`, `.nq`.')
 
     def sort(self, inplace=True):
         pass
