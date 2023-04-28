@@ -97,11 +97,9 @@ class Graph:
         return isinstance(other, Graph) and (len(self) <= len(other))
 
     def __eq__(self, other):
-        # TODO: same triples? canonicalization?
         return isinstance(other, Graph) and (len(self) == len(other))
 
     def __ne__(self, other):
-        # TODO: same triples? canonicalization?
         return isinstance(other, Graph) and (len(self) != len(other))
 
     def size(self):
@@ -123,9 +121,6 @@ class Graph:
 
     def to_list(self):
         return self.to_df().values.tolist()
-
-    def to_chunks(self, chunksize=250000):
-        pass    # to_batches
 
     def add(self, s, p, o, g='', validate=False, preserve_duplicates=False):
         self.bulk_add([[s, p, o, g]], validate=validate, preserve_duplicates=preserve_duplicates)
@@ -199,9 +194,6 @@ class Graph:
             serialize_rdf(self, filepath, chunksize)
         else:
             print('Invalid serialization file extension. Valid values: `.cotta`, `.parquet`, `.nt`, `.nq`.')
-
-    def sort(self, inplace=True):
-        pass
 
     def quads(self, s=None, p=None, o=None, g=None, only_triples=False, chunksize=250000):
         variable_dict = {'s': s, 'p': p, 'o': o, 'g': g}
