@@ -8,8 +8,8 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 import duckdb
 
-from .term import *
 from .constants import *
+from .term import *
 
 
 def translate_triple_pattern(table_name, triple_pattern):
@@ -57,7 +57,8 @@ def translate_triple_pattern(table_name, triple_pattern):
 
 
 def cotta_info(cotta_file):
-    import os, datetime
+    import os
+    import datetime
 
     triples_query = f"SELECT COUNT(*) AS triples FROM parquet_scan('{cotta_file}')"
     properties_query = f"SELECT COUNT(DISTINCT p) AS properties FROM parquet_scan('{cotta_file}')"
