@@ -68,18 +68,7 @@ class Graph:
         return self + other
 
     def __sub__(self, other):
-        graph = Graph()
-
-        # it is faster to remove the triples in the smallest graph from the largest graph
-        larger_graph, smaller_graph = (self, other) if self > other else (other, self)
-
-        records = larger_graph.to_list()
-        graph.bulk_add(records, validate=False, preserve_duplicates=True)
-
-        records = smaller_graph.to_list()
-        graph.bulk_remove(records)
-
-        return graph
+        return self - other
 
     def __isub__(self, other):
         return self - other

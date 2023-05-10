@@ -52,10 +52,20 @@ if __name__ == "__main__":
         g1 += g2
         g1.serialize(args.arg3)
 
+    elif args.operation == 'cottaDiff':
+        g1 = Graph()
+        g1.parse(args.arg1)
+
+        g2 = Graph()
+        g2.parse(args.arg1)
+
+        g1 -= g2
+        g1.serialize(args.arg3)
+
     elif args.operation == 'cotta2rdf' or args.operation == 'rdf2cotta':
         g = Graph()
         g.parse(args.arg1)
         g.serialize(args.arg2)
 
     else:
-        print('Invalid COTTA option, arg1 must be `cottaSearch`, `cottaVerify`, `cottaInfo`, `cottaCat`, `cotta2rdf` or `rdf2cotta`.')
+        print('Invalid COTTA option, arg1 must be `cottaSearch`, `cottaVerify`, `cottaInfo`, `cottaCat`, `cottaDiff`, `cotta2rdf` or `rdf2cotta`.')
