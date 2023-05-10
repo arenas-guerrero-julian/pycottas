@@ -41,6 +41,11 @@ Merge two COTTA files:
 python3 -m cotta cottaCat input_graph_1.cotta input_graph_2.cotta output_graph.cotta
 ```
 
+Substract a COTTA file from another one:
+```bash
+python3 -m cotta cottaDiff input_graph_1.cotta input_graph_2.cotta output_graph.cotta
+```
+
 Check if a COTTA file is correct:
 ```bash
 python3 -m cotta cottaVerify graph.cotta
