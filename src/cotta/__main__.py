@@ -47,7 +47,7 @@ if __name__ == "__main__":
         g1.parse(args.arg1)
 
         g2 = Graph()
-        g2.parse(args.arg1)
+        g2.parse(args.arg2)
 
         g1 += g2
         g1.serialize(args.arg3)
@@ -57,7 +57,7 @@ if __name__ == "__main__":
         g1.parse(args.arg1)
 
         g2 = Graph()
-        g2.parse(args.arg1)
+        g2.parse(args.arg2)
 
         g1 -= g2
         g1.serialize(args.arg3)
