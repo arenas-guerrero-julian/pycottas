@@ -68,7 +68,15 @@ class Graph:
         return self + other
 
     def __sub__(self, other):
-        return self - other
+        graph = Graph()
+
+        records = self.to_list()
+        graph.bulk_add(records, validate=False, preserve_duplicates=True)
+
+        records = other.to_list()
+        graph.bulk_remove(records)
+
+        return graph
 
     def __isub__(self, other):
         return self - other
@@ -122,7 +130,6 @@ class Graph:
         quads_df['ot'] = quads_df['ot'].apply(remove_xsd_string)
 
         quads_df['ot'] = quads_df['ot'].apply(decode_escape_sequence)
-        # TODO: unicode escaping?
 
         if validate:
             quads_df['st'].drop_duplicates().apply(validate_subject)
