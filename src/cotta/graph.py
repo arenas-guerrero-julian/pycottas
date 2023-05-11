@@ -37,8 +37,6 @@ class Graph:
         if len(quad) != 4:
             ValueError(f'`{quad}` is not a valid triple or quad. Only 3 or 4 RDF terms are valid.')
 
-        # TODO: validate
-
         try:
             if self.triplestore.execute("SELECT * FROM quads WHERE s='?' AND p='?' AND o='?' AND g='?'", quad).fetchone():
                 return True
@@ -57,10 +55,10 @@ class Graph:
         larger_graph, smaller_graph = (self, other) if self > other else (other, self)
 
         records = larger_graph.to_list()
-        graph.bulk_add(records, validate=False, preserve_duplicates=True)
+        graph.bulk_add(records, preserve_duplicates=True)
 
         records = smaller_graph.to_list()
-        graph.bulk_add(records, validate=False)
+        graph.bulk_add(records)
 
         return graph
 
@@ -71,7 +69,7 @@ class Graph:
         graph = Graph()
 
         records = self.to_list()
-        graph.bulk_add(records, validate=False, preserve_duplicates=True)
+        graph.bulk_add(records, preserve_duplicates=True)
 
         records = other.to_list()
         graph.bulk_remove(records)
@@ -107,7 +105,7 @@ class Graph:
 
     def tail(self, number_of_triples=10):
         offset = len(self) - number_of_triples
-        offset = max(0, offset) # validate offset is non-negative
+        offset = max(0, offset)     # validate offset is non-negative
         return self.triplestore.execute(f'SELECT * FROM quads LIMIT {number_of_triples} OFFSET {offset}').fetch_df()
 
     def to_df(self):
@@ -119,10 +117,10 @@ class Graph:
     def to_list(self):
         return self.to_df().values.tolist()
 
-    def add(self, s, p, o, g='', validate=False, preserve_duplicates=False):
-        self.bulk_add([[s, p, o, g]], validate=validate, preserve_duplicates=preserve_duplicates)
+    def add(self, s, p, o, g='', preserve_duplicates=False):
+        self.bulk_add([[s, p, o, g]], preserve_duplicates=preserve_duplicates)
 
-    def bulk_add(self, quads, validate=False, preserve_duplicates=False):
+    def bulk_add(self, quads, preserve_duplicates=False):
         temp_columns = ['st', 'pt', 'ot', 'gt']
 
         quads_df = pd.DataFrame.from_records(quads, columns=temp_columns)
@@ -131,19 +129,12 @@ class Graph:
 
         quads_df['ot'] = quads_df['ot'].apply(decode_escape_sequence)
 
-        if validate:
-            quads_df['st'].drop_duplicates().apply(validate_subject)
-            quads_df['pt'].drop_duplicates().apply(validate_predicate)
-            quads_df['ot'].apply(validate_object)
-            quads_df['gt'].drop_duplicates().apply(validate_named_graph)
-
         temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
         self.triplestore.register(temporal_table, quads_df)
         if preserve_duplicates:
             self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
         else:
-            #self.triplestore.execute(f'INSERT INTO quads (SELECT DISTINCT * FROM {temporal_table} EXCEPT SELECT * FROM quads)')
-            self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
+            self.triplestore.execute(f'INSERT INTO quads (SELECT DISTINCT * FROM {temporal_table} EXCEPT SELECT * FROM quads)')
         self.triplestore.unregister(temporal_table)
 
     def remove(self, s, p, o, g=''):

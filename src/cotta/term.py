@@ -87,36 +87,6 @@ def is_valid_blanknode(blanknode):
     return True
 
 
-def validate_subject(s):
-    if is_valid_iri(s):
-        return
-    elif is_valid_blanknode(s):
-        return
-    raise TypeError(f'The subject term `{s}` is not a valid IRI or blank node.')
-
-
-def validate_object(o):
-    if is_valid_literal(o):
-        return
-    elif is_valid_iri(o):
-        return
-    elif is_valid_blanknode(o):
-        return
-    raise TypeError(f'The object term `{o}` is not a valid IRI, literal or blank node.')
-
-
-def validate_predicate(p):
-    if not is_iri(p) or not is_valid_iri(p):
-        raise TypeError(f'The predicate term `{p}` is not a valid IRI.')
-
-
-def validate_named_graph(g):
-    if not g:
-        return
-    if not is_iri(g) or not is_valid_iri(g):
-        raise ValueError(f'The named graph term `{g}` is not a valid IRI.')
-
-
 def remove_xsd_string(literal):
     if literal.endswith(f'"^^<{XSD_STRING}>'):
         return literal[:-43]
