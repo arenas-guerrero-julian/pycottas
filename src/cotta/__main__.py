@@ -8,7 +8,7 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 import argparse
 
-from .graph import *
+from .__init__ import *
 from .utils import *
 
 
@@ -26,11 +26,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.operation == 'cottaSearch':
-        result_df = duckdb.query(translate_triple_pattern(f"{args.arg1}", args.arg2)).df()
-        if args.arg3 is None:
-            print(result_df)
-        else:
-            result_df.to_csv(args.arg3, index=False, sep='\t')
+        cotta_search(args.arg1, args.arg2, args.arg3)
 
     elif args.operation == 'cottaVerify':
         verify_query = f"SELECT * FROM parquet_scan('{args.arg1}') LIMIT 0"
@@ -43,29 +39,16 @@ if __name__ == "__main__":
         print(cotta_info(args.arg1))
 
     elif args.operation == 'cottaCat':
-        g1 = Graph()
-        g1.parse(args.arg1)
-
-        g2 = Graph()
-        g2.parse(args.arg2)
-
-        g1 += g2
-        g1.serialize(args.arg3)
+        cotta_cat(args.arg1, args.arg2, args.arg3)
 
     elif args.operation == 'cottaDiff':
-        g1 = Graph()
-        g1.parse(args.arg1)
+        cotta_diff(args.arg1, args.arg2, args.arg3)
 
-        g2 = Graph()
-        g2.parse(args.arg2)
+    elif args.operation == 'rdf2cotta':
+        cotta_2_rdf(args.arg1, args.arg2)
 
-        g1 -= g2
-        g1.serialize(args.arg3)
-
-    elif args.operation == 'cotta2rdf' or args.operation == 'rdf2cotta':
-        g = Graph()
-        g.parse(args.arg1)
-        g.serialize(args.arg2)
+    elif args.operation == 'cotta2rdf':
+        cotta_2_rdf(args.arg1, args.arg2)
 
     else:
         print('Invalid COTTA option, arg1 must be `cottaSearch`, `cottaVerify`, `cottaInfo`, `cottaCat`, `cottaDiff`, `cotta2rdf` or `rdf2cotta`.')

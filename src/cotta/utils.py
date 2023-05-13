@@ -56,7 +56,7 @@ def translate_triple_pattern(table_name, triple_pattern):
     return triple_pattern_query
 
 
-def cotta_info(cotta_file):
+def generate_cotta_info(cotta_file):
     import os
     import datetime
 
