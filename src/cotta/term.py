@@ -7,6 +7,7 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 
 from uuid import uuid4
+
 from .constants import XSD_STRING
 
 
@@ -85,65 +86,3 @@ def is_valid_blanknode(blanknode):
     if blanknode[-1] == '.':
         return False
     return True
-
-
-def remove_xsd_string(literal):
-    if literal.endswith(f'"^^<{XSD_STRING}>'):
-        return literal[:-43]
-    else:
-        return literal
-
-
-def get_literal_lexical_form(literal):
-    if is_literal(literal):
-        if literal.endswith('"'):    # no datatype nor language tag
-            return literal
-        elif literal.endswith('>'):   # has datatype
-            return '"^^<'.join(literal.split('"^^<')[:-1]) + '"'
-        # has language tag
-        return '"@'.join(literal.split('"@')[:-1]) + '"'
-
-    raise TypeError(f'`{literal}` is not a valid literal.')
-
-
-def get_literal_datatype(literal):
-    if is_literal(literal):
-        if literal.endswith('>'):
-            return '<' + literal.split('"^^<')[-1]
-        # has no datatype
-        return None
-
-    raise TypeError(f'`{literal}` is not a valid literal.')
-
-
-def get_literal_langtag(literal):
-    if is_literal(literal):
-        if not literal.endswith('"') and not literal.endswith('>'):
-            return '@' + literal.split('@')[-1]
-        # has no langtag
-        return None
-
-    raise TypeError(f'`{literal}` is not a valid literal.')
-
-
-def decode_escape_sequence(rdf_term):
-    if not is_literal(rdf_term) or '\\' not in rdf_term:
-        return rdf_term
-
-    rdf_term = rdf_term.replace('\\n', '\n')
-    rdf_term = rdf_term.replace('\\r', '\r')
-    rdf_term = rdf_term.replace('\\t', '\t')
-    rdf_term = rdf_term.replace('\\"', '"')
-    rdf_term = rdf_term.replace('\\\\', '\\')
-
-    return rdf_term
-
-
-def encode_escape_sequence(rdf_term):
-    rdf_term = rdf_term.replace('\\', '\\\\')
-    rdf_term = rdf_term.replace('\n', '\\n')
-    rdf_term = rdf_term.replace('\r', '\\r')
-    rdf_term = rdf_term.replace('\t', '\\t')
-    rdf_term = rdf_term.replace('"', '\\"')
-
-    return rdf_term

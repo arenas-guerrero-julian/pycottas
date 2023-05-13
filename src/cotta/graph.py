@@ -23,7 +23,8 @@ class Graph:
 
     def __init__(self, triplestore=':memory:', read_only=False):
         self.triplestore = duckdb.connect(database=triplestore, read_only=read_only)
-        self.triplestore.execute('CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)')
+        self.triplestore.execute(
+            'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)')
 
     def __str__(self):
         return repr(self)
@@ -38,10 +39,10 @@ class Graph:
             ValueError(f'`{quad}` is not a valid triple or quad. Only 3 or 4 RDF terms are valid.')
 
         try:
-            if self.triplestore.execute("SELECT * FROM quads WHERE s='?' AND p='?' AND o='?' AND g='?'", quad).fetchone():
+            if self.triplestore.execute("SELECT * FROM quads WHERE s='?' AND p='?' AND o='?' AND g='?'",
+                                        quad).fetchone():
                 return True
         except Exception as e:
-            # TODO: log error message, it could be because of adding a duplicate triple, violating CHECK constrainst, etc
             return False
         return False
 
@@ -125,16 +126,13 @@ class Graph:
 
         quads_df = pd.DataFrame.from_records(quads, columns=temp_columns)
 
-        quads_df['ot'] = quads_df['ot'].apply(remove_xsd_string)
-
-        quads_df['ot'] = quads_df['ot'].apply(decode_escape_sequence)
-
         temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
         self.triplestore.register(temporal_table, quads_df)
         if preserve_duplicates:
             self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
         else:
-            self.triplestore.execute(f'INSERT INTO quads (SELECT DISTINCT * FROM {temporal_table} EXCEPT SELECT * FROM quads)')
+            self.triplestore.execute(f'INSERT INTO quads (SELECT DISTINCT * FROM {temporal_table} '
+                                     f'EXCEPT SELECT * FROM quads)')
         self.triplestore.unregister(temporal_table)
 
     def remove(self, s, p, o, g=''):
@@ -159,7 +157,9 @@ class Graph:
 
         temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
         self.triplestore.register(temporal_table, quads_df)
-        self.triplestore.execute(f'DELETE FROM quads USING {temporal_table} WHERE quads.s={temporal_table}.st AND quads.p={temporal_table}.pt AND quads.o={temporal_table}.ot AND quads.g={temporal_table}.gt')
+        self.triplestore.execute(f'DELETE FROM quads USING {temporal_table} WHERE '
+                                 f'quads.s={temporal_table}.st AND quads.p={temporal_table}.pt AND '
+                                 f'quads.o={temporal_table}.ot AND quads.g={temporal_table}.gt')
         self.triplestore.unregister(temporal_table)
 
     def parse(self, filepath):
@@ -195,7 +195,7 @@ class Graph:
             select_query = select_query[:-5]  # remove final ` AND `
 
         for i in range((len(self) // chunksize) + 1):
-            chunk_select_query = f'{select_query} LIMIT {chunksize} OFFSET {i*chunksize}'   # TODO: simplify with self.fetch_df_chunks?
+            chunk_select_query = f'{select_query} LIMIT {chunksize} OFFSET {i*chunksize}'
             quads = self.triplestore.execute(chunk_select_query).fetch_df().values.tolist()
 
             if only_triples:
@@ -207,9 +207,3 @@ class Graph:
 
     def triples(self, s=None, p=None, o=None, g='', chunksize=250000):
         return self.quads(s, p, o, g, only_triples=True, chunksize=chunksize)
-
-    def subjects(self, p=None, o=None, g='', unique=False):
-        variable_dict = {'p': p, 'o': o, 'g': g}
-
-    def objects(self, subject=None, predicate=None, unique=False):
-        pass

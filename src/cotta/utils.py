@@ -80,14 +80,20 @@ def cotta_info(cotta_file):
     info += f"{iri(cotta_path)} {iri(RDF_TYPE)} {iri('http://purl.org/COTTA/cotta#Dataset')} .\n"
     info += f"{iri(cotta_path)} {iri(RDF_TYPE)} {iri('http://rdfs.org/ns/void#Dataset')} .\n"
     info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#triples')} {literal(triples, datatype=XSD_INTEGER)} .\n"
-    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#properties')} {literal(properties, datatype=XSD_INTEGER)} .\n"
-    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#distinctSubjects')} {literal(distinct_subjects, datatype=XSD_INTEGER)} .\n"
-    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#distinctObjects')} {literal(distinct_objects, datatype=XSD_INTEGER)} .\n"
+    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#properties')} " \
+            f"{literal(properties, datatype=XSD_INTEGER)} .\n"
+    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#distinctSubjects')} " \
+            f"{literal(distinct_subjects, datatype=XSD_INTEGER)} .\n"
+    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#distinctObjects')} " \
+            f"{literal(distinct_objects, datatype=XSD_INTEGER)} .\n"
 
-    info += f'{iri(cotta_path)} {iri("http://purl.org/COTTA/cotta#publicationInformation")} "_:publicationInformation" .\n'
-    info += f'"_:publicationInformation" {iri("http://purl.org/dc/terms/issued")} {literal(cotta_issued, datatype=XSD_DATETIME)} .\n'
+    info += f'{iri(cotta_path)} {iri("http://purl.org/COTTA/cotta#publicationInformation")} ' \
+            f'"_:publicationInformation" .\n'
+    info += f'"_:publicationInformation" {iri("http://purl.org/dc/terms/issued")} ' \
+            f'{literal(cotta_issued, datatype=XSD_DATETIME)} .\n'
 
     info += f'{iri(cotta_path)} {iri("http://purl.org/COTTA/cotta#statisticalInformation")} "_:statistics" .\n'
-    info += f'"_:statistics" {iri("http://purl.org/COTTA/cotta#cottaSize")} {literal(cotta_size, datatype=XSD_INTEGER)} .'
+    info += f'"_:statistics" {iri("http://purl.org/COTTA/cotta#cottaSize")} ' \
+            f'{literal(cotta_size, datatype=XSD_INTEGER)} .'
 
     return info
