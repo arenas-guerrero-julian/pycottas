@@ -24,6 +24,90 @@ pip install git+https://github.com/oeg-upm/cotta.git
 
 ### Command Line
 
+#### rdf2cotta
+
+Transform an RDF file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/) and [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTA file:
+```bash
+python3 -m cotta rdf2cotta file.nt file.cotta
+```
+
+#### cotta2rdf
+
+Transform a COTTA file into an RDF file ([N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/)):
+```bash
+python3 -m cotta cotta2rdf file.cotta file.cotta
+```
+
+#### cottaSearch
+
+Resolve triple pattern in a COTTA file:
+```bash
+python3 -m cotta cottaSearch file.cotta "? <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?"
+```
+
+#### cottaCat
+
+Merge two COTTA files:
+```bash
+python3 -m cotta cottaCat input_graph_1.cotta input_graph_2.cotta output_file.cotta
+```
+
+#### cottaDiff
+
+Substract a COTTA file from another one:
+```bash
+python3 -m cotta cottaDiff input_graph_1.cotta input_graph_2.cotta output_file.cotta
+```
+
+#### cottaInfo
+
+Retrieve basic information and statistics from a COTTA file:
+```bash
+python3 -m cotta cottaInfo file.cotta
+```
+
+#### cottaVerify
+
+Check if a COTTA file is correct:
+```bash
+python3 -m cotta cottaVerify file.cotta
+```
+
 ### Library
+
+Import COTTA:
+```python
+import cotta
+```
+
+#### rdf_2_cotta
+
+**`rdf_2_cotta(rdf_file, cotta_file)`**
+
+#### cotta_2_rdf
+
+**`cotta_2_rdf(cotta_file, rdf_file)`**
+
+#### cotta_search
+
+**`cotta_search(cotta_file, triple_pattern, results_file=None)`**
+
+#### cotta_cat
+
+**`cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file)`**
+
+#### cotta_diff
+
+**`cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file)`**
+
+#### cotta_info
+
+**`cotta_info(cotta_file)`**
+
+#### cotta_verify
+
+**`cotta_verify(cotta_file)`**
+
+
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
