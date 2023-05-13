@@ -1,5 +1,12 @@
 # COTTA
 
+**COTTA** is a toolkit for efficient **RDF** graph management. It is based on a triple table representation of RDF using the [Apache Parquet](https://parquet.apache.org/) file format. The toolkit provides an [HDT](https://www.rdfhdt.org/)-like interface.
+
+## Tutorial
+
+```
+TODO: tutorial on google colab.
+```
 
 ## Licenses
 
