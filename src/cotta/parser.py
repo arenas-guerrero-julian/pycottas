@@ -25,7 +25,7 @@ def parse_cotta(graph, filepath):
     return graph.triplestore
 
 
-def parse_rdf(graph, filepath):
+def parse_rdf(graph, filepath, preserve_duplicates):
     parser = lightrdf.Parser()
 
     triples = []
@@ -36,12 +36,12 @@ def parse_rdf(graph, filepath):
         triples.append(triple)
 
         if i == 100000000:
-            graph.bulk_add(triples)
+            graph.bulk_add(triples, preserve_duplicates)
             triples = []
             i = 0
         else:
             i += 1
-    graph.bulk_add(triples)
+    graph.bulk_add(triples, preserve_duplicates)
 
     return graph.triplestore
 
@@ -103,7 +103,7 @@ def _quad_from_line(line):
     return quad
 
 
-def parse_nquads(graph, filepath):
+def parse_nquads(graph, filepath, preserve_duplicates):
     file = open(filepath)
 
     while 1:
@@ -112,7 +112,7 @@ def parse_nquads(graph, filepath):
             break
 
         quads = [_quad_from_line(line) for line in lines if _line_has_quad(line)]
-        graph.bulk_add(quads)
+        graph.bulk_add(quads, preserve_duplicates)
 
     file.close()
 

@@ -6,22 +6,47 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
+from os import mkdir
+
+from shutil import rmtree
+
+
 from .graph import *
 from .term import *
 from .constants import *
 from .utils import *
 
 
-def rdf_2_cotta(rdf_file, cotta_file):
-    g = Graph()
-    g.parse(rdf_file)
-    g.serialize(cotta_file)
+def rdf_2_cotta(rdf_file, cotta_file, in_memory=False):
+    if in_memory:
+        g = Graph()
+        g.parse(cotta_file, preserve_duplicates=False)
+        g.serialize(rdf_file)
+    else:
+        rmtree('.cotta_temp', ignore_errors=True)
+        mkdir('.cotta_temp')
+
+        g = Graph('.cotta_temp/cotta.duckdb')
+        g.parse(rdf_file, preserve_duplicates=True)
+        g.serialize(cotta_file)
+
+        rmtree('.cotta_temp')
 
 
-def cotta_2_rdf(cotta_file, rdf_file):
-    g = Graph()
-    g.parse(cotta_file)
-    g.serialize(rdf_file)
+def cotta_2_rdf(cotta_file, rdf_file, in_memory=False):
+    if in_memory:
+        g = Graph()
+        g.parse(cotta_file, preserve_duplicates=False)
+        g.serialize(rdf_file)
+    else:
+        rmtree('.cotta_temp', ignore_errors=True)
+        mkdir('.cotta_temp')
+
+        g = Graph('.cotta_temp/cotta.duckdb')
+        g.parse(cotta_file, preserve_duplicates=True)
+        g.serialize(rdf_file)
+
+        rmtree('.cotta_temp')
 
 
 def cotta_search(cotta_file, triple_pattern, results_file=None):
@@ -33,26 +58,56 @@ def cotta_search(cotta_file, triple_pattern, results_file=None):
         return result_df
 
 
-def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file):
-    g1 = Graph()
-    g1.parse(cotta_file_1)
+def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=False):
+    if in_memory:
+        g1 = Graph()
+        g1.parse(cotta_file_1, preserve_duplicates=False)
 
-    g2 = Graph()
-    g2.parse(cotta_file_2)
+        g2 = Graph()
+        g2.parse(cotta_file_2, preserve_duplicates=False)
 
-    g1 += g2
-    g1.serialize(cotta_cat_file)
+        g1 += g2
+        g1.serialize(cotta_cat_file)
+    else:
+        rmtree('.cotta_temp', ignore_errors=True)
+        mkdir('.cotta_temp')
+
+        g1 = Graph('.cotta_temp/cotta_1.duckdb')
+        g1.parse(cotta_file_1, preserve_duplicates=True)
+
+        g2 = Graph('.cotta_temp/cotta_2.duckdb')
+        g2.parse(cotta_file_2, preserve_duplicates=True)
+
+        g1 += g2
+        g1.serialize(cotta_cat_file)
+
+        rmtree('.cotta_temp')
 
 
-def cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file):
-    g1 = Graph()
-    g1.parse(cotta_file_1)
+def cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=False):
+    if in_memory:
+        g1 = Graph()
+        g1.parse(cotta_file_1, preserve_duplicates=False)
 
-    g2 = Graph()
-    g2.parse(cotta_file_2)
+        g2 = Graph()
+        g2.parse(cotta_file_2, preserve_duplicates=False)
 
-    g1 -= g2
-    g1.serialize(cotta_diff_file)
+        g1 -= g2
+        g1.serialize(cotta_diff_file)
+    else:
+        rmtree('.cotta_temp', ignore_errors=True)
+        mkdir('.cotta_temp')
+
+        g1 = Graph('.cotta_temp/cotta_1.duckdb')
+        g1.parse(cotta_file_1, preserve_duplicates=True)
+
+        g2 = Graph('.cotta_temp/cotta_2.duckdb')
+        g2.parse(cotta_file_2, preserve_duplicates=True)
+
+        g1 -= g2
+        g1.serialize(cotta_diff_file)
+
+        rmtree('.cotta_temp')
 
 
 def cotta_info(cotta_file):

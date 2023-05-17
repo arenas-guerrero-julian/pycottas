@@ -12,15 +12,14 @@ import pandas as pd
 
 from random import randint
 
+from .constants import DUCKDB_MEMORY
 from .parser import parse_cotta, parse_rdf, parse_nquads
 from .serializer import serialize_cotta, serialize_rdf
 
 
 class Graph:
 
-    # TODO: https://docs.python.org/3/reference/datamodel.html
-
-    def __init__(self, triplestore=':memory:'):
+    def __init__(self, triplestore=DUCKDB_MEMORY):
         self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
             'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)')
@@ -117,7 +116,7 @@ class Graph:
     def to_list(self):
         return self.to_df().values.tolist()
 
-    def add(self, s, p, o, g='', preserve_duplicates=False):
+    def add(self, s, p, o, g='', preserve_duplicates=True):
         self.bulk_add([[s, p, o, g]], preserve_duplicates=preserve_duplicates)
 
     def bulk_add(self, quads, preserve_duplicates=False):
@@ -161,15 +160,15 @@ class Graph:
                                  f'quads.o={temporal_table}.ot AND quads.g={temporal_table}.gt')
         self.triplestore.unregister(temporal_table)
 
-    def parse(self, filepath):
+    def parse(self, filepath, preserve_duplicates=True):
         file_extension = os.path.splitext(filepath)[1].lower()
 
         if file_extension == '.cotta' or file_extension == '.parquet':
-            self.triplestore = parse_cotta(self, filepath)
+            self.triplestore = parse_cotta(self, filepath, preserve_duplicates)
         elif file_extension == '.nq':
-            self.triplestore = parse_nquads(self, filepath)
+            self.triplestore = parse_nquads(self, filepath, preserve_duplicates)
         else:
-            self.triplestore = parse_rdf(self, filepath)
+            self.triplestore = parse_rdf(self, filepath, preserve_duplicates)
 
     def serialize(self, filepath, codec='ZSTD', chunksize=250000):
         file_extension = os.path.splitext(filepath)[1].lower()

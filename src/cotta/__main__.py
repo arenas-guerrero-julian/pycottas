@@ -45,7 +45,7 @@ if __name__ == "__main__":
         cotta_diff(args.arg1, args.arg2, args.arg3)
 
     elif args.operation == 'rdf2cotta':
-        cotta_2_rdf(args.arg1, args.arg2)
+        rdf_2_cotta(args.arg1, args.arg2)
 
     elif args.operation == 'cotta2rdf':
         cotta_2_rdf(args.arg1, args.arg2)
