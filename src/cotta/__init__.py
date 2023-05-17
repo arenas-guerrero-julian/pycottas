@@ -30,7 +30,7 @@ def rdf_2_cotta(rdf_file, cotta_file, in_memory=False):
         g.parse(rdf_file, preserve_duplicates=True)
         g.serialize(cotta_file)
 
-        rmtree('.cotta_temp')
+        rmtree('.cotta_temp', ignore_errors=True)
 
 
 def cotta_2_rdf(cotta_file, rdf_file, in_memory=False):
@@ -46,7 +46,7 @@ def cotta_2_rdf(cotta_file, rdf_file, in_memory=False):
         g.parse(cotta_file, preserve_duplicates=True)
         g.serialize(rdf_file)
 
-        rmtree('.cotta_temp')
+        rmtree('.cotta_temp', ignore_errors=True)
 
 
 def cotta_search(cotta_file, triple_pattern, results_file=None):
@@ -81,7 +81,7 @@ def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=False):
         g1 += g2
         g1.serialize(cotta_cat_file)
 
-        rmtree('.cotta_temp')
+        rmtree('.cotta_temp', ignore_errors=True)
 
 
 def cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=False):
@@ -107,7 +107,7 @@ def cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=False):
         g1 -= g2
         g1.serialize(cotta_diff_file)
 
-        rmtree('.cotta_temp')
+        rmtree('.cotta_temp', ignore_errors=True)
 
 
 def cotta_info(cotta_file):
