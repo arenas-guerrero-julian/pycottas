@@ -12,7 +12,6 @@ import pandas as pd
 
 from random import randint
 
-from .term import *
 from .parser import parse_cotta, parse_rdf, parse_nquads
 from .serializer import serialize_cotta, serialize_rdf
 
@@ -21,8 +20,8 @@ class Graph:
 
     # TODO: https://docs.python.org/3/reference/datamodel.html
 
-    def __init__(self, triplestore=':memory:', read_only=False):
-        self.triplestore = duckdb.connect(database=triplestore, read_only=read_only)
+    def __init__(self, triplestore=':memory:'):
+        self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
             'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)')
 
