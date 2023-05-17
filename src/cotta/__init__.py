@@ -50,12 +50,12 @@ def cotta_2_rdf(cotta_file, rdf_file, in_memory=False):
 
 
 def cotta_search(cotta_file, triple_pattern, results_file=None):
-    result_df = duckdb.query(translate_triple_pattern(f"{cotta_file}", triple_pattern)).df()
+    results_df = duckdb.query(translate_triple_pattern(f"{cotta_file}", triple_pattern)).df()
 
     if results_file:
-        result_df.to_csv(results_file, index=False, sep='\t')
+        results_df.to_csv(results_file, index=False, sep='\t')
     else:
-        return result_df
+        return results_df
 
 
 def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=False):

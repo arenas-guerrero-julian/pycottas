@@ -26,7 +26,9 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.operation == 'cottaSearch':
-        cotta_search(args.arg1, args.arg2, args.arg3)
+        results_df = cotta_search(args.arg1, args.arg2, args.arg3)
+
+        print(results_df)
 
     elif args.operation == 'cottaVerify':
         verify_query = f"SELECT * FROM parquet_scan('{args.arg1}') LIMIT 0"
