@@ -32,7 +32,15 @@ def parse_rdf(graph, filepath, preserve_duplicates):
     i = 0
     for triple in parser.parse(filepath, base_iri=None):
         triple = list(triple)
+
+        # format quoted triples
+        if ' <' in triple[0]:
+            triple[0] = f'<< {triple[0]} >>'
+        if ' <' in triple[2]:
+            triple[2] = f'<< {triple[2]} >>'
+
         triple.append('')   # for empty quad
+        triple.append(f'{triple[0]} {triple[1]} {triple[2]}')
         triples.append(triple)
 
         if i == 100000000:
@@ -99,6 +107,8 @@ def _quad_from_line(line):
     else:
         quad.append(line)   # object
         quad.append('')     # quad
+
+    quad.append(f'{quad[0]} {quad[1]} {quad[2]}')
 
     return quad
 

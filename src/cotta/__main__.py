@@ -31,11 +31,7 @@ if __name__ == "__main__":
         print(results_df)
 
     elif args.operation == 'cottaVerify':
-        verify_query = f"SELECT * FROM parquet_scan('{args.arg1}') LIMIT 0"
-        cotta_df = duckdb.query(verify_query).df()
-
-        cotta_columns = [c.lower() for c in cotta_df.columns]
-        print(set(cotta_columns) <= {'s', 'p', 'o', 'g'})
+        print(cotta_verify(args.arg1))
 
     elif args.operation == 'cottaInfo':
         print(cotta_info(args.arg1))

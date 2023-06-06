@@ -120,4 +120,4 @@ def cotta_verify(cotta_file):
 
     cotta_columns = [c.lower() for c in cotta_df.columns]
 
-    return set(cotta_columns) <= {'s', 'p', 'o', 'g'}
+    return set(cotta_columns) <= {'s', 'p', 'o', 'g', 'id'}

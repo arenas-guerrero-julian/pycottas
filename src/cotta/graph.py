@@ -22,7 +22,7 @@ class Graph:
     def __init__(self, triplestore=DUCKDB_MEMORY):
         self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
-            'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)')
+            'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, id VARCHAR NOT NULL)')
 
     def __str__(self):
         return repr(self)
@@ -120,7 +120,7 @@ class Graph:
         self.bulk_add([[s, p, o, g]], preserve_duplicates=preserve_duplicates)
 
     def bulk_add(self, quads, preserve_duplicates=False):
-        temp_columns = ['st', 'pt', 'ot', 'gt']
+        temp_columns = ['st', 'pt', 'ot', 'gt', 'id']
 
         quads_df = pd.DataFrame.from_records(quads, columns=temp_columns)
 
@@ -164,8 +164,8 @@ class Graph:
         file_extension = os.path.splitext(filepath)[1].lower()
 
         if file_extension == '.cotta' or file_extension == '.parquet':
-            self.triplestore = parse_cotta(self, filepath, preserve_duplicates)
-        elif file_extension == '.nq':
+            self.triplestore = parse_cotta(self, filepath)
+        elif file_extension == '.nq':   # lightrdf does not support N-Quads
             self.triplestore = parse_nquads(self, filepath, preserve_duplicates)
         else:
             self.triplestore = parse_rdf(self, filepath, preserve_duplicates)
