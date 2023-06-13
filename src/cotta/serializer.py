@@ -19,6 +19,12 @@ def serialize_rdf(graph, filepath, chunksize=1000000):
         quads = quads_df.values.tolist()
 
         for quad in quads:
+            # format quoted triples
+            if ' <' in quad[0]:
+                quad[0] = f'<< {quad[0]} >>'
+            if ' <' in quad[2]:
+                quad[2] = f'<< {quad[2]} >>'
+
             if quad[3]:
                 # in case of named graph
                 quad = f"{quad[0]} {quad[1]} {quad[2]} {quad[3]}"
