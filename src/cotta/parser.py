@@ -96,7 +96,7 @@ def _quad_from_line(line):
 
     if is_quad:
         splitted_line = line.split('<')
-        quad.append('<'.join(splitted_line[:1]).strip())    # object
+        quad.append('<'.join(splitted_line[:-1]).strip())    # object
         quad.append(f'<{splitted_line[-1]}')                # quad
     else:
         quad.append(line)   # object
