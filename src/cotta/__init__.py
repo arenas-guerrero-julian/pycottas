@@ -17,11 +17,11 @@ from .constants import *
 from .utils import *
 
 
-def rdf_2_cotta(rdf_file, cotta_file, in_memory=False):
+def rdf_2_cotta(rdf_file, cotta_file, in_memory=True):
     if in_memory:
         g = Graph()
-        g.parse(cotta_file, preserve_duplicates=False)
-        g.serialize(rdf_file)
+        g.parse(rdf_file, preserve_duplicates=False)
+        g.serialize(cotta_file)
     else:
         rmtree('.cotta_temp', ignore_errors=True)
         mkdir('.cotta_temp')
@@ -33,7 +33,7 @@ def rdf_2_cotta(rdf_file, cotta_file, in_memory=False):
         rmtree('.cotta_temp', ignore_errors=True)
 
 
-def cotta_2_rdf(cotta_file, rdf_file, in_memory=False):
+def cotta_2_rdf(cotta_file, rdf_file, in_memory=True):
     if in_memory:
         g = Graph()
         g.parse(cotta_file, preserve_duplicates=False)
@@ -58,7 +58,7 @@ def cotta_search(cotta_file, triple_pattern, results_file=None):
         return results_df
 
 
-def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=False):
+def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True):
     if in_memory:
         g1 = Graph()
         g1.parse(cotta_file_1, preserve_duplicates=False)
@@ -84,7 +84,7 @@ def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=False):
         rmtree('.cotta_temp', ignore_errors=True)
 
 
-def cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=False):
+def cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=True):
     if in_memory:
         g1 = Graph()
         g1.parse(cotta_file_1, preserve_duplicates=False)
@@ -119,5 +119,8 @@ def cotta_verify(cotta_file):
     cotta_df = duckdb.query(verify_query).df()
 
     cotta_columns = [c.lower() for c in cotta_df.columns]
+
+    if 's' not in cotta_columns or 'p' not in cotta_columns or 'o' not in cotta_columns:
+        return False
 
     return set(cotta_columns) <= {'s', 'p', 'o', 'g', 'id'}

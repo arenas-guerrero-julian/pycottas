@@ -96,7 +96,7 @@ def translate_triple_pattern(cotta_file, triple_pattern_str):
             triple_pattern_query += f"p AS {triple_pattern[1][1:]}, "
         if triple_pattern[2].startswith('?'):
             triple_pattern_query += f"o AS {triple_pattern[2][1:]}, "
-        if len(triple_pattern[3]) == 4 and triple_pattern[3].startswith('?'):
+        if len(triple_pattern) == 4 and triple_pattern[3].startswith('?'):
             triple_pattern_query += f"g AS {triple_pattern[3][1:]}, "
 
         triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM read_parquet('{cotta_file}')\nWHERE "

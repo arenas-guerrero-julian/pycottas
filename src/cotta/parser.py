@@ -102,7 +102,7 @@ def _quad_from_line(line):
         quad.append(line)   # object
         quad.append('')     # quad
 
-    quad.append(f'{quad[0]} {quad[1]} {quad[2]}')
+    quad.append('')
 
     return quad
 

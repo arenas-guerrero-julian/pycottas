@@ -121,7 +121,7 @@ class Graph:
         self.bulk_add([[s, p, o, g]], preserve_duplicates=preserve_duplicates)
 
     def bulk_add(self, quads, preserve_duplicates=False):
-        temp_columns = ['st', 'pt', 'ot', 'gt', 'id']
+        temp_columns = ['st', 'pt', 'ot', 'gt', 'idt']
 
         quads_df = pd.DataFrame.from_records(quads, columns=temp_columns)
 
@@ -149,9 +149,8 @@ class Graph:
             self.triplestore.execute(delete_query)
 
     def bulk_remove(self, quads):
-        quads = [quad if len(quad) == 4 else quad + [''] for quad in quads]     # add default named graph for triples
 
-        quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt'])
+        quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt'])
         quads_df = quads_df.drop_duplicates()
 
         temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
