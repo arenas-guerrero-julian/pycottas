@@ -48,5 +48,8 @@ if __name__ == "__main__":
     elif args.operation == 'cotta2rdf':
         cotta_2_rdf(args.arg1, args.arg2)
 
+    elif args.operation == 'cottaRemoveID':
+        cotta_remove_id(args.arg1)
+
     else:
-        print('Invalid COTTA option, arg1 must be `cottaSearch`, `cottaVerify`, `cottaInfo`, `cottaCat`, `cottaDiff`, `cotta2rdf` or `rdf2cotta`.')
+        print('Invalid COTTA option, arg1 must be `cottaSearch`, `cottaVerify`, `cottaInfo`, `cottaCat`, `cottaDiff`, `cotta2rdf`, `rdf2cotta` or `cottaRemoveID`.')

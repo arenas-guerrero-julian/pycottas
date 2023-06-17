@@ -49,6 +49,23 @@ def cotta_2_rdf(cotta_file, rdf_file, in_memory=True):
         rmtree('.cotta_temp', ignore_errors=True)
 
 
+def cotta_remove_id(cotta_file, in_memory=True):
+    if in_memory:
+        g = Graph()
+        g.parse(cotta_file, preserve_duplicates=False)
+        g.triplestore.execute("UPDATE quads SET id=''")
+        g.serialize(cotta_file)
+    else:
+        rmtree('.cotta_temp', ignore_errors=True)
+        mkdir('.cotta_temp')
+
+        g = Graph('.cotta_temp/cotta.duckdb')
+        g.parse(cotta_file, preserve_duplicates=True)
+        g.serialize(cotta_file)
+
+        rmtree('.cotta_temp', ignore_errors=True)
+
+
 def cotta_search(cotta_file, triple_pattern, results_file=None):
     results_df = duckdb.query(translate_triple_pattern(f"{cotta_file}", triple_pattern)).df()
 
