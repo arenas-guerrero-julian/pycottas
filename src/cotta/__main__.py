@@ -25,31 +25,33 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.operation == 'cottaSearch':
+    if args.operation.lower() == 'cottasearch':
         results_df = cotta_search(args.arg1, args.arg2, args.arg3)
 
         print(results_df)
 
-    elif args.operation == 'cottaVerify':
+    elif args.operation.lower() == 'cottaverify':
         print(cotta_verify(args.arg1))
 
-    elif args.operation == 'cottaInfo':
+    elif args.operation.lower() == 'cottainfo':
         print(cotta_info(args.arg1))
 
-    elif args.operation == 'cottaCat':
+    elif args.operation.lower() == 'cottacat':
         cotta_cat(args.arg1, args.arg2, args.arg3)
 
-    elif args.operation == 'cottaDiff':
+    elif args.operation.lower() == 'cottadiff':
         cotta_diff(args.arg1, args.arg2, args.arg3)
 
-    elif args.operation == 'rdf2cotta':
+    elif args.operation.lower() == 'rdf2cotta':
         rdf_2_cotta(args.arg1, args.arg2)
 
-    elif args.operation == 'cotta2rdf':
+    elif args.operation.lower() == 'cotta2rdf':
         cotta_2_rdf(args.arg1, args.arg2)
 
-    elif args.operation == 'cottaRemoveID':
+    elif args.operation.lower() == 'cottaremoveid':
         cotta_remove_id(args.arg1)
 
     else:
-        print('Invalid COTTA option, arg1 must be `cottaSearch`, `cottaVerify`, `cottaInfo`, `cottaCat`, `cottaDiff`, `cotta2rdf`, `rdf2cotta` or `cottaRemoveID`.')
+        print(
+            'Invalid COTTA option, arg1 must be `cottaSearch`, `cottaVerify`, `cottaInfo`, `cottaCat`, `cottaDiff`, '
+            '`cotta2rdf`, `rdf2cotta` or `cottaRemoveID`.')
