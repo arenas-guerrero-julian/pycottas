@@ -22,7 +22,8 @@ class Graph:
     def __init__(self, triplestore=DUCKDB_MEMORY):
         self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
-            'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, id VARCHAR NOT NULL)')
+            'CREATE TABLE quads ('
+            's VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, id VARCHAR NOT NULL)')
 
     def __str__(self):
         return repr(self)

@@ -27,15 +27,20 @@ def _build_star_query(triple_pattern, query, cotta_file):
         query += f"s AS {triple_pattern[0][1:]}, "
     elif type(triple_pattern[0]) is list:
         query += "s, "
+
     if type(triple_pattern[1]) is str and triple_pattern[1].startswith('?'):
         query += f"p AS {triple_pattern[1][1:]}, "
-    elif type(triple_pattern[1]) is list:
-        query += "p, "
+
     if type(triple_pattern[2]) is str and triple_pattern[2].startswith('?'):
         query += f"o AS {triple_pattern[2][1:]}, "
     elif type(triple_pattern[2]) is list:
         query += "o, "
-    if type(triple_pattern[0]) is list or type(triple_pattern[1]) is list or type(triple_pattern[2]) is list:
+
+    # if named graph
+    if len(triple_pattern) == 4 and type(triple_pattern[3]) is str and triple_pattern[3].startswith('?'):
+        query += f"g AS {triple_pattern[3][1:]}, "
+
+    if type(triple_pattern[0]) is list or type(triple_pattern[2]) is list:
         query = query[:-2]
     else:
         query += 'id'
@@ -43,10 +48,12 @@ def _build_star_query(triple_pattern, query, cotta_file):
 
     if type(triple_pattern[0]) is str and not triple_pattern[0].startswith('?'):
         query += f"s='{triple_pattern[0]}' AND "
-    if type(triple_pattern[1]) is str and not triple_pattern[1].startswith('?'):
+    if not triple_pattern[1].startswith('?'):
         query += f"p='{triple_pattern[1]}' AND "
     if type(triple_pattern[2]) is str and not triple_pattern[2].startswith('?'):
         query += f"o='{triple_pattern[2]}' AND "
+    if len(triple_pattern) == 4 and not triple_pattern[3].startswith('?'):
+        query += f"g='{triple_pattern[3]}' AND "
 
     # remove last "AND "
     if query.endswith(' AND '):
@@ -79,7 +86,8 @@ def translate_triple_pattern(cotta_file, triple_pattern_str):
         triple_pattern_query = "SELECT "
         for var in projection_list:
             triple_pattern_query += f"{var}, "
-        triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM ( {_build_star_query(triple_pattern, '', cotta_file)} )"
+        triple_pattern_query = f"{triple_pattern_query[:-2]}\n" \
+                               f"FROM ( {_build_star_query(triple_pattern, '', cotta_file)} )"
     else:
         triple_pattern_query = f"SELECT "
         if triple_pattern[0].startswith('?'):
@@ -88,6 +96,8 @@ def translate_triple_pattern(cotta_file, triple_pattern_str):
             triple_pattern_query += f"p AS {triple_pattern[1][1:]}, "
         if triple_pattern[2].startswith('?'):
             triple_pattern_query += f"o AS {triple_pattern[2][1:]}, "
+        if len(triple_pattern[3]) == 4 and triple_pattern[3].startswith('?'):
+            triple_pattern_query += f"g AS {triple_pattern[3][1:]}, "
 
         triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM read_parquet('{cotta_file}')\nWHERE "
 
@@ -97,8 +107,9 @@ def translate_triple_pattern(cotta_file, triple_pattern_str):
             triple_pattern_query += f"p='{triple_pattern[1]}' AND "
         if not triple_pattern[2].startswith('?'):
             triple_pattern_query += f"o='{triple_pattern[2]}' AND "
+        if len(triple_pattern) == 4 and not triple_pattern[3].startswith('?'):
+            triple_pattern_query += f"g='{triple_pattern[3]}' AND "
         triple_pattern_query = triple_pattern_query[:-5]
-        print(triple_pattern_query)
 
     return triple_pattern_query
 
