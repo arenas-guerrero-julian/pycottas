@@ -61,6 +61,7 @@ def remove_id(cotta_file, in_memory=True):
 
         g = Graph('.cotta_temp/cotta.duckdb')
         g.parse(cotta_file, preserve_duplicates=True)
+        g.triplestore.execute("UPDATE quads SET id=''")
         g.serialize(cotta_file)
 
         rmtree('.cotta_temp', ignore_errors=True)
