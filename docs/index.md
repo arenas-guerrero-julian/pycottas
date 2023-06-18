@@ -1,12 +1,22 @@
 # COTTA
 
-**COTTA** is a toolkit for efficient **RDF** graph management. It is based on a triple table representation of RDF using the [Apache Parquet](https://parquet.apache.org/) file format. The toolkit provides an [HDT](https://www.rdfhdt.org/)-like interface.
+**COTTA** is a toolkit for **[RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graph management in **compressed** space. It is based on a triple table representation of [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) using the [Apache Parquet](https://parquet.apache.org/) file format with [ZSTD](https://en.wikipedia.org/wiki/Zstd). The toolkit is built on top of [DuckDB](https://duckdb.org/) and provides an **[HDT](https://www.rdfhdt.org/)**-like interface.
 
-## Tutorial
+## Features
 
-```
-TODO: tutorial on google colab.
-```
+- Compress/uncompress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html).
+- Evaluate triple patterns over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) in compressed space.
+- Merge compressed files.
+- Executes via **command line** or as a **library**.
+- Runs on **Linux**, **Windows** and **macOS** systems.
+
+## COTTA Files
+
+COTTA is based on COlumnar Triple TAble storage with the [Apache Parquet](https://parquet.apache.org/) file format. A COTTA file consists on a table with **s**, **p**, **o**, **g** columns representing triples (and [named graphs](https://www.w3.org/TR/rdf11-concepts/#dfn-named-graph)). In addition, an optional *id* column is necessary when evaluating triple patterns over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html).
+
+- The *s*, *p*, *o*, *g* are filled with the RDF terms of the triples.
+- When a triple belongs to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), *g* is the empty string. If all the triples in the [dataset](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset) belong to the default graph, *g* can be omitted.
+- The *id* column consists on the concatenation of the former columns. The *id* column is only necessary if evaluating triple patterns over [datasets](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
 
 ## Licenses
 
