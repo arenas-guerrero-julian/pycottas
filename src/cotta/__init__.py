@@ -20,7 +20,7 @@ from .utils import *
 def rdf_2_cotta(rdf_file, cotta_file, in_memory=True):
     if in_memory:
         g = Graph()
-        g.parse(rdf_file, preserve_duplicates=False)
+        g.parse(rdf_file, preserve_duplicates=True)
         g.serialize(cotta_file)
     else:
         rmtree('.cotta_temp', ignore_errors=True)
@@ -36,7 +36,7 @@ def rdf_2_cotta(rdf_file, cotta_file, in_memory=True):
 def cotta_2_rdf(cotta_file, rdf_file, in_memory=True):
     if in_memory:
         g = Graph()
-        g.parse(cotta_file, preserve_duplicates=False)
+        g.parse(cotta_file, preserve_duplicates=True)
         g.serialize(rdf_file)
     else:
         rmtree('.cotta_temp', ignore_errors=True)
@@ -52,7 +52,7 @@ def cotta_2_rdf(cotta_file, rdf_file, in_memory=True):
 def remove_id(cotta_file, in_memory=True):
     if in_memory:
         g = Graph()
-        g.parse(cotta_file, preserve_duplicates=False)
+        g.parse(cotta_file, preserve_duplicates=True)
         g.triplestore.execute("UPDATE quads SET id=''")
         g.serialize(cotta_file)
     else:
@@ -70,8 +70,8 @@ def remove_id(cotta_file, in_memory=True):
 def create_id(cotta_file, in_memory=True):
     if in_memory:
         g = Graph()
-        g.parse(cotta_file, preserve_duplicates=False)
-        g.triplestore.execute("UPDATE quads SET id=''")
+        g.parse(cotta_file, preserve_duplicates=True)
+        g.triplestore.execute("UPDATE quads SET id=CONCAT(s, ' ', p, ' ', o)")
         g.serialize(cotta_file)
     else:
         rmtree('.cotta_temp', ignore_errors=True)
@@ -96,10 +96,10 @@ def search(cotta_file, triple_pattern, results_file=None):
 def cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True):
     if in_memory:
         g1 = Graph()
-        g1.parse(cotta_file_1, preserve_duplicates=False)
+        g1.parse(cotta_file_1, preserve_duplicates=True)
 
         g2 = Graph()
-        g2.parse(cotta_file_2, preserve_duplicates=False)
+        g2.parse(cotta_file_2, preserve_duplicates=True)
 
         g1 += g2
         g1.serialize(cotta_cat_file)
@@ -122,10 +122,10 @@ def cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True):
 def diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=True):
     if in_memory:
         g1 = Graph()
-        g1.parse(cotta_file_1, preserve_duplicates=False)
+        g1.parse(cotta_file_1, preserve_duplicates=True)
 
         g2 = Graph()
-        g2.parse(cotta_file_2, preserve_duplicates=False)
+        g2.parse(cotta_file_2, preserve_duplicates=True)
 
         g1 -= g2
         g1.serialize(cotta_diff_file)

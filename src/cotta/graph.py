@@ -120,12 +120,10 @@ class Graph:
     def add(self, s, p, o, g='', preserve_duplicates=True):
         self.bulk_add([[s, p, o, g]], preserve_duplicates=preserve_duplicates)
 
-    def bulk_add(self, quads, preserve_duplicates=False):
-        temp_columns = ['st', 'pt', 'ot', 'gt', 'idt']
+    def bulk_add(self, quads, preserve_duplicates=True):
+        quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt'])
 
-        quads_df = pd.DataFrame.from_records(quads, columns=temp_columns)
-
-        temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
+        temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
         if preserve_duplicates:
             self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
@@ -149,11 +147,10 @@ class Graph:
             self.triplestore.execute(delete_query)
 
     def bulk_remove(self, quads):
-
         quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt'])
         quads_df = quads_df.drop_duplicates()
 
-        temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
+        temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
         self.triplestore.execute(f'DELETE FROM quads USING {temporal_table} WHERE '
                                  f'quads.s={temporal_table}.st AND quads.p={temporal_table}.pt AND '
