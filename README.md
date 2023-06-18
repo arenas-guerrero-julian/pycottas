@@ -50,12 +50,11 @@ cotta.rdf_2_cotta('file.ttl', 'file.cotta')
 tp_df = cotta.search('file.cotta', '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>')
 
 # uncompress RDF-star
-cotta.rdf_2_cotta('file.cotta', 'file.nt')
+cotta.cotta_2_rdf('file.cotta', 'file.nt')
 
 # merge two COTTA files
 cotta.cat('input_file_1.cotta', 'input_file_2.cotta', 'output.cotta')
 ```
-
 
 ## License :unlock:
 
