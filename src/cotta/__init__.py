@@ -49,7 +49,7 @@ def cotta_2_rdf(cotta_file, rdf_file, in_memory=True):
         rmtree('.cotta_temp', ignore_errors=True)
 
 
-def cotta_remove_id(cotta_file, in_memory=True):
+def remove_id(cotta_file, in_memory=True):
     if in_memory:
         g = Graph()
         g.parse(cotta_file, preserve_duplicates=False)
@@ -66,7 +66,24 @@ def cotta_remove_id(cotta_file, in_memory=True):
         rmtree('.cotta_temp', ignore_errors=True)
 
 
-def cotta_search(cotta_file, triple_pattern, results_file=None):
+def create_id(cotta_file, in_memory=True):
+    if in_memory:
+        g = Graph()
+        g.parse(cotta_file, preserve_duplicates=False)
+        g.triplestore.execute("UPDATE quads SET id=''")
+        g.serialize(cotta_file)
+    else:
+        rmtree('.cotta_temp', ignore_errors=True)
+        mkdir('.cotta_temp')
+
+        g = Graph('.cotta_temp/cotta.duckdb')
+        g.parse(cotta_file, preserve_duplicates=True)
+        g.serialize(cotta_file)
+
+        rmtree('.cotta_temp', ignore_errors=True)
+
+
+def search(cotta_file, triple_pattern, results_file=None):
     results_df = duckdb.query(translate_triple_pattern(f"{cotta_file}", triple_pattern)).df()
 
     if results_file:
@@ -75,7 +92,7 @@ def cotta_search(cotta_file, triple_pattern, results_file=None):
         return results_df
 
 
-def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True):
+def cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True):
     if in_memory:
         g1 = Graph()
         g1.parse(cotta_file_1, preserve_duplicates=False)
@@ -101,7 +118,7 @@ def cotta_cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True):
         rmtree('.cotta_temp', ignore_errors=True)
 
 
-def cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=True):
+def diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=True):
     if in_memory:
         g1 = Graph()
         g1.parse(cotta_file_1, preserve_duplicates=False)
@@ -127,11 +144,11 @@ def cotta_diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=True):
         rmtree('.cotta_temp', ignore_errors=True)
 
 
-def cotta_info(cotta_file):
+def info(cotta_file):
     return generate_cotta_info(cotta_file)
 
 
-def cotta_verify(cotta_file):
+def verify(cotta_file):
     verify_query = f"SELECT * FROM parquet_scan('{cotta_file}') LIMIT 0"
     cotta_df = duckdb.query(verify_query).df()
 

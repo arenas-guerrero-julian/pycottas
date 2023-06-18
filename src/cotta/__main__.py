@@ -25,22 +25,22 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.operation.lower() == 'cottasearch':
-        results_df = cotta_search(args.arg1, args.arg2, args.arg3)
+    if args.operation.lower() == 'search':
+        results_df = search(args.arg1, args.arg2, args.arg3)
 
         print(results_df)
 
-    elif args.operation.lower() == 'cottaverify':
-        print(cotta_verify(args.arg1))
+    elif args.operation.lower() == 'verify':
+        print(verify(args.arg1))
 
-    elif args.operation.lower() == 'cottainfo':
-        print(cotta_info(args.arg1))
+    elif args.operation.lower() == 'info':
+        print(info(args.arg1))
 
-    elif args.operation.lower() == 'cottacat':
-        cotta_cat(args.arg1, args.arg2, args.arg3)
+    elif args.operation.lower() == 'cat':
+        cat(args.arg1, args.arg2, args.arg3)
 
-    elif args.operation.lower() == 'cottadiff':
-        cotta_diff(args.arg1, args.arg2, args.arg3)
+    elif args.operation.lower() == 'diff':
+        diff(args.arg1, args.arg2, args.arg3)
 
     elif args.operation.lower() == 'rdf2cotta':
         rdf_2_cotta(args.arg1, args.arg2)
@@ -48,10 +48,13 @@ if __name__ == "__main__":
     elif args.operation.lower() == 'cotta2rdf':
         cotta_2_rdf(args.arg1, args.arg2)
 
-    elif args.operation.lower() == 'cottaremoveid':
-        cotta_remove_id(args.arg1)
+    elif args.operation.lower() == 'createid':
+        create_id(args.arg1)
+
+    elif args.operation.lower() == 'removeid':
+        remove_id(args.arg1)
 
     else:
         print(
-            'Invalid COTTA option, arg1 must be `cottaSearch`, `cottaVerify`, `cottaInfo`, `cottaCat`, `cottaDiff`, '
-            '`cotta2rdf`, `rdf2cotta` or `cottaRemoveID`.')
+            'Invalid COTTA option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, '
+            '`cotta2rdf`, `rdf2cotta`, `createID` or `removeID`.')
