@@ -6,7 +6,7 @@
 [![PyPI status](https://img.shields.io:/pypi/status/cotta?)](https://pypi.python.org/pypi/cotta)
 [![Documentation Status](https://readthedocs.org/projects/cotta/badge/?version=latest)](https://cotta.readthedocs.io/en/latest/?badge=latest)
 
-**COTTA** is a toolkit for **[RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graph management in **compressed** space. It is based on a triple table representation of [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) using the [Apache Parquet](https://parquet.apache.org/) file format. The toolkit provides an [HDT](https://www.rdfhdt.org/)-like interface.
+**COTTA** is a toolkit for **[RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graph management in **compressed** space. It is based on a triple table representation of [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) using the [Apache Parquet](https://parquet.apache.org/) file format. The toolkit provides an **[HDT](https://www.rdfhdt.org/)**-like interface.
 
 ## Documentation :bookmark_tabs:
 
