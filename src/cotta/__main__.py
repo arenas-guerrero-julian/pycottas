@@ -15,7 +15,7 @@ from .utils import *
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         prog='COTTA',
-        description='Columnar triple table storage for efficient RDF management',
+        description='Efficient RDF-star management in compressed space',
         epilog='Copyright © 2023 Julián Arenas-Guerrero')
 
     parser.add_argument('operation')
@@ -26,9 +26,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.operation.lower() == 'search':
-        results_df = search(args.arg1, args.arg2, args.arg3)
-
-        print(results_df)
+        print(search(args.arg1, args.arg2, args.arg3))
 
     elif args.operation.lower() == 'verify':
         print(verify(args.arg1))
