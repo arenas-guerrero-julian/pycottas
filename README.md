@@ -53,7 +53,7 @@ tp_df = cotta.search('file.cotta', '<< ?employee <http://ex.com/jobTitle> ?job >
 cotta.rdf_2_cotta('file.cotta', 'file.nt')
 
 # merge two COTTA files
-cotta.cat('file1.cotta', 'file2.cotta', 'file3.cotta')
+cotta.cat('input_file_1.cotta', 'input_file_2.cotta', 'output.cotta')
 ```
 
 
