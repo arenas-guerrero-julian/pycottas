@@ -43,6 +43,9 @@ if __name__ == "__main__":
     elif args.operation.lower() == 'rdf2cotta':
         rdf_2_cotta(args.arg1, args.arg2)
 
+    elif args.operation.lower() == 'rdf2cottanoid':
+        rdf_2_cotta(args.arg1, args.arg2, create_id=False)
+
     elif args.operation.lower() == 'cotta2rdf':
         cotta_2_rdf(args.arg1, args.arg2)
 
@@ -55,4 +58,4 @@ if __name__ == "__main__":
     else:
         print(
             'Invalid COTTA option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, '
-            '`cotta2rdf`, `rdf2cotta`, `createID` or `removeID`.')
+            '`cotta2rdf`, `rdf2cotta`, `rdf2cottaNoID`, `createID` or `removeID`.')

@@ -17,10 +17,12 @@ from .constants import *
 from .utils import *
 
 
-def rdf_2_cotta(rdf_file, cotta_file, in_memory=True):
+def rdf_2_cotta(rdf_file, cotta_file, create_id=True, in_memory=True):
     if in_memory:
         g = Graph()
         g.parse(rdf_file, preserve_duplicates=True)
+        if not create_id:
+            g.triplestore.execute("UPDATE quads SET id=''")
         g.serialize(cotta_file)
     else:
         rmtree('.cotta_temp', ignore_errors=True)
@@ -28,6 +30,8 @@ def rdf_2_cotta(rdf_file, cotta_file, in_memory=True):
 
         g = Graph('.cotta_temp/cotta.duckdb')
         g.parse(rdf_file, preserve_duplicates=True)
+        if not create_id:
+            g.triplestore.execute("UPDATE quads SET id=''")
         g.serialize(cotta_file)
 
         rmtree('.cotta_temp', ignore_errors=True)
