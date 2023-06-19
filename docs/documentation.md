@@ -103,23 +103,23 @@ import cotta
 
 #### rdf_2_cotta
 
-**`rdf_2_cotta(rdf_file, cotta_file)`**
+**`rdf_2_cotta(rdf_file, cotta_file, create_id=True, in_memory=True)`**
 
 #### cotta_2_rdf
 
-**`cotta_2_rdf(cotta_file, rdf_file)`**
+**`cotta_2_rdf(cotta_file, rdf_file, in_memory=True)`**
 
 #### search
 
-**`search(cotta_file, triple_pattern, results_file=None)`**
+**`search(cotta_file, triple_pattern)`**
 
 #### cat
 
-**`cat(cotta_file_1, cotta_file_2, cotta_cat_file)`**
+**`cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True)`**
 
 #### diff
 
-**`diff(cotta_file_1, cotta_file_2, cotta_diff_file)`**
+**`diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=True)`**
 
 #### info
 
@@ -129,6 +129,13 @@ import cotta
 
 **`verify(cotta_file)`**
 
+#### create_id
+
+**`create_id(cotta_file, in_memory=True)`**
+
+#### remove_id
+
+**`remove_id(cotta_file, in_memory=True)`**
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }

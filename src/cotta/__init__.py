@@ -88,13 +88,8 @@ def create_id(cotta_file, in_memory=True):
         rmtree('.cotta_temp', ignore_errors=True)
 
 
-def search(cotta_file, triple_pattern, results_file=None):
-    results_df = duckdb.query(translate_triple_pattern(f"{cotta_file}", triple_pattern)).df()
-
-    if results_file:
-        results_df.to_csv(results_file, index=False, sep='\t')
-    else:
-        return results_df
+def search(cotta_file, triple_pattern):
+    return duckdb.query(translate_triple_pattern(f"{cotta_file}", triple_pattern)).df()
 
 
 def cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True):
