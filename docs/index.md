@@ -5,18 +5,18 @@
 ## Features
 
 - Compress/uncompress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html).
-- Evaluate triple patterns over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) in compressed space.
+- Evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) in compressed space.
 - Merge compressed files.
 - Executes via **command line** or as a **library**.
 - Runs on **Linux**, **Windows** and **macOS** systems.
 
 ## COTTA Files
 
-COTTA is based on COlumnar Triple TAble storage with the [Apache Parquet](https://parquet.apache.org/) file format. A COTTA file consists on a table with **s**, **p**, **o**, **g** columns representing triples (and [named graphs](https://www.w3.org/TR/rdf11-concepts/#dfn-named-graph)). In addition, an optional *id* column is necessary when evaluating triple patterns over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html).
+COTTA is based on COlumnar Triple TAble storage with the [Apache Parquet](https://parquet.apache.org/) file format. A COTTA file consists on a table with **s**, **p**, **o**, **g** columns representing triples (and [named graphs](https://www.w3.org/TR/rdf11-concepts/#dfn-named-graph)). In addition, an optional **id** column is necessary when evaluating [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html).
 
-- The *s*, *p*, *o*, *g* are filled with the RDF terms of the triples.
-- When a triple belongs to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), *g* is the empty string. If all the triples in the [dataset](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset) belong to the default graph, *g* can be omitted.
-- The *id* column consists on the concatenation of the former columns. The *id* column is only necessary if evaluating triple patterns over [datasets](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
+- The **s**, **p**, **o**, **g** are filled with the [RDF-star terms](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-rdf-star-terms) of the triples.
+- When a triple belongs to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** is the empty string. If all the triples in the [dataset](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-dataset) belong to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** can be omitted.
+- The **id** column consists on the concatenation of the former columns. The **id** column is only necessary if evaluating [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over [datasets](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-dataset) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
 
 ## Licenses
 
