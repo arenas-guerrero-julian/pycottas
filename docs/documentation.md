@@ -22,20 +22,24 @@ pip install git+https://github.com/arenas-guerrero-julian/cotta.git
 
 ## Usage
 
+COTTA can be executed from the command line or as a library. In the following it is described how to use COTTA with both alternatives.
+
 ### Command Line
+
+To execute COTTA from the command line, it is necessary to call the `cotta` package, specifying the COTTA operation to perform (rdf2cotta, search, cat, etc.), and providing a set of parameters.
 
 #### rdf2cotta
 
 Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTA file.
 ```bash
-python3 -m cotta rdf2cotta file.nt file.cotta
+python3 -m cotta rdf2cotta file.ttl file.cotta
 ```
 
 #### rdf2cottaNoID
 
 Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTA file without **id** column. This achieves better compression ratio than creating the **id** column (with `rdf2cotta`), but it does not allow the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
 ```bash
-python3 -m cotta rdf2cottaNoID file.nt file.cotta
+python3 -m cotta rdf2cottaNoID file.ttl file.cotta
 ```
 
 #### cotta2rdf
@@ -47,7 +51,7 @@ python3 -m cotta cotta2rdf file.cotta file.nt
 
 #### search
 
-Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over a COTTA file:
+Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over a COTTA file.
 ```bash
 python3 -m cotta search file.cotta '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>'
 ```
@@ -96,7 +100,7 @@ python3 -m cotta removeID file.cotta
 
 ### Library
 
-Import COTTA:
+Import COTTA.
 ```python
 import cotta
 ```
@@ -129,7 +133,7 @@ Uncompress a COTTA file into an [RDF-star](https://w3c.github.io/rdf-star/cg-spe
 Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over a COTTA file, returning a [DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html).
 
 * _**cotta_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTA file.
-* _**triple_pattern**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) [Triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) to evaluate.
+* _**triple_pattern**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) [Triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) to evaluate, e.g., '*<< ?employee \<http://ex.com/jobTitle> ?job >> \<http://ex.com/accordingTo> \<http://ex.com/employee/22>*'.
 
 #### cotta.cat
 
@@ -139,7 +143,7 @@ Merge two COTTA files into a new COTTA file.
 
 * _**cotta_file_1**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTA file.
 * _**cotta_file_2**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTA file.
-* _**cotta_cat_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the output merged COTTA file.
+* _**cotta_cat_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the merged output COTTA file.
 * _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
 #### cotta.diff
@@ -150,7 +154,7 @@ Substract a COTTA file from another one into a new COTTA file.
 
 * _**cotta_file_1**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTA file.
 * _**cotta_file_2**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTA file.
-* _**cotta_diff_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the output diff COTTA file.
+* _**cotta_diff_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the diff output COTTA file.
 * _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
 #### cotta.info
