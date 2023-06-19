@@ -26,21 +26,21 @@ pip install git+https://github.com/arenas-guerrero-julian/cotta.git
 
 #### rdf2cotta
 
-Transform an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTA file.
+Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTA file.
 ```bash
 python3 -m cotta rdf2cotta file.nt file.cotta
 ```
 
 #### rdf2cottaNoID
 
-Transform an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTA file without **id** column. This achieves better compression ratio than creating the **id** column (with `rdf2cotta`), but it does not allow the resolution of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
+Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTA file without **id** column. This achieves better compression ratio than creating the **id** column (with `rdf2cotta`), but it does not allow the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
 ```bash
 python3 -m cotta rdf2cottaNoID file.nt file.cotta
 ```
 
 #### cotta2rdf
 
-Transform a COTTA file into an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/)).
+Uncompress a COTTA file into an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/)).
 ```bash
 python3 -m cotta cotta2rdf file.cotta file.nt
 ```
@@ -82,14 +82,14 @@ python3 -m cotta verify file.cotta
 
 #### createID
 
-Compute the **id** column of a COTTA file. This increases the size of the COTTA file, but it is necessary to evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
+Add the **id** column to a COTTA file. This increases the size of the COTTA file, but it is necessary to evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
 ```bash
 python3 -m cotta createID file.cotta
 ```
 
 #### removeID
 
-Remove the **id** column of a COTTA file. This reduces the size of the COTTA file, but the  evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
+Remove the **id** column from a COTTA file. This reduces the size of the COTTA file, but the  evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
 ```bash
 python3 -m cotta removeID file.cotta
 ```
@@ -101,41 +101,91 @@ Import COTTA:
 import cotta
 ```
 
-#### rdf_2_cotta
+#### cotta.rdf_2_cotta
 
-**`rdf_2_cotta(rdf_file, cotta_file, create_id=True, in_memory=True)`**
+**`cotta.rdf_2_cotta(rdf_file, cotta_file, create_id=True, in_memory=True)`**
 
-#### cotta_2_rdf
+Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTA file.
 
-**`cotta_2_rdf(cotta_file, rdf_file, in_memory=True)`**
+* _**rdf_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file.
+* _**cotta_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the output COTTA file.
+* _**create_id**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, the **id** column will be included in the COTTA file. Creating the **id** column results in larger COTTA files, but it enables the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
+* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
-#### search
+#### cotta.cotta_2_rdf
 
-**`search(cotta_file, triple_pattern)`**
+**`cotta.cotta_2_rdf(cotta_file, rdf_file, in_memory=True)`**
 
-#### cat
+Uncompress a COTTA file into an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/)).
 
-**`cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True)`**
+* _**cotta_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTA file.
+* _**rdf_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the output [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file.
+* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
-#### diff
+#### cotta.search
 
-**`diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=True)`**
+**`cotta.search(cotta_file, triple_pattern)`**
 
-#### info
+Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over a COTTA file, returning a [DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html).
 
-**`info(cotta_file)`**
+* _**cotta_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTA file.
+* _**triple_pattern**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) [Triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) to evaluate.
 
-#### verify
+#### cotta.cat
 
-**`verify(cotta_file)`**
+**`cotta.cat(cotta_file_1, cotta_file_2, cotta_cat_file, in_memory=True)`**
 
-#### create_id
+Merge two COTTA files into a new COTTA file.
 
-**`create_id(cotta_file, in_memory=True)`**
+* _**cotta_file_1**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTA file.
+* _**cotta_file_2**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTA file.
+* _**cotta_cat_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the output merged COTTA file.
+* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
-#### remove_id
+#### cotta.diff
 
-**`remove_id(cotta_file, in_memory=True)`**
+**`cotta.diff(cotta_file_1, cotta_file_2, cotta_diff_file, in_memory=True)`**
+
+Substract a COTTA file from another one into a new COTTA file.
+
+* _**cotta_file_1**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTA file.
+* _**cotta_file_2**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTA file.
+* _**cotta_diff_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the output diff COTTA file.
+* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
+
+#### cotta.info
+
+**`cotta.info(cotta_file)`**
+
+Retrieve basic information and statistics from a COTTA file, returning an [RDF](https://www.w3.org/TR/rdf11-concepts/) [string](https://docs.python.org/3/library/stdtypes.html#str).
+
+* _**cotta_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTA file.
+
+#### cotta.verify
+
+**`cotta.verify(cotta_file)`**
+
+Check if a COTTA file is correct, returning a [boolean](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values).
+
+* _**cotta_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTA file.
+
+#### cotta.create_id
+
+**`creatcotta._id(cotta_file, in_memory=True)`**
+
+Add the **id** column to a COTTA file. This increases the size of the COTTA file, but it is necessary to evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
+
+* _**cotta_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input/output COTTA file.
+* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
+
+#### cotta.remove_id
+
+**`cotta.remove_id(cotta_file, in_memory=True)`**
+
+Remove the **id** column from a COTTA file. This reduces the size of the COTTA file, but the  evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
+
+* _**cotta_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input/output COTTA file.
+* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
