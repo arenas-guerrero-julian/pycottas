@@ -30,7 +30,7 @@ python3 -m cotta rdf2cotta file.ttl file.cotta
 
 Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over compressed [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html):
 ```bash
-python3 -m cotta search '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>'
+python3 -m cotta search file.cotta '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>'
 ```
 
 Uncompress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html):
