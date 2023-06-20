@@ -1,64 +1,64 @@
-# COTTA
+# COTTAS
 
-[![License](https://img.shields.io/pypi/l/cotta.svg)](https://github.com/arenas-guerrero-julian/cotta/blob/main/LICENSE)
-[![Latest PyPI version](https://img.shields.io/pypi/v/cotta?style=flat)](https://pypi.python.org/pypi/cotta)
-[![Python Version](https://img.shields.io/pypi/pyversions/cotta.svg)](https://pypi.python.org/pypi/cott)
-[![PyPI status](https://img.shields.io:/pypi/status/cotta?)](https://pypi.python.org/pypi/cotta)
-[![Documentation Status](https://readthedocs.org/projects/cotta/badge/?version=latest)](https://cotta.readthedocs.io/en/latest/?badge=latest)
+[![License](https://img.shields.io/pypi/l/cottas.svg)](https://github.com/arenas-guerrero-julian/cottas/blob/main/LICENSE)
+[![Latest PyPI version](https://img.shields.io/pypi/v/cottas?style=flat)](https://pypi.python.org/pypi/cottas)
+[![Python Version](https://img.shields.io/pypi/pyversions/cottas.svg)](https://pypi.python.org/pypi/cott)
+[![PyPI status](https://img.shields.io:/pypi/status/cottas?)](https://pypi.python.org/pypi/cottas)
+[![Documentation Status](https://readthedocs.org/projects/cottas/badge/?version=latest)](https://cottas.readthedocs.io/en/latest/?badge=latest)
 
-**COTTA** is a toolkit for **[RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graph management in **compressed** space. It is based on a triple table representation of [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) using the [Apache Parquet](https://parquet.apache.org/) file format. The toolkit provides an **[HDT](https://www.rdfhdt.org/)**-like interface.
+**COTTAS** is a toolkit for **[RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graph management in **compressed** space. It is based on a triple table representation of [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) using the [Apache Parquet](https://parquet.apache.org/) file format. The toolkit provides an **[HDT](https://www.rdfhdt.org/)**-like interface.
 
 ## Documentation :bookmark_tabs:
 
-**[Read the documentation](https://cotta.readthedocs.io/en/latest/documentation/)**.
+**[Read the documentation](https://cottas.readthedocs.io/en/latest/documentation/)**.
 
 ## Getting Started :rocket:
 
-**[PyPi](https://pypi.org/project/cotta/)** is the fastest way to install COTTA:
+**[PyPi](https://pypi.org/project/cottas/)** is the fastest way to install COTTAS:
 ```bash
-pip install cotta
+pip install cottas
 ```
 
-We recommend to use **[virtual environments](https://docs.python.org/3/library/venv.html#)** to install COTTA.
+We recommend to use **[virtual environments](https://docs.python.org/3/library/venv.html#)** to install COTTAS.
 
 ### Command line
 
 Compress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html):
 ```bash
-python3 -m cotta rdf2cotta file.ttl file.cotta
+python3 -m cottas rdf2cottas file.ttl file.cottas
 ```
 
 Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over compressed [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html):
 ```bash
-python3 -m cotta search file.cotta '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>'
+python3 -m cottas search file.cottas '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>'
 ```
 
 Uncompress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html):
 ```bash
-python3 -m cotta cotta2rdf file.cotta file.nt
+python3 -m cottas cottas2rdf file.cottas file.nt
 ```
 
 ### Library
 
 ```python
-import cotta
+import cottas
 
 # compress RDF-star
-cotta.rdf_2_cotta('file.ttl', 'file.cotta')
+cottas.rdf_2_cottas('file.ttl', 'file.cottas')
 
 # evaluate triple pattern
-tp_df = cotta.search('file.cotta', '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>')
+tp_df = cottas.search('file.cottas', '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>')
 
 # uncompress RDF-star
-cotta.cotta_2_rdf('file.cotta', 'file.nt')
+cottas.cottas_2_rdf('file.cottas', 'file.nt')
 
-# merge two COTTA files
-cotta.cat('input_file_1.cotta', 'input_file_2.cotta', 'output.cotta')
+# merge two COTTAS files
+cottas.cat('input_file_1.cottas', 'input_file_2.cottas', 'output.cottas')
 ```
 
 ## License :unlock:
 
-COTTA is available under the **[Apache License 2.0](https://github.com/cotta/cotta/blob/main/LICENSE)**.
+COTTAS is available under the **[Apache License 2.0](https://github.com/cottas/cottas/blob/main/LICENSE)**.
 
 ## Author & Contact :mailbox_with_mail:
 

@@ -1,8 +1,8 @@
-site_url: https://cotta.readthedocs.io
+site_url: https://cottas.readthedocs.io
 
-site_name: COTTA
+site_name: COTTAS
 
-repo_url: https://github.com/oeg-upm/cotta
+repo_url: https://github.com/oeg-upm/cottas
 edit_uri: ""
 
 copyright: Copyright &copy; 2023 Julián Arenas-Guerrero | Universidad Politécnica de Madrid
@@ -42,17 +42,17 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/oeg-upm/cotta
-      name: COTTA on GitHub
+      link: https://github.com/oeg-upm/cottas
+      name: COTTAS on GitHub
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/cotta/
-      name: COTTA on PyPi
+      link: https://pypi.org/project/cottas/
+      name: COTTAS on PyPi
     - icon: fontawesome/solid/paper-plane
       link: mailto:<julian.arenas.guerrero@upm.es>
       name: Contact email
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/ArenasGuerreroJ
-      name: COTTA announcements on Twitter
+      name: COTTAS announcements on Twitter
   generator: false
 
 extra_css:

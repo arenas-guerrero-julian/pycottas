@@ -11,7 +11,7 @@ import lightrdf
 from random import randint
 
 
-def parse_cotta(graph, filepath):
+def parse_cottas(graph, filepath):
     temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
     graph.triplestore.execute(f"CREATE TABLE {temporal_table} AS SELECT * FROM parquet_scan('{filepath}')")
 

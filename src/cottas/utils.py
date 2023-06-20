@@ -14,13 +14,13 @@ from .constants import *
 from .term import *
 
 
-def _build_star_query(triple_pattern, query, cotta_file):
+def _build_star_query(triple_pattern, query, cottas_file):
     s_query, o_query = '', ''
 
     if type(triple_pattern[0]) is list:
-        s_query = _build_star_query(triple_pattern[0], query, cotta_file)
+        s_query = _build_star_query(triple_pattern[0], query, cottas_file)
     if type(triple_pattern[2]) is list:
-        o_query = _build_star_query(triple_pattern[2], query, cotta_file)
+        o_query = _build_star_query(triple_pattern[2], query, cottas_file)
 
     query = f"SELECT "
     if type(triple_pattern[0]) is str and triple_pattern[0].startswith('?'):
@@ -44,7 +44,7 @@ def _build_star_query(triple_pattern, query, cotta_file):
         query = query[:-2]
     else:
         query += 'id'
-    query += f" FROM read_parquet('{cotta_file}') WHERE "
+    query += f" FROM read_parquet('{cottas_file}') WHERE "
 
     if type(triple_pattern[0]) is str and not triple_pattern[0].startswith('?'):
         query += f"s='{triple_pattern[0]}' AND "
@@ -69,7 +69,7 @@ def _build_star_query(triple_pattern, query, cotta_file):
     return query
 
 
-def translate_triple_pattern(cotta_file, triple_pattern_str):
+def translate_triple_pattern(cottas_file, triple_pattern_str):
     projection_str = triple_pattern_str
     projection_str = projection_str.replace("<<", '').replace(">>", '')
     projection_list = [term[1:] for term in projection_str.split() if term.startswith('?')]
@@ -87,7 +87,7 @@ def translate_triple_pattern(cotta_file, triple_pattern_str):
         for var in projection_list:
             triple_pattern_query += f"{var}, "
         triple_pattern_query = f"{triple_pattern_query[:-2]}\n" \
-                               f"FROM ( {_build_star_query(triple_pattern, '', cotta_file)} )"
+                               f"FROM ( {_build_star_query(triple_pattern, '', cottas_file)} )"
     else:
         triple_pattern_query = f"SELECT "
         if triple_pattern[0].startswith('?'):
@@ -99,7 +99,7 @@ def translate_triple_pattern(cotta_file, triple_pattern_str):
         if len(triple_pattern) == 4 and triple_pattern[3].startswith('?'):
             triple_pattern_query += f"g AS {triple_pattern[3][1:]}, "
 
-        triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM read_parquet('{cotta_file}')\nWHERE "
+        triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM read_parquet('{cottas_file}')\nWHERE "
 
         if not triple_pattern[0].startswith('?'):
             triple_pattern_query += f"s='{triple_pattern[0]}' AND "
@@ -114,20 +114,20 @@ def translate_triple_pattern(cotta_file, triple_pattern_str):
     return triple_pattern_query
 
 
-def generate_cotta_info(cotta_file):
+def generate_cottas_info(cottas_file):
     import os
     import datetime
 
-    triples_query = f"SELECT COUNT(*) AS triples FROM parquet_scan('{cotta_file}')"
-    properties_query = f"SELECT COUNT(DISTINCT p) AS properties FROM parquet_scan('{cotta_file}')"
-    distinct_subjects_query = f"SELECT COUNT(DISTINCT s) AS distinct_subjects FROM parquet_scan('{cotta_file}')"
-    distinct_objects_query = f"SELECT COUNT(DISTINCT o) AS distinct_objects FROM parquet_scan('{cotta_file}')"
+    triples_query = f"SELECT COUNT(*) AS triples FROM parquet_scan('{cottas_file}')"
+    properties_query = f"SELECT COUNT(DISTINCT p) AS properties FROM parquet_scan('{cottas_file}')"
+    distinct_subjects_query = f"SELECT COUNT(DISTINCT s) AS distinct_subjects FROM parquet_scan('{cottas_file}')"
+    distinct_objects_query = f"SELECT COUNT(DISTINCT o) AS distinct_objects FROM parquet_scan('{cottas_file}')"
 
-    cotta_path = f"file://{os.path.join(os.getcwd(), cotta_file)}"
-    cotta_size = os.path.getsize(cotta_file)
+    cottas_path = f"file://{os.path.join(os.getcwd(), cottas_file)}"
+    cottas_size = os.path.getsize(cottas_file)
 
-    (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(cotta_file)
-    cotta_issued = datetime.datetime.fromtimestamp(ctime).isoformat()
+    (mode, ino, dev, nlink, uid, gid, size, atime, mtime, ctime) = os.stat(cottas_file)
+    cottas_issued = datetime.datetime.fromtimestamp(ctime).isoformat()
 
     triples = duckdb.query(triples_query).df().iloc[0]['triples']
     properties = duckdb.query(properties_query).df().iloc[0]['properties']
@@ -135,23 +135,23 @@ def generate_cotta_info(cotta_file):
     distinct_objects = duckdb.query(distinct_objects_query).df().iloc[0]['distinct_objects']
 
     info = ''
-    info += f"{iri(cotta_path)} {iri(RDF_TYPE)} {iri('http://purl.org/COTTA/cotta#Dataset')} .\n"
-    info += f"{iri(cotta_path)} {iri(RDF_TYPE)} {iri('http://rdfs.org/ns/void#Dataset')} .\n"
-    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#triples')} {literal(triples, datatype=XSD_INTEGER)} .\n"
-    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#properties')} " \
+    info += f"{iri(cottas_path)} {iri(RDF_TYPE)} {iri('http://purl.org/COTTAS/cottas#Dataset')} .\n"
+    info += f"{iri(cottas_path)} {iri(RDF_TYPE)} {iri('http://rdfs.org/ns/void#Dataset')} .\n"
+    info += f"{iri(cottas_path)} {iri('http://rdfs.org/ns/void#triples')} {literal(triples, datatype=XSD_INTEGER)} .\n"
+    info += f"{iri(cottas_path)} {iri('http://rdfs.org/ns/void#properties')} " \
             f"{literal(properties, datatype=XSD_INTEGER)} .\n"
-    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#distinctSubjects')} " \
+    info += f"{iri(cottas_path)} {iri('http://rdfs.org/ns/void#distinctSubjects')} " \
             f"{literal(distinct_subjects, datatype=XSD_INTEGER)} .\n"
-    info += f"{iri(cotta_path)} {iri('http://rdfs.org/ns/void#distinctObjects')} " \
+    info += f"{iri(cottas_path)} {iri('http://rdfs.org/ns/void#distinctObjects')} " \
             f"{literal(distinct_objects, datatype=XSD_INTEGER)} .\n"
 
-    info += f'{iri(cotta_path)} {iri("http://purl.org/COTTA/cotta#publicationInformation")} ' \
+    info += f'{iri(cottas_path)} {iri("http://purl.org/COTTAS/cottas#publicationInformation")} ' \
             f'"_:publicationInformation" .\n'
     info += f'"_:publicationInformation" {iri("http://purl.org/dc/terms/issued")} ' \
-            f'{literal(cotta_issued, datatype=XSD_DATETIME)} .\n'
+            f'{literal(cottas_issued, datatype=XSD_DATETIME)} .\n'
 
-    info += f'{iri(cotta_path)} {iri("http://purl.org/COTTA/cotta#statisticalInformation")} "_:statistics" .\n'
-    info += f'"_:statistics" {iri("http://purl.org/COTTA/cotta#cottaSize")} ' \
-            f'{literal(cotta_size, datatype=XSD_INTEGER)} .'
+    info += f'{iri(cottas_path)} {iri("http://purl.org/COTTAS/cottas#statisticalInformation")} "_:statistics" .\n'
+    info += f'"_:statistics" {iri("http://purl.org/COTTAS/cottas#cottasSize")} ' \
+            f'{literal(cottas_size, datatype=XSD_INTEGER)} .'
 
     return info

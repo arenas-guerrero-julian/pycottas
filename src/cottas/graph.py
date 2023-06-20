@@ -13,8 +13,8 @@ import pandas as pd
 from random import randint
 
 from .constants import DUCKDB_MEMORY
-from .parser import parse_cotta, parse_rdf, parse_nquads
-from .serializer import serialize_cotta, serialize_rdf
+from .parser import parse_cottas, parse_rdf, parse_nquads
+from .serializer import serialize_cottas, serialize_rdf
 
 
 class Graph:
@@ -160,8 +160,8 @@ class Graph:
     def parse(self, filepath, preserve_duplicates=True):
         file_extension = os.path.splitext(filepath)[1].lower()
 
-        if file_extension == '.cotta' or file_extension == '.parquet':
-            self.triplestore = parse_cotta(self, filepath)
+        if file_extension == '.cottas' or file_extension == '.parquet':
+            self.triplestore = parse_cottas(self, filepath)
         elif file_extension == '.nq':   # lightrdf does not support N-Quads
             self.triplestore = parse_nquads(self, filepath, preserve_duplicates)
         else:
@@ -170,12 +170,12 @@ class Graph:
     def serialize(self, filepath, codec='ZSTD', chunksize=250000):
         file_extension = os.path.splitext(filepath)[1].lower()
 
-        if file_extension == '.cotta' or file_extension == '.parquet':
-            serialize_cotta(self, filepath, codec)
+        if file_extension == '.cottas' or file_extension == '.parquet':
+            serialize_cottas(self, filepath, codec)
         elif file_extension == '.nt' or '.nq':
             serialize_rdf(self, filepath, chunksize)
         else:
-            print('Invalid serialization file extension. Valid values: `.cotta`, `.parquet`, `.nt`, `.nq`.')
+            print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.nt`, `.nq`.')
 
     def quads(self, s=None, p=None, o=None, g=None, only_triples=False, chunksize=250000):
         variable_dict = {'s': s, 'p': p, 'o': o, 'g': g}

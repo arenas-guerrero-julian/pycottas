@@ -14,7 +14,7 @@ from .utils import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
-        prog='COTTA',
+        prog='COTTAS',
         description='Efficient RDF-star management in compressed space',
         epilog='Copyright © 2023 Julián Arenas-Guerrero')
 
@@ -40,14 +40,14 @@ if __name__ == "__main__":
     elif args.operation.lower() == 'diff':
         diff(args.arg1, args.arg2, args.arg3)
 
-    elif args.operation.lower() == 'rdf2cotta':
-        rdf_2_cotta(args.arg1, args.arg2)
+    elif args.operation.lower() == 'rdf2cottas':
+        rdf_2_cottas(args.arg1, args.arg2)
 
-    elif args.operation.lower() == 'rdf2cottanoid':
-        rdf_2_cotta(args.arg1, args.arg2, create_id=False)
+    elif args.operation.lower() == 'rdf2cottasnoid':
+        rdf_2_cottas(args.arg1, args.arg2, create_id=False)
 
-    elif args.operation.lower() == 'cotta2rdf':
-        cotta_2_rdf(args.arg1, args.arg2)
+    elif args.operation.lower() == 'cottas2rdf':
+        cottas_2_rdf(args.arg1, args.arg2)
 
     elif args.operation.lower() == 'createid':
         create_id(args.arg1)
@@ -57,5 +57,5 @@ if __name__ == "__main__":
 
     else:
         print(
-            'Invalid COTTA option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, '
-            '`cotta2rdf`, `rdf2cotta`, `rdf2cottaNoID`, `createID` or `removeID`.')
+            'Invalid COTTAS option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, '
+            '`cottas2rdf`, `rdf2cottas`, `rdf2cottasNoID`, `createID` or `removeID`.')

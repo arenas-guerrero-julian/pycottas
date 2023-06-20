@@ -8,7 +8,7 @@ Source = ''
 Tracker = ''
 
 [project]
-name = 'cotta'
+name = 'cottas'
 description = ''
 readme = 'README.md'
 keywords = []
@@ -41,4 +41,4 @@ dependencies = [
 ]
 
 [tool.hatch.version]
-path = 'src/cotta/_version.py'
+path = 'src/cottas/_version.py'
