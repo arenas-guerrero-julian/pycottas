@@ -175,7 +175,7 @@ Check if a COTTAS file is correct, returning a [boolean](https://docs.python.org
 
 #### cottas.create_id
 
-**`creatcottas._id(cottas_file, in_memory=True)`**
+**`cottas._create_id(cottas_file, in_memory=True)`**
 
 Add the **id** column to a COTTAS file. This increases the size of the COTTAS file, but it is necessary to evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
 
