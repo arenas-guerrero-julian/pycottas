@@ -152,7 +152,7 @@ def verify(cottas_file):
     verify_query = f"SELECT * FROM parquet_scan('{cottas_file}') LIMIT 0"
     cottas_df = duckdb.query(verify_query).df()
 
-    cottas_columns = [c.lower() for c in cottas_df.columns]
+    cottas_columns = list(cottas_df.columns)
 
     if 's' not in cottas_columns or 'p' not in cottas_columns or 'o' not in cottas_columns:
         return False
