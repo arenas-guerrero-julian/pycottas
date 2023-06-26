@@ -49,32 +49,17 @@ class Graph:
         return bool(len(self))
 
     def __add__(self, other):
-        graph = Graph()
+        self.bulk_add(other.to_list())
 
-        # it is faster to add the largest graph first
-        larger_graph, smaller_graph = (self, other) if self > other else (other, self)
-
-        records = larger_graph.to_list()
-        graph.bulk_add(records, preserve_duplicates=True)
-
-        records = smaller_graph.to_list()
-        graph.bulk_add(records)
-
-        return graph
+        return self
 
     def __iadd__(self, other):
         return self + other
 
     def __sub__(self, other):
-        graph = Graph()
+        self.bulk_remove(other.to_list())
 
-        records = self.to_list()
-        graph.bulk_add(records, preserve_duplicates=True)
-
-        records = other.to_list()
-        graph.bulk_remove(records)
-
-        return graph
+        return self
 
     def __isub__(self, other):
         return self - other

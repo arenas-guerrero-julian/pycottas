@@ -10,7 +10,7 @@ def serialize_cottas(graph, filepath, codec='ZSTD'):
     graph.triplestore.execute(f"COPY quads TO '{filepath}' (FORMAT 'PARQUET', CODEC '{codec}')")
 
 
-def serialize_rdf(graph, filepath, chunksize=1000000):
+def serialize_rdf(graph, filepath):
     f = open(filepath, 'w')
 
     duckdb_cursor = graph.triplestore.cursor()
