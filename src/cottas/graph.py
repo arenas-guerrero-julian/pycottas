@@ -160,7 +160,7 @@ class Graph:
     def parse(self, filepath, preserve_duplicates=True):
         file_extension = os.path.splitext(filepath)[1].lower()
 
-        if file_extension == '.cottas' or file_extension == '.parquet':
+        if file_extension == '.cottas' or file_extension == '.parquet' or file_extension == '.pq':
             self.triplestore = parse_cottas(self, filepath)
         elif file_extension == '.nq':   # lightrdf does not support N-Quads
             self.triplestore = parse_nquads(self, filepath, preserve_duplicates)
@@ -170,12 +170,12 @@ class Graph:
     def serialize(self, filepath, codec='ZSTD', chunksize=250000):
         file_extension = os.path.splitext(filepath)[1].lower()
 
-        if file_extension == '.cottas' or file_extension == '.parquet':
+        if file_extension == '.cottas' or file_extension == '.parquet' or file_extension == '.pq':
             serialize_cottas(self, filepath, codec)
         elif file_extension == '.nt' or '.nq':
             serialize_rdf(self, filepath, chunksize)
         else:
-            print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.nt`, `.nq`.')
+            print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.pq`, `.nt`, `.nq`.')
 
     def quads(self, s=None, p=None, o=None, g=None, only_triples=False, chunksize=250000):
         variable_dict = {'s': s, 'p': p, 'o': o, 'g': g}

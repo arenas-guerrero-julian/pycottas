@@ -6,17 +6,19 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
-def serialize_cottas(graph, filepath, codec='SNAPPY'):
+def serialize_cottas(graph, filepath, codec='ZSTD'):
     graph.triplestore.execute(f"COPY quads TO '{filepath}' (FORMAT 'PARQUET', CODEC '{codec}')")
 
 
 def serialize_rdf(graph, filepath, chunksize=1000000):
     f = open(filepath, 'w')
 
-    for i in range((len(graph) // chunksize) + 1):
-        quads_df = graph.triplestore.execute(f'SELECT s, p, o, g FROM quads LIMIT {chunksize} OFFSET {i * chunksize}').fetch_df()
+    duckdb_cursor = graph.triplestore.cursor()
+    query = duckdb_cursor.execute("SELECT s, p, o, g FROM quads")
 
-        quads = quads_df.values.tolist()
+    cur_chunk_df = query.fetch_df_chunk()
+    while len(cur_chunk_df):
+        quads = cur_chunk_df.values.tolist()
 
         for quad in quads:
             # format quoted triples
@@ -32,5 +34,7 @@ def serialize_rdf(graph, filepath, chunksize=1000000):
                 quad = f"{quad[0]} {quad[1]} {quad[2]}"
 
             f.write(f'{quad} .\n')
+
+        cur_chunk_df = query.fetch_df_chunk()
 
     f.close()

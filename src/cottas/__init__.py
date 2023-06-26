@@ -25,16 +25,16 @@ def rdf_2_cottas(rdf_file, cottas_file, create_id=True, in_memory=True):
             g.triplestore.execute("UPDATE quads SET id=''")
         g.serialize(cottas_file)
     else:
-        rmtree('.cottas_temp', ignore_errors=True)
-        mkdir('.cottas_temp')
+        rmtree('.cottas_tmp', ignore_errors=True)
+        mkdir('.cottas_tmp')
 
-        g = Graph('.cottas_temp/cottas.duckdb')
+        g = Graph('.cottas_tmp/cottas.duckdb')
         g.parse(rdf_file, preserve_duplicates=True)
         if not create_id:
             g.triplestore.execute("UPDATE quads SET id=''")
         g.serialize(cottas_file)
 
-        rmtree('.cottas_temp', ignore_errors=True)
+        rmtree('.cottas_tmp', ignore_errors=True)
 
 
 def cottas_2_rdf(cottas_file, rdf_file, in_memory=True):
@@ -43,14 +43,14 @@ def cottas_2_rdf(cottas_file, rdf_file, in_memory=True):
         g.parse(cottas_file, preserve_duplicates=True)
         g.serialize(rdf_file)
     else:
-        rmtree('.cottas_temp', ignore_errors=True)
-        mkdir('.cottas_temp')
+        rmtree('.cottas_tmp', ignore_errors=True)
+        mkdir('.cottas_tmp')
 
-        g = Graph('.cottas_temp/cottas.duckdb')
+        g = Graph('.cottas_tmp/cottas.duckdb')
         g.parse(cottas_file, preserve_duplicates=True)
         g.serialize(rdf_file)
 
-        rmtree('.cottas_temp', ignore_errors=True)
+        rmtree('.cottas_tmp', ignore_errors=True)
 
 
 def remove_id(cottas_file, in_memory=True):
@@ -60,15 +60,15 @@ def remove_id(cottas_file, in_memory=True):
         g.triplestore.execute("UPDATE quads SET id=''")
         g.serialize(cottas_file)
     else:
-        rmtree('.cottas_temp', ignore_errors=True)
-        mkdir('.cottas_temp')
+        rmtree('.cottas_tmp', ignore_errors=True)
+        mkdir('.cottas_tmp')
 
-        g = Graph('.cottas_temp/cottas.duckdb')
+        g = Graph('.cottas_tmp/cottas.duckdb')
         g.parse(cottas_file, preserve_duplicates=True)
         g.triplestore.execute("UPDATE quads SET id=''")
         g.serialize(cottas_file)
 
-        rmtree('.cottas_temp', ignore_errors=True)
+        rmtree('.cottas_tmp', ignore_errors=True)
 
 
 def create_id(cottas_file, in_memory=True):
@@ -78,14 +78,14 @@ def create_id(cottas_file, in_memory=True):
         g.triplestore.execute("UPDATE quads SET id=CONCAT(s, ' ', p, ' ', o)")
         g.serialize(cottas_file)
     else:
-        rmtree('.cottas_temp', ignore_errors=True)
-        mkdir('.cottas_temp')
+        rmtree('.cottas_tmp', ignore_errors=True)
+        mkdir('.cottas_tmp')
 
-        g = Graph('.cottas_temp/cottas.duckdb')
+        g = Graph('.cottas_tmp/cottas.duckdb')
         g.parse(cottas_file, preserve_duplicates=True)
         g.serialize(cottas_file)
 
-        rmtree('.cottas_temp', ignore_errors=True)
+        rmtree('.cottas_tmp', ignore_errors=True)
 
 
 def search(cottas_file, triple_pattern):
@@ -103,19 +103,19 @@ def cat(cottas_file_1, cottas_file_2, cottas_cat_file, in_memory=True):
         g1 += g2
         g1.serialize(cottas_cat_file)
     else:
-        rmtree('.cottas_temp', ignore_errors=True)
-        mkdir('.cottas_temp')
+        rmtree('.cottas_tmp', ignore_errors=True)
+        mkdir('.cottas_tmp')
 
-        g1 = Graph('.cottas_temp/cottas_1.duckdb')
+        g1 = Graph('.cottas_tmp/cottas_1.duckdb')
         g1.parse(cottas_file_1, preserve_duplicates=True)
 
-        g2 = Graph('.cottas_temp/cottas_2.duckdb')
+        g2 = Graph('.cottas_tmp/cottas_2.duckdb')
         g2.parse(cottas_file_2, preserve_duplicates=True)
 
         g1 += g2
         g1.serialize(cottas_cat_file)
 
-        rmtree('.cottas_temp', ignore_errors=True)
+        rmtree('.cottas_tmp', ignore_errors=True)
 
 
 def diff(cottas_file_1, cottas_file_2, cottas_diff_file, in_memory=True):
@@ -129,19 +129,19 @@ def diff(cottas_file_1, cottas_file_2, cottas_diff_file, in_memory=True):
         g1 -= g2
         g1.serialize(cottas_diff_file)
     else:
-        rmtree('.cottas_temp', ignore_errors=True)
-        mkdir('.cottas_temp')
+        rmtree('.cottas_tmp', ignore_errors=True)
+        mkdir('.cottas_tmp')
 
-        g1 = Graph('.cottas_temp/cottas_1.duckdb')
+        g1 = Graph('.cottas_tmp/cottas_1.duckdb')
         g1.parse(cottas_file_1, preserve_duplicates=True)
 
-        g2 = Graph('.cottas_temp/cottas_2.duckdb')
+        g2 = Graph('.cottas_tmp/cottas_2.duckdb')
         g2.parse(cottas_file_2, preserve_duplicates=True)
 
         g1 -= g2
         g1.serialize(cottas_diff_file)
 
-        rmtree('.cottas_temp', ignore_errors=True)
+        rmtree('.cottas_tmp', ignore_errors=True)
 
 
 def info(cottas_file):

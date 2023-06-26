@@ -19,7 +19,7 @@ def parse_cottas(graph, filepath):
         # add empty named graphs column
         graph.triplestore.execute(f"ALTER TABLE {temporal_table} ADD COLUMN g TEXT DEFAULT ''")
 
-    graph.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table} EXCEPT SELECT * FROM quads)')
+    graph.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
     graph.triplestore.execute(f'DROP TABLE {temporal_table}')
 
     return graph.triplestore
