@@ -58,6 +58,9 @@ def _build_star_query(triple_pattern, query, cottas_file):
     # remove last "AND "
     if query.endswith(' AND '):
         query = query[:-5]
+    # remove las "WHERE "
+    if query.endswith(' WHERE '):
+        query = query[:-6]
 
     if s_query:
         v1, v2 = f"v{randint(0, 100000)}", f"v{randint(0, 100000)}"
@@ -81,6 +84,7 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
     triple_pattern_str = '[' + triple_pattern_str + ']'
 
     triple_pattern = eval(triple_pattern_str)
+    print(triple_pattern)
 
     if type(triple_pattern[0]) is list or type(triple_pattern[2]) is list:
         triple_pattern_query = "SELECT "
@@ -110,7 +114,7 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
         if len(triple_pattern) == 4 and not triple_pattern[3].startswith('?'):
             triple_pattern_query += f"g='{triple_pattern[3]}' AND "
         triple_pattern_query = triple_pattern_query[:-5]
-
+    print(triple_pattern_query)
     return triple_pattern_query
 
 
