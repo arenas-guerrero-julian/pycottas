@@ -26,7 +26,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.operation.lower() == 'search':
-        print(search(args.arg1, args.arg2, args.arg3))
+        print(search(args.arg1, args.arg2))
 
     elif args.operation.lower() == 'verify':
         print(verify(args.arg1))
@@ -56,6 +56,5 @@ if __name__ == "__main__":
         remove_id(args.arg1)
 
     else:
-        print(
-            'Invalid COTTAS option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, '
-            '`cottas2rdf`, `rdf2cottas`, `rdf2cottasNoID`, `createID` or `removeID`.')
+        print('Invalid COTTAS option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, `cottas2rdf`, '
+              '`rdf2cottas`, `rdf2cottasNoID`, `createID` or `removeID`.')

@@ -152,13 +152,13 @@ class Graph:
         else:
             self.triplestore = parse_rdf(self, filepath, preserve_duplicates)
 
-    def serialize(self, filepath, codec='ZSTD', chunksize=250000):
+    def serialize(self, filepath, codec='ZSTD'):
         file_extension = os.path.splitext(filepath)[1].lower()
 
         if file_extension == '.cottas' or file_extension == '.parquet' or file_extension == '.pq':
             serialize_cottas(self, filepath, codec)
         elif file_extension == '.nt' or '.nq':
-            serialize_rdf(self, filepath, chunksize)
+            serialize_rdf(self, filepath)
         else:
             print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.pq`, `.nt`, `.nq`.')
 
