@@ -14,19 +14,19 @@ from .constants import *
 from .term import *
 
 
-def _build_star_query(triple_pattern, query, cottas_file):
+def _build_star_query(triple_pattern, query, cottas_file, recursion_track=''):
     s_query, o_query = '', ''
 
     if type(triple_pattern[0]) is list:
-        s_query = _build_star_query(triple_pattern[0], query, cottas_file)
+        s_query = _build_star_query(triple_pattern[0], query, cottas_file, f"{recursion_track}s")
     if type(triple_pattern[2]) is list:
-        o_query = _build_star_query(triple_pattern[2], query, cottas_file)
+        o_query = _build_star_query(triple_pattern[2], query, cottas_file, f"{recursion_track}o")
 
     query = f"SELECT "
     if type(triple_pattern[0]) is str and triple_pattern[0].startswith('?'):
         query += f"s AS {triple_pattern[0][1:]}, "
     elif type(triple_pattern[0]) is list:
-        query += "s, "
+        query += f"s AS s{recursion_track}, "
 
     if type(triple_pattern[1]) is str and triple_pattern[1].startswith('?'):
         query += f"p AS {triple_pattern[1][1:]}, "
@@ -34,17 +34,15 @@ def _build_star_query(triple_pattern, query, cottas_file):
     if type(triple_pattern[2]) is str and triple_pattern[2].startswith('?'):
         query += f"o AS {triple_pattern[2][1:]}, "
     elif type(triple_pattern[2]) is list:
-        query += "o, "
+        query += f"o AS o{recursion_track}, "
 
     # if named graph
     if len(triple_pattern) == 4 and type(triple_pattern[3]) is str and triple_pattern[3].startswith('?'):
         query += f"g AS {triple_pattern[3][1:]}, "
 
-    if type(triple_pattern[0]) is list or type(triple_pattern[2]) is list:
-        query = query[:-2]
-    else:
-        query += 'id'
-    query += f" FROM read_parquet('{cottas_file}') WHERE "
+    if recursion_track:
+        query += f"CONCAT('<< ', id, ' >>') AS id{recursion_track}, "
+    query = f"{query[:-2]} FROM read_parquet('{cottas_file}') WHERE "
 
     if type(triple_pattern[0]) is str and not triple_pattern[0].startswith('?'):
         query += f"s='{triple_pattern[0]}' AND "
@@ -64,10 +62,10 @@ def _build_star_query(triple_pattern, query, cottas_file):
 
     if s_query:
         v1, v2 = f"v{randint(0, 100000)}", f"v{randint(0, 100000)}"
-        query = f"SELECT *\nFROM ( ( ( {s_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} ON {v1}.id={v2}.s ) )"
+        query = f"SELECT *\nFROM ( ( ( {s_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} ON {v1}.id{recursion_track}s={v2}.s ) )"
     if o_query:
         v1, v2 = f"v{randint(0, 100000)}", f"v{randint(0, 100000)}"
-        query = f"SELECT *\nFROM ( ( ( {o_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} ON {v1}.id={v2}.o ) )"
+        query = f"SELECT *\nFROM ( ( ( {o_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} ON {v1}.id{recursion_track}o={v2}.o{recursion_track} ) )"
 
     return query
 
@@ -84,12 +82,11 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
     triple_pattern_str = '[' + triple_pattern_str + ']'
 
     triple_pattern = eval(triple_pattern_str)
-    print(triple_pattern)
 
     if type(triple_pattern[0]) is list or type(triple_pattern[2]) is list:
         triple_pattern_query = "SELECT "
         for var in projection_list:
-            triple_pattern_query += f"{var}, "
+            triple_pattern_query += f"IF(starts_with({var}, '<< '), ARRAY_SLICE({var}, 4, -3), {var}) AS {var}, "
         triple_pattern_query = f"{triple_pattern_query[:-2]}\n" \
                                f"FROM ( {_build_star_query(triple_pattern, '', cottas_file)} )"
     else:
@@ -114,7 +111,7 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
         if len(triple_pattern) == 4 and not triple_pattern[3].startswith('?'):
             triple_pattern_query += f"g='{triple_pattern[3]}' AND "
         triple_pattern_query = triple_pattern_query[:-5]
-    print(triple_pattern_query)
+
     return triple_pattern_query
 
 

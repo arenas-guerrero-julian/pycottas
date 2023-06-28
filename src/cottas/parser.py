@@ -34,6 +34,10 @@ def parse_rdf(graph, filepath, preserve_duplicates):
         triple = list(triple)
 
         triple.append('')   # for empty quad
+        if not triple[0].startswith('"') and ' <' in triple[0]:
+            triple[0] = f'<< {triple[0]} >>'
+        if not triple[2].startswith('"') and ' <' in triple[2]:
+            triple[2] = f'<< {triple[2]} >>'
         triple.append(f'{triple[0]} {triple[1]} {triple[2]}')
         triples.append(triple)
 
