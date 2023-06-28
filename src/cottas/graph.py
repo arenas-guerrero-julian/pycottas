@@ -161,29 +161,3 @@ class Graph:
             serialize_rdf(self, filepath)
         else:
             print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.pq`, `.nt`, `.nq`.')
-
-    def quads(self, s=None, p=None, o=None, g=None, only_triples=False, chunksize=250000):
-        variable_dict = {'s': s, 'p': p, 'o': o, 'g': g}
-        variable_dict = {k: v for k, v in variable_dict.items() if v is not None}
-
-        select_query = 'SELECT * FROM quads'
-
-        if len(variable_dict):
-            select_query += ' WHERE '
-            for k, v in variable_dict.items():
-                select_query += f"{k}='{v}' AND "
-            select_query = select_query[:-5]  # remove final ` AND `
-
-        for i in range((len(self) // chunksize) + 1):
-            chunk_select_query = f'{select_query} LIMIT {chunksize} OFFSET {i*chunksize}'
-            quads = self.triplestore.execute(chunk_select_query).fetch_df().values.tolist()
-
-            if only_triples:
-                for quad in quads:
-                    yield quad[0], quad[1], quad[2]
-            else:
-                for quad in quads:
-                    yield quad[0], quad[1], quad[2], quad[3]
-
-    def triples(self, s=None, p=None, o=None, g='', chunksize=250000):
-        return self.quads(s, p, o, g, only_triples=True, chunksize=chunksize)
