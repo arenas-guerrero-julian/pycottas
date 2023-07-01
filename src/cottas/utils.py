@@ -123,6 +123,8 @@ def generate_cottas_info(cottas_file):
     properties_query = f"SELECT COUNT(DISTINCT p) AS properties FROM parquet_scan('{cottas_file}')"
     distinct_subjects_query = f"SELECT COUNT(DISTINCT s) AS distinct_subjects FROM parquet_scan('{cottas_file}')"
     distinct_objects_query = f"SELECT COUNT(DISTINCT o) AS distinct_objects FROM parquet_scan('{cottas_file}')"
+    schema_query = f"DESCRIBE SELECT * FROM read_parquet('{cottas_file}');"
+    compression_query = f"SELECT compression FROM parquet_metadata('{cottas_file}')"
 
     cottas_path = f"file://{os.path.join(os.getcwd(), cottas_file)}"
     cottas_size = os.path.getsize(cottas_file)
@@ -134,6 +136,8 @@ def generate_cottas_info(cottas_file):
     properties = duckdb.query(properties_query).df().iloc[0]['properties']
     distinct_subjects = duckdb.query(distinct_subjects_query).df().iloc[0]['distinct_subjects']
     distinct_objects = duckdb.query(distinct_objects_query).df().iloc[0]['distinct_objects']
+    schema = str(list(duckdb.query(schema_query).df()['column_name'])).replace("'", "")[1:-1]
+    compression = duckdb.query(compression_query).df().iloc[0]['compression']
 
     info = ''
     info += f"{iri(cottas_path)} {iri(RDF_TYPE)} {iri('http://purl.org/COTTAS/cottas#Dataset')} .\n"
@@ -153,6 +157,9 @@ def generate_cottas_info(cottas_file):
 
     info += f'{iri(cottas_path)} {iri("http://purl.org/COTTAS/cottas#statisticalInformation")} "_:statistics" .\n'
     info += f'"_:statistics" {iri("http://purl.org/COTTAS/cottas#cottasSize")} ' \
-            f'{literal(cottas_size, datatype=XSD_INTEGER)} .'
+            f'{literal(cottas_size, datatype=XSD_INTEGER)} .\n'
+
+    info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#compression")} "{compression}" .\n'
+    info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#schema")} "{schema}" .\n'
 
     return info
