@@ -83,6 +83,7 @@ def create_id(cottas_file, in_memory=True):
 
         g = Graph('.cottas_tmp/cottas.duckdb')
         g.parse(cottas_file, preserve_duplicates=True)
+        g.triplestore.execute("UPDATE quads SET id=CONCAT(s, ' ', p, ' ', o)")
         g.serialize(cottas_file)
 
         rmtree('.cottas_tmp', ignore_errors=True)
