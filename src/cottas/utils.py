@@ -62,10 +62,12 @@ def _build_star_query(triple_pattern, query, cottas_file, recursion_track=''):
 
     if s_query:
         v1, v2 = f"v{randint(0, 100000)}", f"v{randint(0, 100000)}"
-        query = f"SELECT *\nFROM ( ( ( {s_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} ON {v1}.id{recursion_track}s={v2}.s ) )"
+        query = f"SELECT *\nFROM ( ( ( {s_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} " \
+                f"ON {v1}.id{recursion_track}s={v2}.s ) )"
     if o_query:
         v1, v2 = f"v{randint(0, 100000)}", f"v{randint(0, 100000)}"
-        query = f"SELECT *\nFROM ( ( ( {o_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} ON {v1}.id{recursion_track}o={v2}.o{recursion_track} ) )"
+        query = f"SELECT *\nFROM ( ( ( {o_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} " \
+                f"ON {v1}.id{recursion_track}o={v2}.o{recursion_track} ) )"
 
     return query
 
