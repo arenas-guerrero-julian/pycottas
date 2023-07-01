@@ -41,7 +41,7 @@ def parse_rdf(graph, filepath, preserve_duplicates):
         triple.append(f'{triple[0]} {triple[1]} {triple[2]}')
         triples.append(triple)
 
-        if i == 100000000:
+        if i == 1000000:
             graph.bulk_add(triples, preserve_duplicates)
             triples = []
             i = 0
