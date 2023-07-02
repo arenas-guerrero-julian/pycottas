@@ -14,20 +14,21 @@ def serialize_rdf(graph, filepath):
     f = open(filepath, 'w')
 
     duckdb_cursor = graph.triplestore.cursor()
-    query = duckdb_cursor.execute("SELECT s, p, o, g FROM quads")
+    query = duckdb_cursor.execute("SELECT s, p, o, g, ia FROM quads")
 
     cur_chunk_df = query.fetch_df_chunk()
     while len(cur_chunk_df):
         quads = cur_chunk_df.values.tolist()
 
         for quad in quads:
-            if quad[3]:
-                # in case of named graph
-                quad = f"{quad[0]} {quad[1]} {quad[2]} {quad[3]}"
-            else:
-                quad = f"{quad[0]} {quad[1]} {quad[2]}"
+            if quad[4]:     # is_asserted
+                if quad[3]:
+                    # in case of named graph
+                    quad = f"{quad[0]} {quad[1]} {quad[2]} {quad[3]}"
+                else:
+                    quad = f"{quad[0]} {quad[1]} {quad[2]}"
 
-            f.write(f'{quad} .\n')
+                f.write(f'{quad} .\n')
 
         cur_chunk_df = query.fetch_df_chunk()
 

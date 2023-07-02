@@ -8,6 +8,8 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 import os
 import duckdb
+import io
+
 import pandas as pd
 
 from random import randint
@@ -22,8 +24,8 @@ class Graph:
     def __init__(self, triplestore=DUCKDB_MEMORY):
         self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
-            'CREATE TABLE quads ('
-            's VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, id VARCHAR NOT NULL)')
+            'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, '
+            'id VARCHAR NOT NULL, ia BOOLEAN NOT NULL)')
 
     def __str__(self):
         return repr(self)
@@ -102,11 +104,8 @@ class Graph:
     def to_list(self):
         return self.to_df().values.tolist()
 
-    def add(self, s, p, o, g='', preserve_duplicates=True):
-        self.bulk_add([[s, p, o, g]], preserve_duplicates=preserve_duplicates)
-
     def bulk_add(self, quads, preserve_duplicates=True):
-        quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt'])
+        quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt', 'iat'])
 
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
@@ -117,22 +116,8 @@ class Graph:
                                      f'EXCEPT SELECT * FROM quads)')
         self.triplestore.unregister(temporal_table)
 
-    def remove(self, s, p, o, g=''):
-        variable_dict = {'s': s, 'p': p, 'o': o, 'g': g}
-        variable_dict = {k: v for k, v in variable_dict.items() if v is not None}
-
-        if not len(variable_dict):
-            self.triplestore.execute('DELETE FROM quads')
-        else:
-            delete_query = 'DELETE FROM quads WHERE '
-            for k, v in variable_dict.items():
-                delete_query += f"{k}='{v}' AND "
-            delete_query = delete_query[:-5]    # remove final ` AND `
-
-            self.triplestore.execute(delete_query)
-
     def bulk_remove(self, quads):
-        quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt'])
+        quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt', 'iat'])
         quads_df = quads_df.drop_duplicates()
 
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
@@ -161,3 +146,40 @@ class Graph:
             serialize_rdf(self, filepath)
         else:
             print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.pq`, `.nt`, `.nq`.')
+
+    def expand_quoted_triples(self):
+        graph_num_triples = len(self)
+        positions = ['s', 'o']
+        position_changed = False
+        i_pos = 0
+
+        while True:
+            expand_query = f"""
+                SELECT DISTINCT {positions[i_pos]} FROM (
+                    ( SELECT ARRAY_SLICE({positions[i_pos]}, 4, -3) AS {positions[i_pos]} FROM quads
+                                                                    WHERE STARTS_WITH({positions[i_pos]}, '<< ') ) AS v1
+                    LEFT JOIN
+                    ( SELECT id FROM quads ) as v2
+                    ON v1.{positions[i_pos]}=v2.id
+                ) WHERE id IS NULL
+            """
+
+            duckdb_cursor = self.triplestore.cursor()
+            query = duckdb_cursor.execute(expand_query)
+
+            cur_chunk_df = query.fetch_df_chunk()
+            while len(cur_chunk_df):
+                quads_text = f"{'. '.join(list(cur_chunk_df[positions[i_pos]]))} ."
+                self.triplestore = parse_rdf(self, io.BytesIO(quads_text.encode()), True, format='nt',
+                                             is_asserted=False)
+
+                cur_chunk_df = query.fetch_df_chunk()
+
+            if graph_num_triples < len(self):
+                graph_num_triples = len(self)
+                position_changed = False
+            elif not position_changed:
+                i_pos = (i_pos+1) % 2
+                position_changed = True
+            else:
+                break

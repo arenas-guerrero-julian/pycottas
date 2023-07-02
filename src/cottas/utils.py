@@ -42,7 +42,7 @@ def _build_star_query(triple_pattern, query, cottas_file, recursion_track=''):
 
     if recursion_track:
         query += f"CONCAT('<< ', id, ' >>') AS id{recursion_track}, "
-    query = f"{query[:-2]} FROM read_parquet('{cottas_file}') WHERE "
+    query = f"{query[:-2]} FROM READ_PARQUET('{cottas_file}') WHERE "
 
     if type(triple_pattern[0]) is str and not triple_pattern[0].startswith('?'):
         query += f"s='{triple_pattern[0]}' AND "
@@ -53,6 +53,10 @@ def _build_star_query(triple_pattern, query, cottas_file, recursion_track=''):
     if len(triple_pattern) == 4 and not triple_pattern[3].startswith('?'):
         query += f"g='{triple_pattern[3]}' AND "
 
+    # if recursion level is 0, i.e., recursion_track is ''
+    if not recursion_track:
+        # checking is asserted is only needed in the root triple pattern
+        query += 'ia=TRUE'
     # remove last "AND "
     if query.endswith(' AND '):
         query = query[:-5]
@@ -63,7 +67,7 @@ def _build_star_query(triple_pattern, query, cottas_file, recursion_track=''):
     if s_query:
         v1, v2 = f"v{randint(0, 100000)}", f"v{randint(0, 100000)}"
         query = f"SELECT *\nFROM ( ( ( {s_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} " \
-                f"ON {v1}.id{recursion_track}s={v2}.s ) )"
+                f"ON {v1}.id{recursion_track}s={v2}.s{recursion_track} ) )"
     if o_query:
         v1, v2 = f"v{randint(0, 100000)}", f"v{randint(0, 100000)}"
         query = f"SELECT *\nFROM ( ( ( {o_query} ) AS {v1}\nINNER JOIN\n( {query} ) AS {v2} " \
@@ -88,7 +92,7 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
     if type(triple_pattern[0]) is list or type(triple_pattern[2]) is list:
         triple_pattern_query = "SELECT "
         for var in projection_list:
-            triple_pattern_query += f"IF(starts_with({var}, '<< '), ARRAY_SLICE({var}, 4, -3), {var}) AS {var}, "
+            triple_pattern_query += f"IF(STARTS_WITH({var}, '<< '), ARRAY_SLICE({var}, 4, -3), {var}) AS {var}, "
         triple_pattern_query = f"{triple_pattern_query[:-2]}\n" \
                                f"FROM ( {_build_star_query(triple_pattern, '', cottas_file)} )"
     else:
@@ -102,7 +106,7 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
         if len(triple_pattern) == 4 and triple_pattern[3].startswith('?'):
             triple_pattern_query += f"g AS {triple_pattern[3][1:]}, "
 
-        triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM read_parquet('{cottas_file}')\nWHERE "
+        triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM READ_PARQUET('{cottas_file}')\nWHERE "
 
         if not triple_pattern[0].startswith('?'):
             triple_pattern_query += f"s='{triple_pattern[0]}' AND "
@@ -112,8 +116,9 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
             triple_pattern_query += f"o='{triple_pattern[2]}' AND "
         if len(triple_pattern) == 4 and not triple_pattern[3].startswith('?'):
             triple_pattern_query += f"g='{triple_pattern[3]}' AND "
-        triple_pattern_query = triple_pattern_query[:-5]
+        triple_pattern_query += "ia=TRUE"
 
+    print(triple_pattern_query)
     return triple_pattern_query
 
 
@@ -121,13 +126,13 @@ def generate_cottas_info(cottas_file):
     import os
     import datetime
 
-    triples_query = f"SELECT COUNT(*) AS triples FROM parquet_scan('{cottas_file}')"
-    properties_query = f"SELECT COUNT(DISTINCT p) AS properties FROM parquet_scan('{cottas_file}')"
-    distinct_subjects_query = f"SELECT COUNT(DISTINCT s) AS distinct_subjects FROM parquet_scan('{cottas_file}')"
-    distinct_objects_query = f"SELECT COUNT(DISTINCT o) AS distinct_objects FROM parquet_scan('{cottas_file}')"
-    schema_query = f"DESCRIBE SELECT * FROM read_parquet('{cottas_file}');"
-    compression_query = f"SELECT compression FROM parquet_metadata('{cottas_file}')"
-    is_id_computed_query = f"SELECT id FROM read_parquet('{cottas_file}') LIMIT 1"
+    triples_query = f"SELECT COUNT(*) AS triples FROM PARQUET_SCAN('{cottas_file}')"
+    properties_query = f"SELECT COUNT(DISTINCT p) AS properties FROM PARQUET_SCAN('{cottas_file}')"
+    distinct_subjects_query = f"SELECT COUNT(DISTINCT s) AS distinct_subjects FROM PARQUET_SCAN('{cottas_file}')"
+    distinct_objects_query = f"SELECT COUNT(DISTINCT o) AS distinct_objects FROM PARQUET_SCAN('{cottas_file}')"
+    schema_query = f"DESCRIBE SELECT * FROM READ_PARQUET('{cottas_file}');"
+    compression_query = f"SELECT compression FROM PARQUET_METADATA('{cottas_file}')"
+    is_id_computed_query = f"SELECT id FROM READ_PARQUET('{cottas_file}') LIMIT 1"
 
     cottas_path = f"file://{os.path.join(os.getcwd(), cottas_file)}"
     cottas_size = os.path.getsize(cottas_file)

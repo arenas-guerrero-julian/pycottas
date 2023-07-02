@@ -15,22 +15,18 @@ def parse_cottas(graph, filepath):
     temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
     graph.triplestore.execute(f"CREATE TABLE {temporal_table} AS SELECT * FROM parquet_scan('{filepath}')")
 
-    if len(graph.triplestore.execute(f"DESCRIBE {temporal_table}").fetchall()) == 3:
-        # add empty named graphs column
-        graph.triplestore.execute(f"ALTER TABLE {temporal_table} ADD COLUMN g TEXT DEFAULT ''")
-
     graph.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
-    graph.triplestore.execute(f'DROP TABLE {temporal_table}')
+    graph.triplestore.unregister(temporal_table)
 
     return graph.triplestore
 
 
-def parse_rdf(graph, filepath, preserve_duplicates):
+def parse_rdf(graph, filepath, preserve_duplicates, format=None, is_asserted=True):
     parser = lightrdf.Parser()
 
     triples = []
     i = 0
-    for triple in parser.parse(filepath, base_iri=None):
+    for triple in parser.parse(filepath, base_iri=None, format=format):
         triple = list(triple)
 
         triple.append('')   # for empty quad
@@ -39,6 +35,9 @@ def parse_rdf(graph, filepath, preserve_duplicates):
         if not triple[2].startswith('"') and ' <' in triple[2]:
             triple[2] = f'<< {triple[2]} >>'
         triple.append(f'{triple[0]} {triple[1]} {triple[2]}')
+
+        triple.append(is_asserted)
+
         triples.append(triple)
 
         if i == 1000000:
@@ -106,7 +105,8 @@ def _quad_from_line(line):
         quad.append(line)   # object
         quad.append('')     # quad
 
-    quad.append('')
+    quad.append('')     # id
+    quad.append(True)   # is_asserted
 
     return quad
 
