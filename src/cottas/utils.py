@@ -127,6 +127,7 @@ def generate_cottas_info(cottas_file):
     distinct_objects_query = f"SELECT COUNT(DISTINCT o) AS distinct_objects FROM parquet_scan('{cottas_file}')"
     schema_query = f"DESCRIBE SELECT * FROM read_parquet('{cottas_file}');"
     compression_query = f"SELECT compression FROM parquet_metadata('{cottas_file}')"
+    is_id_computed_query = f"SELECT id FROM read_parquet('{cottas_file}') LIMIT 1"
 
     cottas_path = f"file://{os.path.join(os.getcwd(), cottas_file)}"
     cottas_size = os.path.getsize(cottas_file)
@@ -163,5 +164,10 @@ def generate_cottas_info(cottas_file):
 
     info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#compression")} "{compression}" .\n'
     info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#schema")} "{schema}" .\n'
+
+    if duckdb.query(is_id_computed_query).df().iloc[0]['id'] == '':
+        info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#isIdComputed")} "false"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n'
+    else:
+        info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#isIdComputed")} "true"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n'
 
     return info
