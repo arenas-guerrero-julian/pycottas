@@ -70,20 +70,6 @@ Substract a COTTAS file from another one into a new COTTAS file.
 python3 -m cottas diff input_file_1.cottas input_file_2.cottas output_file.cottas
 ```
 
-#### info
-
-Retrieve basic information and statistics from a COTTAS file.
-```bash
-python3 -m cottas info file.cottas
-```
-
-#### verify
-
-Check if a COTTAS file is correct.
-```bash
-python3 -m cottas verify file.cottas
-```
-
 #### createID
 
 Add the **id** column to a COTTAS file. This increases the size of the COTTAS file, but it is necessary to evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
@@ -110,6 +96,20 @@ python3 -m cottas removeID file.cottas
 Similar to `removeID`, but it will remove [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) that are not asserted from the COTTAS file.
 ```bash
 python3 -m cottas shrink file.cottas
+```
+
+#### info
+
+Retrieve basic information and statistics from a COTTAS file.
+```bash
+python3 -m cottas info file.cottas
+```
+
+#### verify
+
+Check if a COTTAS file is correct.
+```bash
+python3 -m cottas verify file.cottas
 ```
 
 ### Library
@@ -171,20 +171,6 @@ Substract a COTTAS file from another one into a new COTTAS file.
 * _**cottas_diff_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the diff output COTTAS file.
 * _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
-#### cottas.info
-
-**`cottas.info(cottas_file)`**
-
-Retrieve basic information and statistics from a COTTAS file, returning an [RDF](https://www.w3.org/TR/rdf11-concepts/) [string](https://docs.python.org/3/library/stdtypes.html#str).
-
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
-
-#### cottas.verify
-
-**`cottas.verify(cottas_file)`**
-
-Check if a COTTAS file is correct, returning a [boolean](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values).
-
 * _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
 
 #### cottas.create_id
@@ -206,6 +192,20 @@ Remove the **id** column from a COTTAS file. This reduces the size of the COTTAS
 * _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input/output COTTAS file.
 * _**shrink**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _False_) If _True_, it also removes triples that are not asserted for [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graphs using the [Separate Assertion mode](https://w3c.github.io/rdf-star/cg-spec/editors_draft.html#sa-mode-and-pg-mode). This results in more compressed COTTAS files.
 * _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
+
+#### cottas.info
+
+**`cottas.info(cottas_file)`**
+
+Retrieve basic information and statistics from a COTTAS file, returning an [RDF](https://www.w3.org/TR/rdf11-concepts/) [string](https://docs.python.org/3/library/stdtypes.html#str).
+
+* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
+
+#### cottas.verify
+
+**`cottas.verify(cottas_file)`**
+
+Check if a COTTAS file is correct, returning a [boolean](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values).
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
