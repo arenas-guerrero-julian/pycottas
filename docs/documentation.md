@@ -171,8 +171,6 @@ Substract a COTTAS file from another one into a new COTTAS file.
 * _**cottas_diff_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the diff output COTTAS file.
 * _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be performed in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
-
 #### cottas.create_id
 
 **`cottas.create_id(cottas_file, expand=False, in_memory=True)`**
