@@ -147,6 +147,12 @@ class Graph:
         else:
             print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.pq`, `.nt`, `.nq`.')
 
+    def create_id(self):
+        self.triplestore.execute(f"UPDATE quads SET id=CONCAT(s, ' ', p, ' ', o)")
+
+    def remove_id(self):
+        self.triplestore.execute(f"UPDATE quads SET id=''")
+
     def expand_quoted_triples(self):
         graph_num_triples = len(self)
         positions = ['s', 'o']
@@ -157,7 +163,7 @@ class Graph:
             expand_query = f"""
                 SELECT DISTINCT {positions[i_pos]} FROM (
                     ( SELECT ARRAY_SLICE({positions[i_pos]}, 4, -3) AS {positions[i_pos]} FROM quads
-                                                                    WHERE STARTS_WITH({positions[i_pos]}, '<< ') ) AS v1
+                            WHERE STARTS_WITH({positions[i_pos]}, '<< ') ) AS v1
                     LEFT JOIN
                     ( SELECT id FROM quads ) as v2
                     ON v1.{positions[i_pos]}=v2.id
@@ -183,3 +189,6 @@ class Graph:
                 position_changed = True
             else:
                 break
+
+    def shrink_quoted_triples(self):
+        self.triplestore.execute(f"DELETE FROM quads WHERE ia=FALSE")

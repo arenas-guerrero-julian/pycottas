@@ -22,7 +22,7 @@ def rdf_2_cottas(rdf_file, cottas_file, create_id=True, in_memory=True):
         g = Graph()
         g.parse(rdf_file, preserve_duplicates=True)
         if not create_id:
-            g.triplestore.execute("UPDATE quads SET id=''")
+            g.remove_id()
         g.serialize(cottas_file)
     else:
         rmtree('.cottas_tmp', ignore_errors=True)
@@ -31,7 +31,7 @@ def rdf_2_cottas(rdf_file, cottas_file, create_id=True, in_memory=True):
         g = Graph('.cottas_tmp/cottas.duckdb')
         g.parse(rdf_file, preserve_duplicates=True)
         if not create_id:
-            g.triplestore.execute("UPDATE quads SET id=''")
+            g.remove_id()
         g.serialize(cottas_file)
 
         rmtree('.cottas_tmp', ignore_errors=True)
@@ -53,11 +53,13 @@ def cottas_2_rdf(cottas_file, rdf_file, in_memory=True):
         rmtree('.cottas_tmp', ignore_errors=True)
 
 
-def remove_id(cottas_file, in_memory=True):
+def remove_id(cottas_file, shrink=False, in_memory=True):
     if in_memory:
         g = Graph()
         g.parse(cottas_file, preserve_duplicates=True)
-        g.triplestore.execute("UPDATE quads SET id=''")
+        if shrink:
+            g.shrink_quoted_triples()
+        g.remove_id()
         g.serialize(cottas_file)
     else:
         rmtree('.cottas_tmp', ignore_errors=True)
@@ -65,17 +67,21 @@ def remove_id(cottas_file, in_memory=True):
 
         g = Graph('.cottas_tmp/cottas.duckdb')
         g.parse(cottas_file, preserve_duplicates=True)
-        g.triplestore.execute("UPDATE quads SET id=''")
+        if shrink:
+            g.shrink_quoted_triples()
+        g.remove_id()
         g.serialize(cottas_file)
 
         rmtree('.cottas_tmp', ignore_errors=True)
 
 
-def create_id(cottas_file, in_memory=True):
+def create_id(cottas_file, expand=False, in_memory=True):
     if in_memory:
         g = Graph()
         g.parse(cottas_file, preserve_duplicates=True)
-        g.triplestore.execute("UPDATE quads SET id=CONCAT(s, ' ', p, ' ', o)")
+        g.create_id()
+        if expand:
+            g.expand_quoted_triples()
         g.serialize(cottas_file)
     else:
         rmtree('.cottas_tmp', ignore_errors=True)
@@ -83,7 +89,9 @@ def create_id(cottas_file, in_memory=True):
 
         g = Graph('.cottas_tmp/cottas.duckdb')
         g.parse(cottas_file, preserve_duplicates=True)
-        g.triplestore.execute("UPDATE quads SET id=CONCAT(s, ' ', p, ' ', o)")
+        g.create_id()
+        if expand:
+            g.expand_quoted_triples()
         g.serialize(cottas_file)
 
         rmtree('.cottas_tmp', ignore_errors=True)

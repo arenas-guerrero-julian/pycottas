@@ -55,6 +55,12 @@ if __name__ == "__main__":
     elif args.operation.lower() == 'removeid':
         remove_id(args.arg1)
 
+    elif args.operation.lower() == 'expand':
+        create_id(args.arg1, expand=True)
+
+    elif args.operation.lower() == 'shrink':
+        remove_id(args.arg1, shrink=True)
+
     else:
         print('Invalid COTTAS option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, `cottas2rdf`, '
-              '`rdf2cottas`, `rdf2cottasNoID`, `createID` or `removeID`.')
+              '`rdf2cottas`, `rdf2cottasNoID`, `createID`, `removeID`, `expand` or `shrink`.')
