@@ -205,5 +205,7 @@ Retrieve basic information and statistics from a COTTAS file, returning an [RDF]
 
 Check if a COTTAS file is correct, returning a [boolean](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values).
 
+* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
+
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
