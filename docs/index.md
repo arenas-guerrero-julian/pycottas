@@ -6,7 +6,7 @@
 
 - Compress/uncompress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html).
 - Evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) in compressed space.
-- Merge compressed files.
+- Merge and substract compressed files.
 - Executes via **command line** or as a **library**.
 - Runs on **Linux**, **Windows** and **macOS** systems.
 
