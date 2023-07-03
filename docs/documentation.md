@@ -91,11 +91,25 @@ Add the **id** column to a COTTAS file. This increases the size of the COTTAS fi
 python3 -m cottas createID file.cottas
 ```
 
+#### expand
+
+Similar to `createID`, but it will include [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) that are not asserted in the COTTAS file. This enables triple pattern evaluation over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graphs using the [Separate Assertion mode](https://w3c.github.io/rdf-star/cg-spec/editors_draft.html#sa-mode-and-pg-mode).
+```bash
+python3 -m cottas expand file.cottas
+```
+
 #### removeID
 
-Remove the **id** column from a COTTAS file. This reduces the size of the COTTAS file, but the  evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
+Remove the **id** column from a COTTAS file. This reduces the size of the COTTAS file, but the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
 ```bash
 python3 -m cottas removeID file.cottas
+```
+
+#### shrink
+
+Similar to `removeID`, but it will remove [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) that are not asserted from the COTTAS file.
+```bash
+python3 -m cottas shrink file.cottas
 ```
 
 ### Library
@@ -175,20 +189,22 @@ Check if a COTTAS file is correct, returning a [boolean](https://docs.python.org
 
 #### cottas.create_id
 
-**`cottas.create_id(cottas_file, in_memory=True)`**
+**`cottas.create_id(cottas_file, expand=False, in_memory=True)`**
 
 Add the **id** column to a COTTAS file. This increases the size of the COTTAS file, but it is necessary to evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
 
 * _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input/output COTTAS file.
+* _**expand**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _False_) If _True_, it also prepares the COTTAS file to evaluate triple patterns over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graphs using the [Separate Assertion mode](https://w3c.github.io/rdf-star/cg-spec/editors_draft.html#sa-mode-and-pg-mode).
 * _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
 #### cottas.remove_id
 
-**`cottas.remove_id(cottas_file, in_memory=True)`**
+**`cottas.remove_id(cottas_file, shrink=False, in_memory=True)`**
 
-Remove the **id** column from a COTTAS file. This reduces the size of the COTTAS file, but the  evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
+Remove the **id** column from a COTTAS file. This reduces the size of the COTTAS file, but the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
 
 * _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input/output COTTAS file.
+* _**shrink**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _False_) If _True_, it also removes triples that are not asserted for [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graphs using the [Separate Assertion mode](https://w3c.github.io/rdf-star/cg-spec/editors_draft.html#sa-mode-and-pg-mode). This results in more compressed COTTAS files.
 * _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be done in-memory, otherwise temporary files are created in the system (reducing memory consumption).
 
 
