@@ -65,11 +65,10 @@ def generate_cottas_info(cottas_file):
     info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#compression")} "{compression}" .\n'
     info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#schema")} "{schema}" .\n'
 
+    info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#isIdComputed")} '
     if is_id_computed(cottas_file):
-        info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#isIdComputed")} ' \
-                f'"false"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n'
+        info += f'"false"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n'
     else:
-        info += f'{iri(cottas_path)} {iri("github.com/arenas-guerrero-julian/cottas#isIdComputed")} ' \
-                f'"true"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n'
+        info += f'"true"^^<http://www.w3.org/2001/XMLSchema#boolean> .\n'
 
     return info
