@@ -7,14 +7,11 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 
 from os import mkdir
-
 from shutil import rmtree
 
-
 from .graph import *
-from .term import *
-from .constants import *
-from .utils import *
+from .triple_pattern_translation import translate_triple_pattern
+from .utils import generate_cottas_info
 
 
 def rdf_2_cottas(rdf_file, cottas_file, create_id=True, in_memory=True):

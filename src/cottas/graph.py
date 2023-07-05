@@ -92,7 +92,7 @@ class Graph:
 
     def tail(self, number_of_triples=10):
         offset = len(self) - number_of_triples
-        offset = max(0, offset)     # validate offset is non-negative
+        offset = max(0, offset)     # ensure offset is non-negative
         return self.triplestore.execute(f'SELECT * FROM quads LIMIT {number_of_triples} OFFSET {offset}').fetch_df()
 
     def to_df(self):
@@ -109,11 +109,14 @@ class Graph:
 
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
+
         if preserve_duplicates:
-            self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
+            # DISTINCT is needed, c.f. DuckDB #6500
+            self.triplestore.execute(f'INSERT OR IGNORE INTO quads (SELECT DISTINCT * FROM {temporal_table})')
         else:
             self.triplestore.execute(f'INSERT INTO quads (SELECT DISTINCT * FROM {temporal_table} '
                                      f'EXCEPT SELECT * FROM quads)')
+
         self.triplestore.unregister(temporal_table)
 
     def bulk_remove(self, quads):
@@ -122,15 +125,18 @@ class Graph:
 
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
+
+        # this can also be done checking only the id attribute (but it requires/assumes id to be precomputed)
         self.triplestore.execute(f'DELETE FROM quads USING {temporal_table} WHERE '
                                  f'quads.s={temporal_table}.st AND quads.p={temporal_table}.pt AND '
                                  f'quads.o={temporal_table}.ot AND quads.g={temporal_table}.gt')
+
         self.triplestore.unregister(temporal_table)
 
     def parse(self, filepath, preserve_duplicates=True):
         file_extension = os.path.splitext(filepath)[1].lower()
 
-        if file_extension == '.cottas' or file_extension == '.parquet' or file_extension == '.pq':
+        if file_extension in ['.cottas', '.parquet', '.pq']:
             self.triplestore = parse_cottas(self, filepath)
         elif file_extension == '.nq':   # lightrdf does not support N-Quads
             self.triplestore = parse_nquads(self, filepath, preserve_duplicates)
@@ -140,9 +146,9 @@ class Graph:
     def serialize(self, filepath, codec='ZSTD'):
         file_extension = os.path.splitext(filepath)[1].lower()
 
-        if file_extension == '.cottas' or file_extension == '.parquet' or file_extension == '.pq':
+        if file_extension in ['.cottas', '.parquet', '.pq']:
             serialize_cottas(self, filepath, codec)
-        elif file_extension == '.nt' or '.nq':
+        elif file_extension in ['.nt', '.nq']:
             serialize_rdf(self, filepath)
         else:
             print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.pq`, `.nt`, `.nq`.')
@@ -151,43 +157,55 @@ class Graph:
         self.triplestore.execute(f"UPDATE quads SET id=CONCAT(s, ' ', p, ' ', o)")
 
     def remove_id(self):
-        self.triplestore.execute(f"UPDATE quads SET id=''")
+        self.triplestore.execute(f"UPDATE quads SET id=NULL")
 
     def expand_quoted_triples(self):
         graph_num_triples = len(self)
-        positions = ['s', 'o']
-        position_changed = False
-        i_pos = 0
+        s_o = ['s', 'o']            # to alternate between subject and object positions
+        i = 0                       # whether subject or object in s_o is being processed
+        position_changed = False    # if True, expansion through previous position was unsuccessful
 
         while True:
+            # LEFT JOIN between a quoted column (s, o) with id column
+            # if id IS NULL then there is no id for that quoted triple, hence there is no record for the quoted triple
             expand_query = f"""
-                SELECT DISTINCT {positions[i_pos]} FROM (
-                    ( SELECT ARRAY_SLICE({positions[i_pos]}, 4, -3) AS {positions[i_pos]} FROM quads
-                            WHERE STARTS_WITH({positions[i_pos]}, '<< ') ) AS v1
+                SELECT DISTINCT {s_o[i]} FROM (
+                    ( SELECT ARRAY_SLICE({s_o[i]}, 4, -3) AS {s_o[i]} FROM quads
+                            WHERE STARTS_WITH({s_o[i]}, '<< ') ) AS v1
                     LEFT JOIN
                     ( SELECT id FROM quads ) as v2
-                    ON v1.{positions[i_pos]}=v2.id
+                    ON v1.{s_o[i]}=v2.id
                 ) WHERE id IS NULL
             """
 
             duckdb_cursor = self.triplestore.cursor()
             query = duckdb_cursor.execute(expand_query)
 
+            # process query results in a streaming manner
             cur_chunk_df = query.fetch_df_chunk()
             while len(cur_chunk_df):
-                quads_text = f"{'. '.join(list(cur_chunk_df[positions[i_pos]]))} ."
+                # generate N-Triples string and load it to the graph
+                quads_text = f"{'. '.join(list(cur_chunk_df[s_o[i]]))} ."
                 self.triplestore = parse_rdf(self, io.BytesIO(quads_text.encode()), True, format='nt',
                                              is_asserted=False)
 
+                # process next chunk of the query result set
                 cur_chunk_df = query.fetch_df_chunk()
 
+            # if the graph is larger after expansion, expand it further
             if graph_num_triples < len(self):
                 graph_num_triples = len(self)
+                # reset position, the graph could be expanded through subject or object
                 position_changed = False
+            # expansion was not possible through the current position, try with the other position
             elif not position_changed:
-                i_pos = (i_pos+1) % 2
+                # mark that expansion through current position was unsuccessful
                 position_changed = True
+                # switch position in s_o
+                i = (i+1) % 2
+            # expanding the graph through subject and object was unsuccessful, it is not possible to expand further
             else:
+                # terminate expansion
                 break
 
     def shrink_quoted_triples(self):

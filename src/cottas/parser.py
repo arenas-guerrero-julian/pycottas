@@ -8,15 +8,9 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 import lightrdf
 
-from random import randint
-
 
 def parse_cottas(graph, filepath):
-    temporal_table = f'temporal_quads_{randint(0, 10000000000)}'
-    graph.triplestore.execute(f"CREATE TABLE {temporal_table} AS SELECT * FROM parquet_scan('{filepath}')")
-
-    graph.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
-    graph.triplestore.unregister(temporal_table)
+    graph.triplestore.execute(f"INSERT INTO quads (SELECT * FROM parquet_scan('{filepath}'))")
 
     return graph.triplestore
 
@@ -35,7 +29,6 @@ def parse_rdf(graph, filepath, preserve_duplicates, format=None, is_asserted=Tru
         if not triple[2].startswith('"') and ' <' in triple[2]:
             triple[2] = f'<< {triple[2]} >>'
         triple.append(f'{triple[0]} {triple[1]} {triple[2]}')
-
         triple.append(is_asserted)
 
         triples.append(triple)
@@ -46,6 +39,7 @@ def parse_rdf(graph, filepath, preserve_duplicates, format=None, is_asserted=Tru
             i = 0
         else:
             i += 1
+
     graph.bulk_add(triples, preserve_duplicates)
 
     return graph.triplestore
@@ -99,7 +93,7 @@ def _quad_from_line(line):
 
     if is_quad:
         splitted_line = line.split('<')
-        quad.append('<'.join(splitted_line[:-1]).strip())    # object
+        quad.append('<'.join(splitted_line[:-1]).strip())   # object
         quad.append(f'<{splitted_line[-1]}')                # quad
     else:
         quad.append(line)   # object

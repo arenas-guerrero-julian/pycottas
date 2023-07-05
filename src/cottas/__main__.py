@@ -6,16 +6,15 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
-import argparse
+from argparse import ArgumentParser
 
 from .__init__ import *
-from .utils import *
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
+    parser = ArgumentParser(
         prog='COTTAS',
-        description='Efficient RDF-star management in compressed space',
+        description='Efficient RDF-star graph management in compressed space',
         epilog='Copyright © 2023 Julián Arenas-Guerrero')
 
     parser.add_argument('operation')
