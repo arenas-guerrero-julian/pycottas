@@ -8,7 +8,7 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 from .graph import *
 from .constants import DUCKDB_MEMORY
-from .triple_pattern_translation import translate_triple_pattern
+from .triple_pattern_translator import translate_triple_pattern
 from .utils import generate_cottas_info
 
 
