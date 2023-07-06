@@ -7,6 +7,7 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 
 import lightrdf
+import pandas as pd
 
 
 def parse_cottas(graph, filepath):
@@ -99,8 +100,8 @@ def _quad_from_line(line):
         quad.append(line)   # object
         quad.append('')     # quad
 
-    quad.append('')     # id
-    quad.append(True)   # is_asserted
+    quad.append(f'{quad[0]} {quad[1]} {quad[2]}')   # id
+    quad.append(True)                               # is_asserted
 
     return quad
 
@@ -109,7 +110,7 @@ def parse_nquads(graph, filepath, preserve_duplicates):
     file = open(filepath)
 
     while 1:
-        lines = file.readlines(100000000)
+        lines = file.readlines(100000)
         if not lines:
             break
 

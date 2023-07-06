@@ -111,8 +111,7 @@ class Graph:
         self.triplestore.register(temporal_table, quads_df)
 
         if preserve_duplicates:
-            # DISTINCT is needed, c.f. DuckDB #6500
-            self.triplestore.execute(f'INSERT OR IGNORE INTO quads (SELECT DISTINCT * FROM {temporal_table})')
+            self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
         else:
             self.triplestore.execute(f'INSERT INTO quads (SELECT DISTINCT * FROM {temporal_table} '
                                      f'EXCEPT SELECT * FROM quads)')
@@ -126,7 +125,7 @@ class Graph:
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
 
-        # this can also be done checking only the id attribute (but it requires/assumes id to be precomputed)
+        # this can also be done checking only (id, g) but it requires/assumes id to be precomputed
         self.triplestore.execute(f'DELETE FROM quads USING {temporal_table} WHERE '
                                  f'quads.s={temporal_table}.st AND quads.p={temporal_table}.pt AND '
                                  f'quads.o={temporal_table}.ot AND quads.g={temporal_table}.gt')

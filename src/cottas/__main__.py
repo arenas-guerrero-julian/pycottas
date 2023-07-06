@@ -24,22 +24,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    if args.operation.lower() == 'search':
-        print(search(args.arg1, args.arg2))
-
-    elif args.operation.lower() == 'verify':
-        print(verify(args.arg1))
-
-    elif args.operation.lower() == 'info':
-        print(info(args.arg1))
-
-    elif args.operation.lower() == 'cat':
-        cat(args.arg1, args.arg2, args.arg3)
-
-    elif args.operation.lower() == 'diff':
-        diff(args.arg1, args.arg2, args.arg3)
-
-    elif args.operation.lower() == 'rdf2cottas':
+    if args.operation.lower() == 'rdf2cottas':
         rdf_2_cottas(args.arg1, args.arg2)
 
     elif args.operation.lower() == 'rdf2cottasnoid':
@@ -47,6 +32,15 @@ if __name__ == "__main__":
 
     elif args.operation.lower() == 'cottas2rdf':
         cottas_2_rdf(args.arg1, args.arg2)
+
+    elif args.operation.lower() == 'search':
+        print(search(args.arg1, args.arg2))
+
+    elif args.operation.lower() == 'cat':
+        cat(args.arg1, args.arg2, args.arg3)
+
+    elif args.operation.lower() == 'diff':
+        diff(args.arg1, args.arg2, args.arg3)
 
     elif args.operation.lower() == 'createid':
         create_id(args.arg1)
@@ -59,6 +53,12 @@ if __name__ == "__main__":
 
     elif args.operation.lower() == 'shrink':
         remove_id(args.arg1, shrink=True)
+
+    elif args.operation.lower() == 'verify':
+        print(verify(args.arg1))
+
+    elif args.operation.lower() == 'info':
+        print(info(args.arg1))
 
     else:
         print('Invalid COTTAS option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, `cottas2rdf`, '
