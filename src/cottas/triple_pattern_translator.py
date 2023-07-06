@@ -113,4 +113,5 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
             triple_pattern_query += f"g='{triple_pattern[3]}' AND "
         triple_pattern_query += "ia=TRUE"
 
+    print(triple_pattern_query)
     return triple_pattern_query

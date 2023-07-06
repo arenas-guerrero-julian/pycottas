@@ -15,13 +15,15 @@ import pandas as pd
 from random import randint
 
 from .constants import DUCKDB_MEMORY
-from .parser import parse_cottas, parse_rdf, parse_nquads
+from .parser import parse_cottas, parse_rdf, parse_rdf_fs
 from .serializer import serialize_cottas, serialize_rdf
 
 
 class Graph:
 
-    def __init__(self, triplestore=DUCKDB_MEMORY):
+    def __init__(self, triplestore=DUCKDB_MEMORY, preserve_duplicates=True):
+        self.preserve_duplicates = preserve_duplicates
+
         self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
             'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, '
@@ -104,17 +106,13 @@ class Graph:
     def to_list(self):
         return self.to_df().values.tolist()
 
-    def bulk_add(self, quads, preserve_duplicates=True):
+    def bulk_add(self, quads):
         quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt', 'iat'])
 
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
 
-        if preserve_duplicates:
-            self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
-        else:
-            self.triplestore.execute(f'INSERT INTO quads (SELECT DISTINCT * FROM {temporal_table} '
-                                     f'EXCEPT SELECT * FROM quads)')
+        self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
 
         self.triplestore.unregister(temporal_table)
 
@@ -132,15 +130,16 @@ class Graph:
 
         self.triplestore.unregister(temporal_table)
 
-    def parse(self, filepath, preserve_duplicates=True):
+    def parse(self, filepath):
         file_extension = os.path.splitext(filepath)[1].lower()
 
         if file_extension in ['.cottas', '.parquet', '.pq']:
             self.triplestore = parse_cottas(self, filepath)
-        elif file_extension == '.nq':   # lightrdf does not support N-Quads
-            self.triplestore = parse_nquads(self, filepath, preserve_duplicates)
+        elif self.preserve_duplicates:
+            self.triplestore = parse_rdf(self, filepath)
         else:
-            self.triplestore = parse_rdf(self, filepath, preserve_duplicates)
+            # use the file system
+            self.triplestore = parse_rdf_fs(self, filepath)
 
     def serialize(self, filepath, codec='ZSTD'):
         file_extension = os.path.splitext(filepath)[1].lower()
@@ -185,8 +184,8 @@ class Graph:
             while len(cur_chunk_df):
                 # generate N-Triples string and load it to the graph
                 quads_text = f"{'. '.join(list(cur_chunk_df[s_o[i]]))} ."
-                self.triplestore = parse_rdf(self, io.BytesIO(quads_text.encode()), True, format='nt',
-                                             is_asserted=False)
+                self.triplestore = parse_rdf(self, io.BytesIO(quads_text.encode()), is_asserted=False,
+                                             mime_type='application/n-triples')
 
                 # process next chunk of the query result set
                 cur_chunk_df = query.fetch_df_chunk()

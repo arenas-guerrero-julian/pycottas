@@ -8,8 +8,14 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 import duckdb
 
+from os import path
+
 from .constants import *
 from .term import *
+
+
+def get_file_extension(file_path):
+    return path.splitext(file_path)[1].lower()
 
 
 def is_id_computed(cottas_file):

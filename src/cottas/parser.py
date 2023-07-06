@@ -6,8 +6,12 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
-import lightrdf
-import pandas as pd
+import pyoxigraph
+
+from os import path
+
+from .utils import get_file_extension
+from .constants import file_ext_2_mime_type
 
 
 def parse_cottas(graph, filepath):
@@ -16,34 +20,89 @@ def parse_cottas(graph, filepath):
     return graph.triplestore
 
 
-def parse_rdf(graph, filepath, preserve_duplicates, format=None, is_asserted=True):
-    parser = lightrdf.Parser()
+def parse_rdf(graph, file_path, is_asserted=True, mime_type=None):
+    if not mime_type:
+        mime_type = file_ext_2_mime_type[get_file_extension(file_path=file_path)]
 
-    triples = []
+    quads = []
     i = 0
-    for triple in parser.parse(filepath, base_iri=None, format=format):
-        triple = list(triple)
+    for quad in pyoxigraph.parse(file_path, base_iri=None, mime_type=mime_type):
+        quad = [str(term) for term in quad]
 
-        triple.append('')   # for empty quad
-        if not triple[0].startswith('"') and ' <' in triple[0]:
-            triple[0] = f'<< {triple[0]} >>'
-        if not triple[2].startswith('"') and ' <' in triple[2]:
-            triple[2] = f'<< {triple[2]} >>'
-        triple.append(f'{triple[0]} {triple[1]} {triple[2]}')
-        triple.append(is_asserted)
+        if len(quad) == 3:
+            # for empty quad
+            quad.append('')
 
-        triples.append(triple)
+        if not quad[0].startswith('"') and ' <' in quad[0]:
+            quad[0] = f'<< {quad[0]} >>'
+        if not quad[2].startswith('"') and ' <' in quad[2]:
+            quad[2] = f'<< {quad[2]} >>'
+        quad.append(f'{quad[0]} {quad[1]} {quad[2]}')
+        quad.append(is_asserted)
+
+        quads.append(quad)
 
         if i == 1000000:
-            graph.bulk_add(triples, preserve_duplicates)
-            triples = []
+            graph.bulk_add(quads)
+            quads = []
             i = 0
         else:
             i += 1
 
-    graph.bulk_add(triples, preserve_duplicates)
+    graph.bulk_add(quads)
 
     return graph.triplestore
+
+
+def parse_rdf_fs(graph, file_path, is_asserted=True):
+    # remove temporary dir if existing beforehand
+    from shutil import rmtree
+    if path.isdir('.cottas.oxi'):
+        rmtree('.cottas.oxi', ignore_errors=True)
+
+    mime_type = file_ext_2_mime_type[get_file_extension(file_path=file_path)]
+
+    oxi_store = pyoxigraph.Store('.cottas.oxi')
+    oxi_store.bulk_load(file_path, mime_type=mime_type)
+
+    quads = []
+    i = 0
+    for quad in oxi_store.quads_for_pattern(None, None, None, graph_name=None):
+        quad = [str(term) for term in quad]
+
+        if len(quad) == 3:
+            # for empty quad
+            quad.append('')
+
+        if not quad[0].startswith('"') and ' <' in quad[0]:
+            quad[0] = f'<< {quad[0]} >>'
+        if not quad[2].startswith('"') and ' <' in quad[2]:
+            quad[2] = f'<< {quad[2]} >>'
+        quad.append(f'{quad[0]} {quad[1]} {quad[2]}')
+        quad.append(is_asserted)
+
+        quads.append(quad)
+
+        if i == 1000000:
+            graph.bulk_add(quads)
+            quads = []
+            i = 0
+        else:
+            i += 1
+
+    graph.bulk_add(quads)
+
+    # remove temporary dir
+    del oxi_store
+    if path.isdir('.cottas.oxi'):
+        rmtree('.cottas.oxi', ignore_errors=True)
+
+    return graph.triplestore
+
+
+##############################################################################
+#############################   FROM HERE IT IS DEPRECATED   #################
+##############################################################################
 
 
 def _line_has_quad(line):
@@ -106,7 +165,7 @@ def _quad_from_line(line):
     return quad
 
 
-def parse_nquads(graph, filepath, preserve_duplicates):
+def parse_nquads(graph, filepath):
     file = open(filepath)
 
     while 1:
@@ -115,7 +174,7 @@ def parse_nquads(graph, filepath, preserve_duplicates):
             break
 
         quads = [_quad_from_line(line) for line in lines if _line_has_quad(line)]
-        graph.bulk_add(quads, preserve_duplicates)
+        graph.bulk_add(quads)
 
     file.close()
 
