@@ -19,7 +19,7 @@ def get_file_extension(file_path):
 
 
 def is_id_computed(cottas_file):
-    is_id_computed_query = f"SELECT id FROM READ_PARQUET('{cottas_file}') LIMIT 1"
+    is_id_computed_query = f"SELECT id FROM PARQUET_SCAN('{cottas_file}') LIMIT 1"
 
     return duckdb.query(is_id_computed_query).df().iloc[0]['id'] == ''
 
@@ -32,7 +32,7 @@ def generate_cottas_info(cottas_file):
     properties_query = f"SELECT COUNT(DISTINCT p) AS properties FROM PARQUET_SCAN('{cottas_file}')"
     distinct_subjects_query = f"SELECT COUNT(DISTINCT s) AS distinct_subjects FROM PARQUET_SCAN('{cottas_file}')"
     distinct_objects_query = f"SELECT COUNT(DISTINCT o) AS distinct_objects FROM PARQUET_SCAN('{cottas_file}')"
-    schema_query = f"DESCRIBE SELECT * FROM READ_PARQUET('{cottas_file}');"
+    schema_query = f"DESCRIBE SELECT * FROM PARQUET_SCAN('{cottas_file}');"
     compression_query = f"SELECT compression FROM PARQUET_METADATA('{cottas_file}')"
 
     cottas_path = f"file://{os.path.join(os.getcwd(), cottas_file)}"

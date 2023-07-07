@@ -15,7 +15,7 @@ from .constants import file_ext_2_mime_type
 
 
 def parse_cottas(graph, filepath):
-    graph.triplestore.execute(f"INSERT INTO quads (SELECT * FROM parquet_scan('{filepath}'))")
+    graph.triplestore.execute(f"INSERT INTO quads (SELECT * FROM PARQUET_SCAN('{filepath}'))")
 
     return graph.triplestore
 
@@ -33,10 +33,10 @@ def parse_rdf(graph, file_path, is_asserted=True, mime_type=None):
             # for empty quad
             quad.append('')
 
-        if not quad[0].startswith('"') and ' <' in quad[0]:
-            quad[0] = f'<< {quad[0]} >>'
+        if ' <' in quad[0]:
+            quad[0] = f'<<{quad[0]}>>'
         if not quad[2].startswith('"') and ' <' in quad[2]:
-            quad[2] = f'<< {quad[2]} >>'
+            quad[2] = f'<<{quad[2]}>>'
         quad.append(f'{quad[0]} {quad[1]} {quad[2]}')
         quad.append(is_asserted)
 
@@ -74,10 +74,10 @@ def parse_rdf_fs(graph, file_path, is_asserted=True):
             # for empty quad
             quad.append('')
 
-        if not quad[0].startswith('"') and ' <' in quad[0]:
-            quad[0] = f'<< {quad[0]} >>'
+        if ' <' in quad[0]:
+            quad[0] = f'<<{quad[0]}>>'
         if not quad[2].startswith('"') and ' <' in quad[2]:
-            quad[2] = f'<< {quad[2]} >>'
+            quad[2] = f'<<{quad[2]}>>'
         quad.append(f'{quad[0]} {quad[1]} {quad[2]}')
         quad.append(is_asserted)
 

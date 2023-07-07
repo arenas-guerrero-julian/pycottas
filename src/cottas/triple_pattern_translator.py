@@ -36,8 +36,8 @@ def _build_star_query(triple_pattern, query, cottas_file, recursion_track=''):
         query += f"g AS {triple_pattern[3][1:]}, "
 
     if recursion_track:
-        query += f"CONCAT('<< ', id, ' >>') AS id{recursion_track}, "
-    query = f"{query[:-2]} FROM READ_PARQUET('{cottas_file}') WHERE "
+        query += f"CONCAT('<<', id, '>>') AS id{recursion_track}, "
+    query = f"{query[:-2]} FROM PARQUET_SCAN('{cottas_file}') WHERE "
 
     if type(triple_pattern[0]) is str and not triple_pattern[0].startswith('?'):
         query += f"s='{triple_pattern[0]}' AND "
@@ -76,6 +76,8 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
     projection_str = projection_str.replace("<<", '').replace(">>", '')
     projection_list = [term[1:] for term in projection_str.split() if term.startswith('?')]
 
+    triple_pattern_str = triple_pattern_str.replace('<<', '<< ')
+    triple_pattern_str = triple_pattern_str[::-1].replace('>>', '>> ')[::-1]
     triple_pattern_str = ' '.join("'{}'".format(word) for word in triple_pattern_str.split())
 
     triple_pattern_str = triple_pattern_str.replace("'<<' ", '[').replace(" '>>'", ']')
@@ -87,7 +89,7 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
     if type(triple_pattern[0]) is list or type(triple_pattern[2]) is list:
         triple_pattern_query = "SELECT "
         for var in projection_list:
-            triple_pattern_query += f"IF(STARTS_WITH({var}, '<< '), ARRAY_SLICE({var}, 4, -3), {var}) AS {var}, "
+            triple_pattern_query += f"IF (STARTS_WITH({var}, '<<'), ARRAY_SLICE({var}, 3, -2), {var}) AS {var}, "
         triple_pattern_query = f"{triple_pattern_query[:-2]}\n" \
                                f"FROM ( {_build_star_query(triple_pattern, '', cottas_file)} )"
     else:
@@ -101,7 +103,7 @@ def translate_triple_pattern(cottas_file, triple_pattern_str):
         if len(triple_pattern) == 4 and triple_pattern[3].startswith('?'):
             triple_pattern_query += f"g AS {triple_pattern[3][1:]}, "
 
-        triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM READ_PARQUET('{cottas_file}')\nWHERE "
+        triple_pattern_query = f"{triple_pattern_query[:-2]}\nFROM PARQUET_SCAN('{cottas_file}')\nWHERE "
 
         if not triple_pattern[0].startswith('?'):
             triple_pattern_query += f"s='{triple_pattern[0]}' AND "

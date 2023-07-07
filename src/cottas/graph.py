@@ -27,7 +27,7 @@ class Graph:
         self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
             'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, '
-            'id VARCHAR NOT NULL, ia BOOLEAN NOT NULL)')
+            'id VARCHAR, ia BOOLEAN NOT NULL)')
 
     def __str__(self):
         return repr(self)
@@ -168,8 +168,8 @@ class Graph:
             # if id IS NULL then there is no id for that quoted triple, hence there is no record for the quoted triple
             expand_query = f"""
                 SELECT DISTINCT {s_o[i]} FROM (
-                    ( SELECT ARRAY_SLICE({s_o[i]}, 4, -3) AS {s_o[i]} FROM quads
-                            WHERE STARTS_WITH({s_o[i]}, '<< ') ) AS v1
+                    ( SELECT ARRAY_SLICE({s_o[i]}, 3, -2) AS {s_o[i]} FROM quads
+                            WHERE STARTS_WITH({s_o[i]}, '<<') ) AS v1
                     LEFT JOIN
                     ( SELECT id FROM quads ) as v2
                     ON v1.{s_o[i]}=v2.id
