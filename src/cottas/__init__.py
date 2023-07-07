@@ -86,7 +86,7 @@ def create_id(cottas_file, expand=False, in_memory=True):
 
 
 def search(cottas_file, triple_pattern):
-    return duckdb.query(translate_triple_pattern(f"{cottas_file}", triple_pattern)).df().to_string()
+    return duckdb.query(translate_triple_pattern(f"{cottas_file}", triple_pattern))
 
 
 def cat(cottas_file_1, cottas_file_2, cottas_cat_file, in_memory=True):
