@@ -37,19 +37,19 @@ def parse_rdf(graph, file_path, is_asserted=True, mime_type=None):
             quad[0] = f'<<{quad[0]}>>'
         if not quad[2].startswith('"') and ' <' in quad[2]:
             quad[2] = f'<<{quad[2]}>>'
-        quad.append(f'{quad[0]} {quad[1]} {quad[2]}')
+        quad.append(f'<<{quad[0]} {quad[1]} {quad[2]}>>')
         quad.append(is_asserted)
 
         quads.append(quad)
 
         if i == 1000000:
-            graph.bulk_add(quads)
+            graph.bulk_add(quads, hash_id=True)
             quads = []
             i = 0
         else:
             i += 1
 
-    graph.bulk_add(quads)
+    graph.bulk_add(quads, hash_id=True)
 
     return graph.triplestore
 
@@ -78,19 +78,19 @@ def parse_rdf_fs(graph, file_path, is_asserted=True):
             quad[0] = f'<<{quad[0]}>>'
         if not quad[2].startswith('"') and ' <' in quad[2]:
             quad[2] = f'<<{quad[2]}>>'
-        quad.append(f'{quad[0]} {quad[1]} {quad[2]}')
+        quad.append(f'<<{quad[0]} {quad[1]} {quad[2]}>>')
         quad.append(is_asserted)
 
         quads.append(quad)
 
         if i == 1000000:
-            graph.bulk_add(quads)
+            graph.bulk_add(quads, hash_id=True)
             quads = []
             i = 0
         else:
             i += 1
 
-    graph.bulk_add(quads)
+    graph.bulk_add(quads, hash_id=True)
 
     # remove temporary dir
     del oxi_store
@@ -174,7 +174,7 @@ def parse_nquads(graph, filepath):
             break
 
         quads = [_quad_from_line(line) for line in lines if _line_has_quad(line)]
-        graph.bulk_add(quads)
+        graph.bulk_add(quads, hash_id=True)
 
     file.close()
 

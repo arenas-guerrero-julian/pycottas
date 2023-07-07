@@ -27,7 +27,7 @@ class Graph:
         self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
             'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, '
-            'id VARCHAR, ia BOOLEAN NOT NULL)')
+            'id UBIGINT, ia BOOLEAN NOT NULL)')
 
     def __str__(self):
         return repr(self)
@@ -106,13 +106,16 @@ class Graph:
     def to_list(self):
         return self.to_df().values.tolist()
 
-    def bulk_add(self, quads):
+    def bulk_add(self, quads, hash_id=False):
         quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt', 'idt', 'iat'])
 
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
 
-        self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
+        if hash_id:
+            self.triplestore.execute(f'INSERT INTO quads (SELECT st, pt, ot, gt, HASH(idt), iat FROM {temporal_table})')
+        else:
+            self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
 
         self.triplestore.unregister(temporal_table)
 
@@ -152,14 +155,14 @@ class Graph:
             print('Invalid serialization file extension. Valid values: `.cottas`, `.parquet`, `.pq`, `.nt`, `.nq`.')
 
     def create_id(self):
-        self.triplestore.execute(f"UPDATE quads SET id=CONCAT(s, ' ', p, ' ', o)")
+        self.triplestore.execute(f"UPDATE quads SET id=HASH(CONCAT('<<', s, ' ', p, ' ', o, '>>'))")
 
     def remove_id(self):
         self.triplestore.execute(f"UPDATE quads SET id=NULL")
 
     def expand_quoted_triples(self):
         graph_num_triples = len(self)
-        s_o = ['s', 'o']            # to alternate between subject and object positions
+        s_o = ('s', 'o')            # to alternate between subject and object positions
         i = 0                       # whether subject or object in s_o is being processed
         position_changed = False    # if True, expansion through previous position was unsuccessful
 
@@ -168,11 +171,11 @@ class Graph:
             # if id IS NULL then there is no id for that quoted triple, hence there is no record for the quoted triple
             expand_query = f"""
                 SELECT DISTINCT {s_o[i]} FROM (
-                    ( SELECT ARRAY_SLICE({s_o[i]}, 3, -2) AS {s_o[i]} FROM quads
-                            WHERE STARTS_WITH({s_o[i]}, '<<') ) AS v1
+                    ( SELECT {s_o[i]} AS {s_o[i]}, HASH({s_o[i]}) AS {s_o[i]}_hash FROM quads
+                                WHERE STARTS_WITH({s_o[i]}, '<<') ) AS v1
                     LEFT JOIN
                     ( SELECT id FROM quads ) as v2
-                    ON v1.{s_o[i]}=v2.id
+                    ON v1.{s_o[i]}_hash=v2.id
                 ) WHERE id IS NULL
             """
 
@@ -182,6 +185,8 @@ class Graph:
             # process query results in a streaming manner
             cur_chunk_df = query.fetch_df_chunk()
             while len(cur_chunk_df):
+                # remove enclosing `<<` and `>>` to be able to parse the triple as N-Triples
+                cur_chunk_df[s_o[i]] = cur_chunk_df[s_o[i]].str[2:-2]
                 # generate N-Triples string and load it to the graph
                 quads_text = f"{'. '.join(list(cur_chunk_df[s_o[i]]))} ."
                 self.triplestore = parse_rdf(self, io.BytesIO(quads_text.encode()), is_asserted=False,

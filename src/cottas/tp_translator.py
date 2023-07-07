@@ -86,13 +86,13 @@ def _construct_tp_star_query(tp, cottas_file, traversal_path=''):
             # if the position is a variable, project it (removing the `?`)
             if type(tp[i]) is str and tp[i].startswith('?'):
                 query += f"{i_pos[i]} AS {tp[i][1:]}, "
-            # if the position is a triple pattern, project it using the recursion track as an alias
+            # if the position is a triple pattern, project its hash for later joining
             elif type(tp[i]) is list:
-                query += f"{i_pos[i]} AS {traversal_path}{i_pos[i]}, "
+                query += f"HASH({i_pos[i]}) AS {traversal_path}{i_pos[i]}, "
 
     # if there is recursion, we need to reference the id for joining in upper levels of the tree
     if traversal_path:
-        query += f"CONCAT('<<', id, '>>') AS id{traversal_path}, "
+        query += f"id AS id{traversal_path}, "
 
     # remove final `, `
     query = query[:-2]
