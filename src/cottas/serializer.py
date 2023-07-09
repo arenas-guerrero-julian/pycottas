@@ -6,8 +6,12 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
-def serialize_cottas(graph, filepath, codec='ZSTD'):
-    graph.triplestore.execute(f"COPY quads TO '{filepath}' (FORMAT 'PARQUET', CODEC '{codec}')")
+def serialize_cottas(graph, filepath, compression='ZSTD'):
+    # https://duckdb.org/docs/data/parquet/tips.html
+    # https://duckdb.org/docs/data/parquet/overview
+    # https://duckdb.org/docs/data/parquet/metadata
+    graph.triplestore.execute(f"COPY quads TO '{filepath}' (FORMAT 'PARQUET', COMPRESSION '{compression}')")
+    #graph.triplestore.execute(f"COPY (SELECT s, p, o, g, CONCAT(s, ' ', p, ' ', o) AS id, ia FROM quads) TO '{filepath}' (FORMAT 'PARQUET', CODEC '{codec}')")
 
 
 def serialize_rdf(graph, filepath):

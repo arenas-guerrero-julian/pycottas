@@ -27,7 +27,7 @@ class Graph:
         self.triplestore = duckdb.connect(database=triplestore)
         self.triplestore.execute(
             'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, '
-            'id UBIGINT, ia BOOLEAN NOT NULL)')
+            'id UBIGINT UNIQUE NOT NULL, ia BOOLEAN NOT NULL)')
 
     def __str__(self):
         return repr(self)
@@ -113,9 +113,10 @@ class Graph:
         self.triplestore.register(temporal_table, quads_df)
 
         if hash_id:
-            self.triplestore.execute(f'INSERT INTO quads (SELECT st, pt, ot, gt, HASH(idt), iat FROM {temporal_table})')
+            self.triplestore.execute(f'INSERT OR IGNORE INTO quads ('
+                                     f'SELECT DISTINCT st, pt, ot, gt, HASH(idt), iat FROM {temporal_table})')
         else:
-            self.triplestore.execute(f'INSERT INTO quads (SELECT * FROM {temporal_table})')
+            self.triplestore.execute(f'INSERT OR IGNORE INTO quads (SELECT DISTINCT * FROM {temporal_table})')
 
         self.triplestore.unregister(temporal_table)
 
@@ -141,8 +142,7 @@ class Graph:
         elif self.preserve_duplicates:
             self.triplestore = parse_rdf(self, filepath)
         else:
-            # use the file system
-            self.triplestore = parse_rdf_fs(self, filepath)
+            self.triplestore = parse_rdf(self, filepath)
 
     def serialize(self, filepath, codec='ZSTD'):
         file_extension = os.path.splitext(filepath)[1].lower()

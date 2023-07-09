@@ -58,7 +58,8 @@ if __name__ == "__main__":
         print(verify(args.arg1))
 
     elif args.operation.lower() == 'info':
-        print(info(args.arg1))
+        info_df = info(args.arg1)
+        print(duckdb.query("SELECT * FROM info_df"))
 
     else:
         print('Invalid COTTAS option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, `cottas2rdf`, '
