@@ -19,9 +19,9 @@ def get_file_extension(file_path):
 
 
 def is_id_computed(cottas_file):
-    is_id_computed_query = f"SELECT id FROM PARQUET_SCAN('{cottas_file}') LIMIT 1"
+    is_id_computed_query = f"SELECT id FROM PARQUET_SCAN('{cottas_file}') WHERE id IS NOT NULL LIMIT 1"
 
-    return duckdb.query(is_id_computed_query).df().iloc[0]['id'] == ''
+    return bool(len(duckdb.query(is_id_computed_query)))
 
 
 def generate_cottas_info(cottas_file):
@@ -33,8 +33,8 @@ def generate_cottas_info(cottas_file):
     properties_query = f"SELECT COUNT(DISTINCT p) AS properties FROM PARQUET_SCAN('{cottas_file}')"
     distinct_subjects_query = f"SELECT COUNT(DISTINCT s) AS distinct_subjects FROM PARQUET_SCAN('{cottas_file}')"
     distinct_objects_query = f"SELECT COUNT(DISTINCT o) AS distinct_objects FROM PARQUET_SCAN('{cottas_file}')"
-    subject_has_quoted_query = f"SELECT s FROM PARQUET_SCAN('{cottas_file}') WHERE STARTS_WITH(s, '<<') LIMIT 1"
-    object_has_quoted_query = f"SELECT o FROM PARQUET_SCAN('{cottas_file}') WHERE STARTS_WITH(o, '<<') LIMIT 1"
+    has_quoted_subjects_query = f"SELECT s FROM PARQUET_SCAN('{cottas_file}') WHERE STARTS_WITH(s, '<<') LIMIT 1"
+    has_quoted_objects_query = f"SELECT o FROM PARQUET_SCAN('{cottas_file}') WHERE STARTS_WITH(o, '<<') LIMIT 1"
     schema_query = f"DESCRIBE SELECT * FROM PARQUET_SCAN('{cottas_file}')"
     compression_query = f"SELECT compression FROM PARQUET_METADATA('{cottas_file}')"
 
@@ -47,8 +47,8 @@ def generate_cottas_info(cottas_file):
         ('properties', duckdb.query(properties_query).df().iloc[0]['properties']),
         ('distinct_subjects', duckdb.query(distinct_subjects_query).df().iloc[0]['distinct_subjects']),
         ('distinct_objects', duckdb.query(distinct_objects_query).df().iloc[0]['distinct_objects']),
-        ('subject_has_quoted', True if len(duckdb.query(subject_has_quoted_query)) else False),
-        ('object_has_quoted', True if len(duckdb.query(object_has_quoted_query)) else False),
+        ('has_quoted_subjects', True if len(duckdb.query(has_quoted_subjects_query)) else False),
+        ('has_quoted_objects', True if len(duckdb.query(has_quoted_objects_query)) else False),
         ('issued', cottas_issued),
         ('size (MB)', os.path.getsize(cottas_file) / 10**6),
         ('compression', duckdb.query(compression_query).df().iloc[0]['compression']),
