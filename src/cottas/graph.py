@@ -15,7 +15,7 @@ import pandas as pd
 from random import randint
 
 from .constants import DUCKDB_MEMORY
-from .parser import parse_cottas, parse_rdf, parse_rdf_fs
+from .parser import parse_cottas, parse_rdf, parse_nquads
 from .serializer import serialize_cottas, serialize_rdf
 
 
@@ -144,7 +144,7 @@ class Graph:
         if file_extension in ['.cottas', '.parquet', '.pq']:
             self.triplestore = parse_cottas(self, filepath)
         else:
-            self.triplestore = parse_rdf(self, filepath)
+            self.triplestore = parse_nquads(self, filepath)
 
     def serialize(self, filepath, codec='ZSTD'):
         file_extension = os.path.splitext(filepath)[1].lower()

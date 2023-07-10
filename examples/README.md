@@ -6,7 +6,7 @@ cd cottas
 pip install .
 ```
 
-## Install
+## Run example
 
 Run example:
 
