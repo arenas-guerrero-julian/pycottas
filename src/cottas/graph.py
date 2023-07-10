@@ -21,13 +21,15 @@ from .serializer import serialize_cottas, serialize_rdf
 
 class Graph:
 
-    def __init__(self, triplestore=DUCKDB_MEMORY, preserve_duplicates=True):
-        self.preserve_duplicates = preserve_duplicates
-
+    def __init__(self, triplestore=DUCKDB_MEMORY, id_unique=False):
+        self.id_unique = id_unique
         self.triplestore = duckdb.connect(database=triplestore)
-        self.triplestore.execute(
-            'CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL, '
-            'id UBIGINT UNIQUE NOT NULL, ia BOOLEAN NOT NULL)')
+
+        create_query = f"""
+            CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL,
+            id UBIGINT {'UNIQUE' if id_unique else ''}, ia BOOLEAN NOT NULL)
+        """
+        self.triplestore.execute(create_query)
 
     def __str__(self):
         return repr(self)
@@ -53,6 +55,7 @@ class Graph:
         return bool(len(self))
 
     def __add__(self, other):
+        # TODO: chunking
         self.bulk_add(other.to_list())
 
         return self
@@ -112,12 +115,13 @@ class Graph:
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
 
-        if hash_id:
-            self.triplestore.execute(f'INSERT OR IGNORE INTO quads ('
-                                     f'SELECT DISTINCT st, pt, ot, gt, HASH(idt), iat FROM {temporal_table})')
-        else:
-            self.triplestore.execute(f'INSERT OR IGNORE INTO quads (SELECT DISTINCT * FROM {temporal_table})')
+        insert_query = 'INSERT OR IGNORE' if self.id_unique else 'INSERT'
+        insert_query += ' INTO quads (SELECT '
+        insert_query += 'DISTINCT ' if self.id_unique else ''
+        insert_query += 'st, pt, ot, gt, HASH(idt), iat' if hash_id else '*'
+        insert_query += f" FROM {temporal_table})"
 
+        self.triplestore.execute(insert_query)
         self.triplestore.unregister(temporal_table)
 
     def bulk_remove(self, quads):
@@ -139,8 +143,6 @@ class Graph:
 
         if file_extension in ['.cottas', '.parquet', '.pq']:
             self.triplestore = parse_cottas(self, filepath)
-        elif self.preserve_duplicates:
-            self.triplestore = parse_rdf(self, filepath)
         else:
             self.triplestore = parse_rdf(self, filepath)
 
@@ -188,7 +190,7 @@ class Graph:
                 # remove enclosing `<<` and `>>` to be able to parse the triple as N-Triples
                 cur_chunk_df[s_o[i]] = cur_chunk_df[s_o[i]].str[2:-2]
                 # generate N-Triples string and load it to the graph
-                quads_text = f"{'. '.join(list(cur_chunk_df[s_o[i]]))} ."
+                quads_text = ' .\n'.join(list(cur_chunk_df[s_o[i]])) + ' .'
                 self.triplestore = parse_rdf(self, io.BytesIO(quads_text.encode()), is_asserted=False,
                                              mime_type='application/n-triples')
 

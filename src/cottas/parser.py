@@ -15,7 +15,10 @@ from .constants import file_ext_2_mime_type
 
 
 def parse_cottas(graph, filepath):
-    graph.triplestore.execute(f"INSERT INTO quads (SELECT * FROM PARQUET_SCAN('{filepath}'))")
+    if graph.id_unique:
+        graph.triplestore.execute(f"INSERT OR IGNORE INTO quads (SELECT DISTINCT * FROM PARQUET_SCAN('{filepath}'))")
+    else:
+        graph.triplestore.execute(f"INSERT INTO quads (SELECT * FROM PARQUET_SCAN('{filepath}'))")
 
     return graph.triplestore
 

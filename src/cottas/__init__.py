@@ -28,7 +28,7 @@ def rdf_2_cottas(rdf_file, cottas_file, create_id=True, expand=False, in_memory=
 
     _remove_cottas_temp_files(db_file)
 
-    g = Graph(db_file, preserve_duplicates=in_memory)
+    g = Graph(db_file, id_unique=True)
     g.parse(rdf_file)
     if not create_id and not expand:
         g.remove_id()
