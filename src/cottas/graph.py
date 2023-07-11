@@ -15,19 +15,19 @@ import pandas as pd
 from random import randint
 
 from .constants import DUCKDB_MEMORY
-from .parser import parse_cottas, parse_rdf, parse_nquads
+from .parser import parse_cottas, parse_rdf
 from .serializer import serialize_cottas, serialize_rdf
 
 
 class Graph:
 
-    def __init__(self, triplestore=DUCKDB_MEMORY, id_unique=False):
-        self.id_unique = id_unique
+    def __init__(self, triplestore=DUCKDB_MEMORY, preserve_duplicates=True):
+        self.preserve_duplicates = preserve_duplicates
         self.triplestore = duckdb.connect(database=triplestore)
 
         create_query = f"""
             CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL,
-            id UBIGINT {'UNIQUE' if id_unique else ''}, ia BOOLEAN NOT NULL)
+            id UBIGINT {'' if preserve_duplicates else 'UNIQUE'}, ia BOOLEAN NOT NULL)
         """
         self.triplestore.execute(create_query)
 
@@ -115,9 +115,9 @@ class Graph:
         temporal_table = f'temporal_quads_{randint(0, 1000000)}'
         self.triplestore.register(temporal_table, quads_df)
 
-        insert_query = 'INSERT OR IGNORE' if self.id_unique else 'INSERT'
+        insert_query = 'INSERT' if self.preserve_duplicates else 'INSERT OR IGNORE'
         insert_query += ' INTO quads (SELECT '
-        insert_query += 'DISTINCT ' if self.id_unique else ''
+        insert_query += '' if self.preserve_duplicates else 'DISTINCT '     # DISTINCT is required, see DuckDB #6500
         insert_query += 'st, pt, ot, gt, HASH(idt), iat' if hash_id else '*'
         insert_query += f" FROM {temporal_table})"
 
@@ -138,13 +138,13 @@ class Graph:
 
         self.triplestore.unregister(temporal_table)
 
-    def parse(self, filepath):
+    def parse(self, filepath, in_memory=True):
         file_extension = os.path.splitext(filepath)[1].lower()
 
         if file_extension in ['.cottas', '.parquet', '.pq']:
             self.triplestore = parse_cottas(self, filepath)
         else:
-            self.triplestore = parse_nquads(self, filepath)
+            self.triplestore = parse_rdf(self, filepath)
 
     def serialize(self, filepath, codec='ZSTD'):
         file_extension = os.path.splitext(filepath)[1].lower()

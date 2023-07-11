@@ -26,10 +26,14 @@ def _remove_cottas_temp_files(db_file):
 def rdf_2_cottas(rdf_file, cottas_file, create_id=True, expand=False, in_memory=True):
     db_file = DUCKDB_MEMORY if in_memory else '.cottas.db'
 
-    _remove_cottas_temp_files(db_file)
+    if in_memory:
+        g = Graph(db_file, preserve_duplicates=False)
+    else:
+        _remove_cottas_temp_files(db_file)
+        g = Graph(db_file)
 
-    g = Graph(db_file, id_unique=True)
-    g.parse(rdf_file)
+    g.parse(rdf_file, in_memory=in_memory)
+
     if not create_id and not expand:
         g.remove_id()
     if expand:
@@ -101,7 +105,7 @@ def cat(cottas_file_1, cottas_file_2, cottas_cat_file, in_memory=True):
     g2 = Graph(db_file_2)
     g2.parse(cottas_file_2)
 
-    g1 -= g2    # this ensures no duplicates after merging the graphs
+    g1 -= g2    # this ensures no duplicates after merging the graphs (assuming g2 has no duplicates)
     g1 += g2
     g1.serialize(cottas_cat_file)
 

@@ -57,6 +57,11 @@ def parse_rdf(graph, file_path, is_asserted=True, mime_type=None):
     return graph.triplestore
 
 
+##############################################################################
+#############################   FROM HERE IT IS DEPRECATED   #################
+##############################################################################
+
+
 def parse_rdf_fs(graph, file_path, is_asserted=True):
     # remove temporary dir if existing beforehand
     from shutil import rmtree
@@ -101,11 +106,6 @@ def parse_rdf_fs(graph, file_path, is_asserted=True):
         rmtree('.cottas.oxi', ignore_errors=True)
 
     return graph.triplestore
-
-
-##############################################################################
-#############################   FROM HERE IT IS DEPRECATED   #################
-##############################################################################
 
 
 def _line_has_quad(line):
