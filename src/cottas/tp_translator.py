@@ -144,7 +144,7 @@ def translate_triple_pattern(cottas_file, tp_str):
 
     tp_query = "SELECT "
     for var in projection_list:
-        tp_query += f"IF (STARTS_WITH({var}, '<<'), ARRAY_SLICE({var}, 3, -2), {var}) AS {var}, "
+        tp_query += f"IF (STARTS_WITH({var}, '<<'), ARRAY_SLICE({var}, 3, -3), {var}) AS {var}, "
     tp_query = f"{tp_query[:-2]}\nFROM ( {_construct_tp_star_query(tp, cottas_file)} )"
 
     print(tp_query)
