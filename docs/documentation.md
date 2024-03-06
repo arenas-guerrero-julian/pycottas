@@ -121,7 +121,7 @@ import cottas
 
 #### cottas.rdf_2_cottas
 
-**`cottas.rdf_2_cottas(rdf_file, cottas_file, create_id=True, in_memory=True)`**
+**`cottas.rdf_2_cottas(rdf_file, cottas_file, create_id=True, expand=False, in_memory=True)`**
 
 Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTAS file.
 
