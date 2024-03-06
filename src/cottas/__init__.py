@@ -23,7 +23,7 @@ def _remove_cottas_temp_files(db_file):
         os.remove(f"{db_file}.wal")
 
 
-def rdf_2_cottas(rdf_file, cottas_file, create_id=True, expand=False, in_memory=True):
+def rdf_2_cottas(rdf_file, cottas_file, create_id=True, expand=True, in_memory=True):
     db_file = DUCKDB_MEMORY if in_memory else '.cottas.db'
 
     if in_memory:
