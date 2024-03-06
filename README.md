@@ -1,3 +1,5 @@
+- Rename table `quads` to `STT`
+
 # COTTAS
 
 [![License](https://img.shields.io/pypi/l/cottas.svg)](https://github.com/arenas-guerrero-julian/cottas/blob/main/LICENSE)
