@@ -7,7 +7,7 @@ __email__ = "julian.arenas.guerrero@upm.es"
 
 
 from .graph import *
-from .constants import DUCKDB_MEMORY
+from .constants import DUCKDB_MEMORY, DUCKDB_DISK
 from .tp_translator import translate_triple_pattern
 from .utils import generate_cottas_info
 
@@ -24,7 +24,7 @@ def _remove_cottas_temp_files(db_file):
 
 
 def rdf_2_cottas(rdf_file, cottas_file, create_id=True, expand=True, in_memory=True):
-    db_file = DUCKDB_MEMORY if in_memory else '.cottas.db'
+    db_file = DUCKDB_MEMORY if in_memory else DUCKDB_DISK
 
     if in_memory:
         g = Graph(db_file, preserve_duplicates=False)
@@ -45,7 +45,7 @@ def rdf_2_cottas(rdf_file, cottas_file, create_id=True, expand=True, in_memory=T
 
 
 def cottas_2_rdf(cottas_file, rdf_file, in_memory=True):
-    db_file = DUCKDB_MEMORY if in_memory else '.cottas.db'
+    db_file = DUCKDB_MEMORY if in_memory else DUCKDB_DISK
 
     _remove_cottas_temp_files(db_file)
 
@@ -58,7 +58,7 @@ def cottas_2_rdf(cottas_file, rdf_file, in_memory=True):
 
 
 def remove_id(cottas_file, shrink=False, in_memory=True):
-    db_file = DUCKDB_MEMORY if in_memory else '.cottas.db'
+    db_file = DUCKDB_MEMORY if in_memory else DUCKDB_DISK
 
     _remove_cottas_temp_files(db_file)
 
@@ -74,7 +74,7 @@ def remove_id(cottas_file, shrink=False, in_memory=True):
 
 
 def create_id(cottas_file, expand=False, in_memory=True):
-    db_file = DUCKDB_MEMORY if in_memory else '.cottas.db'
+    db_file = DUCKDB_MEMORY if in_memory else DUCKDB_DISK
 
     _remove_cottas_temp_files(db_file)
 
@@ -94,7 +94,7 @@ def search(cottas_file, triple_pattern):
 
 
 def cat(cottas_file_1, cottas_file_2, cottas_cat_file, in_memory=True):
-    db_file_1, db_file_2 = (DUCKDB_MEMORY, DUCKDB_MEMORY) if in_memory else ('.cottas_1.db', '.cottas_2.db')
+    db_file_1, db_file_2 = (DUCKDB_MEMORY, DUCKDB_MEMORY) if in_memory else (f'.1{DUCKDB_DISK}', f'.2{DUCKDB_DISK}')
 
     _remove_cottas_temp_files(db_file_1)
     _remove_cottas_temp_files(db_file_2)
@@ -116,7 +116,7 @@ def cat(cottas_file_1, cottas_file_2, cottas_cat_file, in_memory=True):
 
 
 def diff(cottas_file_1, cottas_file_2, cottas_diff_file, in_memory=True):
-    db_file_1, db_file_2 = (DUCKDB_MEMORY, DUCKDB_MEMORY) if in_memory else ('.cottas_1.db', '.cottas_2.db')
+    db_file_1, db_file_2 = (DUCKDB_MEMORY, DUCKDB_MEMORY) if in_memory else (f'.1{DUCKDB_DISK}', f'.2{DUCKDB_DISK}')
 
     _remove_cottas_temp_files(db_file_1)
     _remove_cottas_temp_files(db_file_2)
