@@ -18,18 +18,19 @@ i_pos = {
 }
 
 
-def _get_projected_vars(tp_str):
+def _get_projected_vars(tp, projected_vars=[]):
     """
-    :param tp_str: a user-defined triple pattern
+    :param tp: a triple pattern
     :return: a list with the names of the variables in the triple pattern
     """
 
-    # we split the string, so avoid cases where `<<` and `>>` are together with variables, e.g., <<?s ?p ?o>>
-    projection_str = tp_str.replace("<<", ' ').replace(">>", ' ')
-    # split and keep only substring starting by `?` (removing the starting `?`)
-    projection_list = [sub_str[1:] for sub_str in projection_str.split() if sub_str.startswith('?')]
+    for i in range(len(tp)):
+        if type(tp[i]) is list:
+            projected_vars = _get_projected_vars(tp[i], projected_vars)
+        elif tp[i].startswith('?'):
+            projected_vars.append(tp[i][1:])
 
-    return projection_list
+    return list(set(projected_vars))
 
 
 def _construct_tp_tree(tp_str):
@@ -139,13 +140,12 @@ def translate_triple_pattern(cottas_file, tp_str):
     :return: SQL query for the triple pattern
     """
 
-    projection_list = _get_projected_vars(tp_str)
     tp = _construct_tp_tree(tp_str)
+    projected_vars = _get_projected_vars(tp)
 
     tp_query = "SELECT "
-    for var in projection_list:
+    for var in projected_vars:
         tp_query += f"IF (STARTS_WITH({var}, '<<'), ARRAY_SLICE({var}, 3, -3), {var}) AS {var}, "
     tp_query = f"{tp_query[:-2]}\nFROM ( {_construct_tp_star_query(tp, cottas_file)} )"
 
-    print(tp_query)
     return tp_query
