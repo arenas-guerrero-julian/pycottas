@@ -21,13 +21,11 @@ from .serializer import serialize_cottas, serialize_rdf
 
 class Graph:
 
-    def __init__(self, triplestore=DUCKDB_MEMORY, preserve_duplicates=True):
-        self.preserve_duplicates = preserve_duplicates
+    def __init__(self, triplestore=DUCKDB_MEMORY):
         self.triplestore = duckdb.connect(database=triplestore)
 
         create_query = f"""
-            CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL,
-            id UBIGINT {'' if preserve_duplicates else 'UNIQUE'}, ia BOOLEAN NOT NULL)
+            CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)
         """
         self.triplestore.execute(create_query)
 
