@@ -1,3 +1,11 @@
+__author__ = "Julián Arenas-Guerrero"
+__credits__ = ["Julián Arenas-Guerrero"]
+
+__license__ = "Apache-2.0"
+__maintainer__ = "Julián Arenas-Guerrero"
+__email__ = "julian.arenas.guerrero@upm.es"
+
+
 # dict mapping RDF term positions to attribute names
 i_pos = {
     0: 's',
@@ -5,21 +13,6 @@ i_pos = {
     2: 'o',
     3: 'g'
 }
-
-
-def _get_projected_vars(tp):
-    """
-    :param tp: a triple pattern
-    :return: a list with the names of the variables in the triple pattern
-    """
-
-    projected_vars = []
-
-    for i in range(len(tp)):
-        if tp[i].startswith('?'):
-            projected_vars.append(tp[i][1:])
-
-    return list(set(projected_vars))
 
 
 def _parse_tp(tp_str):
@@ -45,11 +38,11 @@ def translate_triple_pattern(cottas_file, tp_str):
     """
 
     tp = _parse_tp(tp_str)
-    projected_vars = _get_projected_vars(tp)
 
     tp_query = "SELECT "
-    for var in projected_vars:
-        tp_query += f"{var}, "
+    for i in range(len(tp)):
+        if tp[i].startswith('?'):
+            tp_query += f"{i_pos[i]} AS {tp[i][1:]}, "
     tp_query = f"{tp_query[:-2]}\nFROM PARQUET_SCAN('{cottas_file}') WHERE "
 
     # build selection iterating over all positions in the triple pattern
@@ -57,6 +50,8 @@ def translate_triple_pattern(cottas_file, tp_str):
         # skip named graph if not in the triple pattern
         if i < len(tp):
             if not tp[i].startswith('?'):
+                # scape 'quotes'
+                tp[i] = tp[i].replace("'", "''")
                 tp_query += f"{i_pos[i]}='{tp[i]}' AND "
 
     # remove final `AND ` and `WHERE `

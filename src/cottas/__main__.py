@@ -11,56 +11,78 @@ from argparse import ArgumentParser
 from .__init__ import *
 
 
+EPILOG_TEXT = 'Copyright © 2023 Julián Arenas-Guerrero'
+
+
 if __name__ == "__main__":
     parser = ArgumentParser(
         prog='COTTAS',
-        description='Efficient RDF-star graph management in compressed space',
-        epilog='Copyright © 2023 Julián Arenas-Guerrero')
+        epilog=EPILOG_TEXT)
 
-    parser.add_argument('operation')
-    parser.add_argument('arg1')
-    parser.add_argument('arg2', nargs='?', default=None)
-    parser.add_argument('arg3', nargs='?', default=None)
+    subparsers = parser.add_subparsers(help='subcommand help', dest='subparser_name', required=True)
+
+    parse_rdf2cottas = subparsers.add_parser('rdf2cottas', help='Compress an RDF file into COTTAS format', epilog=EPILOG_TEXT)
+    parse_rdf2cottas.add_argument('-r', '--rdf_file', type=str, required=True, help='Path to RDF file')
+    parse_rdf2cottas.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
+    parse_rdf2cottas.add_argument('-i', '--index', type=str, required=False, default='SPO', help='Zonemap index, e.g.: `SPO`, `PSO`, `GPOS`')
+
+    parse_cottas2rdf = subparsers.add_parser('cottas2rdf', help='Decompress a COTTAS file to RDF (N-Triples)', epilog=EPILOG_TEXT)
+    parse_cottas2rdf.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
+    parse_cottas2rdf.add_argument('-r', '--rdf_file', type=str, required=True, help='Path to RDF file')
+
+    parse_cottas2rdf = subparsers.add_parser('search', help='Evaluate a triple pattern', epilog=EPILOG_TEXT)
+    parse_cottas2rdf.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
+    parse_cottas2rdf.add_argument('-t', '--triple_pattern', type=str, required=True, help='Triple pattern, e.g., `?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o`')
+    parse_cottas2rdf.add_argument('-r', '--result_option', choices=['table', 'tuples', 'to_csv'], help='What to do with the result set')
+
+    parse_info = subparsers.add_parser('info', help='Get the metadata of a COTTAS file', epilog=EPILOG_TEXT)
+    parse_info.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
+
+    parse_verify = subparsers.add_parser('verify', help='Check whether a file is a valid COTTAS file', epilog=EPILOG_TEXT)
+    parse_verify.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
+
+    parse_cat = subparsers.add_parser('cat', help='Merge multiple COTTAS files', epilog=EPILOG_TEXT)
+    parse_cat.add_argument('--input_cottas_files', type=str, nargs='+', required=True, help='Path of the input COTTAS files')
+    parse_cat.add_argument('--output_cottas_file', type=str, required=True, help='Path of the output COTTAS file')
+    parse_cat.add_argument('-i', '--index', type=str, required=False, default='SPO', help='Zonemap index, e.g.: `SPO`, `PSO`, `GPOS`')
+    parse_cat.add_argument('-r', '--remove_input_files', type=bool, required=False, default=False, help='Whether to remove input COTTAS files after merging')
+
+    parse_diff = subparsers.add_parser('diff', help='Subtract the triples in a COTTAS files from another', epilog=EPILOG_TEXT)
+    parse_diff.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to the COTTAS file')
+    parse_diff.add_argument('-s', '--subtract_cottas_file', type=str, required=True, help='Path to the COTTAS file to subtract')
+    parse_diff.add_argument('-o', '--output_cottas_file', type=str, required=True, help='Path to the output COTTAS file')
+    parse_diff.add_argument('-i', '--index', type=str, required=False, default='SPO', help='Zonemap index, e.g.: `SPO`, `PSO`, `GPOS`')
+    parse_diff.add_argument('-r', '--remove_input_files', type=bool, required=False, default=False, help='Whether to remove the input COTTAS files after merging')
 
     args = parser.parse_args()
 
-    if args.operation.lower() == 'rdf2cottas':
-        rdf_2_cottas(args.arg1, args.arg2)
+    if args.subparser_name == 'rdf2cottas':
+        rdf2cottas(args.rdf_file, args.cottas_file, args.index)
 
-    elif args.operation.lower() == 'rdf2cottasnoid':
-        rdf_2_cottas(args.arg1, args.arg2, create_id=False)
+    elif args.subparser_name == 'cottas2rdf':
+        cottas2rdf(args.cottas_file, args.rdf_file)
 
-    elif args.operation.lower() == 'cottas2rdf':
-        cottas_2_rdf(args.arg1, args.arg2)
+    elif args.subparser_name == 'search':
+        res = search(args.cottas_file, args.triple_pattern)
+        if args.result_option == 'table':
+            print(res)
+        elif args.result_option == 'dict':
+            print(list(res.df().to_dict(orient='records')))
+        elif args.result_option == 'to_csv':
+            res.to_csv('cottas_search_result.csv')
+        else:
+            print(res)
 
-    elif args.operation.lower() == 'search':
-        print(search(args.arg1, args.arg2))
+    elif args.subparser_name == 'info':
+        print(info(args.cottas_file))
 
-    elif args.operation.lower() == 'cat':
-        cat(args.arg1, args.arg2, args.arg3)
+    elif args.subparser_name == 'verify':
+        print(verify(args.cottas_file))
 
-    elif args.operation.lower() == 'diff':
-        diff(args.arg1, args.arg2, args.arg3)
+    elif args.subparser_name == 'cat':
+        cat(args.input_cottas_files, args.output_cottas_file, args.index, args.remove_input_files)
 
-    elif args.operation.lower() == 'createid':
-        create_id(args.arg1)
-
-    elif args.operation.lower() == 'removeid':
-        remove_id(args.arg1)
-
-    elif args.operation.lower() == 'expand':
-        create_id(args.arg1, expand=True)
-
-    elif args.operation.lower() == 'shrink':
-        remove_id(args.arg1, shrink=True)
-
-    elif args.operation.lower() == 'verify':
-        print(verify(args.arg1))
-
-    elif args.operation.lower() == 'info':
-        info_df = info(args.arg1)
-        print(duckdb.query("SELECT * FROM info_df"))
-
-    else:
-        print('Invalid COTTAS option, arg1 must be `search`, `verify`, `info`, `cat`, `diff`, `cottas2rdf`, '
-              '`rdf2cottas`, `rdf2cottasNoID`, `createID`, `removeID`, `expand` or `shrink`.')
+    elif args.subparser_name == 'diff':
+        index = args.index if args.index else 'spo'
+        remove_input_files = args.remove_input_files if args.remove_input_files else False
+        diff(args.cottas_file, args.subtract_cottas_file, args.output_cottas_file, args.index, args.remove_input_files)
