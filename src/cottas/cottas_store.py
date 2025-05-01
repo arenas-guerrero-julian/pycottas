@@ -11,26 +11,31 @@ import duckdb
 from typing import Iterable
 from rdflib.store import Store
 from rdflib.util import from_n3
-from cottas.types import Triple
-from cottas.tp_translator import translate_triple_pattern_tuple
+
+from .utils import verify_cottas_file
+from .types import Triple
+from .tp_translator import translate_triple_pattern_tuple
 
 
 class COTTASStore(Store):
     """An implementation of a Store over a COTTAS document.
 
-    It is heavily inspired by the work from @FlorianLudwig (https://github.com/RDFLib/rdflib/issues/894) and rdflib-hdt (https://github.com/RDFLib/rdflib-hdt).
-l
+    It is heavily inspired by the work from @FlorianLudwig (https://github.com/RDFLib/rdflib/issues/894) and adapted
+    from rdflib-hdt (https://github.com/RDFLib/rdflib-hdt).
+
     Args:
       - path: Absolute path to the COTTAS file to load.
     """
     def __init__(self, path: str, configuration=None, identifier=None):
         super(COTTASStore, self).__init__(configuration=configuration, identifier=identifier)
-        # TODO: verify
+
+        if not verify_cottas_file(path):
+            raise Exception(f"{path} is not a valid COTTAS file.")
+
         self._cottas_path = path
-        duckdb.query(f"SET parquet_metadata_cache=true; SET enable_progress_bar=false; SELECT * FROM PARQUET_SCAN('{path}')")
-        #self._nb_subjects = list(duckdb.query("SELECT COUNT(DISTINCT s) AS s_count FROM PARQUET_SCAN('{path}')").df()['s_count'])[0]
-        #self._nb_predicates =
-        #self._nb_objects =
+        duckdb.query(
+            f"SET parquet_metadata_cache=true; SET enable_progress_bar=false; SELECT * FROM PARQUET_SCAN('{path}')")
+        self._num_triples = duckdb.execute(f"SELECT COUNT(*) FROM PARQUET_SCAN('{path}')").fetchone()[0]
 
     @property
     def cottas_file(self) -> str:
@@ -39,28 +44,22 @@ l
 
     def __len__(self, context) -> int:
         """The number of RDF triples in the COTTAS store."""
-        return False
+        return self._num_triples
 
     @property
     def nb_subjects(self) -> int:
         """The number of subjects in the COTTAS store."""
-        return False
+        return duckdb.execute(f"SELECT COUNT(DISTINCT s) FROM PARQUET_SCAN('{self._cottas_path}')").fetchone()[0]
 
     @property
     def nb_predicates(self) -> int:
         """The number of predicates in the COTTAS store."""
-        return False
+        return duckdb.execute(f"SELECT COUNT(DISTINCT p) FROM PARQUET_SCAN('{self._cottas_path}')").fetchone()[0]
 
     @property
     def nb_objects(self) -> int:
         """The number of objects in the COTTAS store."""
-        return False
-
-    @property
-    def nb_shared(self) -> int:
-        """The number of shared subject-object in the COTTAS store."""
-        # TODO: remove?
-        return False
+        return duckdb.execute(f"SELECT COUNT(DISTINCT o) FROM PARQUET_SCAN('{self._cottas_path}')").fetchone()[0]
 
     def triples(self, pattern, context) -> Iterable[Triple]:
         """Search for a triple pattern in a COTTAS store.

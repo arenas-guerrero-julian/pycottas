@@ -82,13 +82,7 @@ def translate_triple_pattern_tuple(cottas_file, tp_tuple):
         # skip named graph if not in the triple pattern
         if i < len(tp_tuple):
             if not tp_tuple[i] is None:
-                tp_query += f"""{i_pos[i]}='{tp_tuple[i].n3()}' AND """
-                '''
-                if tp_tuple[i].__class__ == rdflib.term.URIRef:
-                    tp_query += f"""{i_pos[i]}='{rdflib.URIRef(tp_tuple[i]).n3()}' AND """
-                elif tp_tuple[i].__class__ == rdflib.term.Literal:
-                    tp_query += f"""{i_pos[i]}='{rdflib.Literal(tp_tuple[i]).n3()}' AND """
-                '''
+                tp_query += f"{i_pos[i]}='{tp_tuple[i].n3()}' AND "
 
     # remove final `AND ` and `WHERE `
     if tp_query.endswith('AND '):

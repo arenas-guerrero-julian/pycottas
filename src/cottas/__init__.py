@@ -6,16 +6,14 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
-from cottas.cottas_store import COTTASStore
-from .constants import DUCKDB_MEMORY, DUCKDB_DISK, file_ext_2_mime_type
-from .tp_translator import translate_triple_pattern
-from .utils import generate_cottas_info, get_file_extension, is_valid_index
-
 import duckdb
 import pyoxigraph
 import os
-import pandas as pd
-from random import randint
+
+from .constants import file_ext_2_mime_type
+from .tp_translator import translate_triple_pattern
+from .utils import generate_cottas_info, get_file_extension, is_valid_index, verify_cottas_file
+from .cottas_store import COTTASStore
 
 
 def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
@@ -29,7 +27,7 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
     create_query = f"""
                 CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)
             """
-    triplestore = duckdb.connect(database=DUCKDB_MEMORY)
+    triplestore = duckdb.connect()
     triplestore.execute(create_query)
 
     quads = []
@@ -46,12 +44,8 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
 
         if i == 1000000:
             # bulk add quads
-            quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt'])
-            temporal_table = f'temporal_quads_{randint(0, 1000000)}'
-            triplestore.register(temporal_table, quads_df)
-            insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads (SELECT st, pt, ot, gt FROM {temporal_table})"
-            triplestore.execute(insert_query)
-            triplestore.unregister(temporal_table)
+            insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads VALUES (?, ?, ?, ?)"
+            triplestore.executemany(insert_query, quads)
 
             # reset quads
             quads = []
@@ -60,12 +54,8 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
             i += 1
 
     # bulk add quads
-    quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt'])
-    temporal_table = f'temporal_quads_{randint(0, 1000000)}'
-    triplestore.register(temporal_table, quads_df)
-    insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads (SELECT st, pt, ot, gt FROM {temporal_table})"
-    triplestore.execute(insert_query)
-    triplestore.unregister(temporal_table)
+    insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads VALUES (?, ?, ?, ?)"
+    triplestore.executemany(insert_query, quads)
 
     # export the triple table
     if quad_found:
@@ -148,13 +138,4 @@ def info(cottas_file):
 
 
 def verify(cottas_file):
-    verify_query = f"SELECT * FROM PARQUET_SCAN('{cottas_file}') LIMIT 0"
-    cottas_df = duckdb.query(verify_query).df()
-
-    cottas_columns = set(cottas_df.columns)
-
-    for pos in ['s', 'p', 'o']:
-        if pos not in cottas_columns:
-            return False
-
-    return cottas_columns <= {'s', 'p', 'o', 'g'}
+    return verify_cottas_file(cottas_file)
