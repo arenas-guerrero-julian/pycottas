@@ -6,6 +6,9 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
+from rdflib.util import from_n3
+
+
 # dict mapping RDF term positions to attribute names
 i_pos = {
     0: 's',
@@ -30,7 +33,7 @@ def _parse_tp(tp_str):
 
 def translate_triple_pattern(cottas_file, tp_str):
     """
-    Given a COTTAS file and a user-defined triple pattern, translate the triple pattern to an SQL over COTTAS.
+    Given a COTTAS file and a user-defined triple pattern, translate the triple pattern to an SQL query over COTTAS.
 
     :param cottas_file: path to a COTTAS file
     :param tp_str: a user-defined triple pattern
@@ -53,6 +56,39 @@ def translate_triple_pattern(cottas_file, tp_str):
                 # scape 'quotes'
                 tp[i] = tp[i].replace("'", "''")
                 tp_query += f"{i_pos[i]}='{tp[i]}' AND "
+
+    # remove final `AND ` and `WHERE `
+    if tp_query.endswith('AND '):
+        tp_query = tp_query[:-4]
+    if tp_query.endswith('WHERE '):
+        tp_query = tp_query[:-6]
+
+    return tp_query
+
+
+def translate_triple_pattern_tuple(cottas_file, tp_tuple):
+    """
+    Given a COTTAS file and an RDFlib triple pattern tuple, translate the triple pattern to an SQL query over COTTAS.
+
+    :param cottas_file: path to a COTTAS file
+    :param tp_str: a user-defined triple pattern
+    :return: SQL query for the triple pattern
+    """
+
+    tp_query = f"SELECT s, p, o FROM PARQUET_SCAN('{cottas_file}') WHERE "
+
+    # build selection iterating over all positions in the triple pattern
+    for i in range(4):
+        # skip named graph if not in the triple pattern
+        if i < len(tp_tuple):
+            if not tp_tuple[i] is None:
+                tp_query += f"""{i_pos[i]}='{tp_tuple[i].n3()}' AND """
+                '''
+                if tp_tuple[i].__class__ == rdflib.term.URIRef:
+                    tp_query += f"""{i_pos[i]}='{rdflib.URIRef(tp_tuple[i]).n3()}' AND """
+                elif tp_tuple[i].__class__ == rdflib.term.Literal:
+                    tp_query += f"""{i_pos[i]}='{rdflib.Literal(tp_tuple[i]).n3()}' AND """
+                '''
 
     # remove final `AND ` and `WHERE `
     if tp_query.endswith('AND '):

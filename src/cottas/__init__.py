@@ -6,6 +6,7 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
+from cottas.cottas_store import COTTASStore
 from .constants import DUCKDB_MEMORY, DUCKDB_DISK, file_ext_2_mime_type
 from .tp_translator import translate_triple_pattern
 from .utils import generate_cottas_info, get_file_extension, is_valid_index
