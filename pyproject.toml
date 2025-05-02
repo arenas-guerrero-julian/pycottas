@@ -3,9 +3,10 @@ requires = ['hatchling>=1.11.0']
 build-backend = 'hatchling.build'
 
 [project.urls]
-Documentation = ''
-Source = ''
-Tracker = ''
+Documentation = 'https://cottas.readthedocs.io'
+Source = 'https://github.com/arenas-guerrero-julian/cottas'
+Tracker = 'https://github.com/arenas-guerrero-julian/cottas/issues'
+History = 'https://github.com/arenas-guerrero-julian/cottas/releases'
 
 [project]
 name = 'cottas'
@@ -22,6 +23,8 @@ classifiers = [
   'Programming Language :: Python :: 3.9',
   'Programming Language :: Python :: 3.10',
   'Programming Language :: Python :: 3.11',
+  'Programming Language :: Python :: 3.12',
+  'Programming Language :: Python :: 3.13',
   'License :: OSI Approved :: Apache Software License',
   'Operating System :: OS Independent',
   'Development Status :: 5 - Production/Stable',
@@ -36,6 +39,7 @@ requires-python = '>=3.8'
 dynamic = ['version']
 dependencies = [
   'duckdb>=1.2.2, <2.0.0',
+  'rdflib>=7.0.0, <8.0.0',
   'pyoxigraph==0.3.18'
 ]
 

@@ -6,9 +6,6 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
-from rdflib.util import from_n3
-
-
 # dict mapping RDF term positions to attribute names
 i_pos = {
     0: 's',
@@ -19,16 +16,27 @@ i_pos = {
 
 
 def _parse_tp(tp_str):
-    # enclose with quotes each substring, e.g., ?s: '?s', "24": '"24"'
-    tp_str = ' '.join("'{}'".format(sub_str) for sub_str in tp_str.split())
+    #statement = "Select ?s ?p ?o where {?s ?p ?o.}"
+    #query_tree = parser.parseQuery(statement)
+    #q_algebra = algebra.translateQuery(query_tree)
+    #algebra.pprintAlgebra(q_algebra)
 
-    # the separators in Python lists are not whitespaces but commas
-    tp_str = tp_str.replace(' ', ',')
-    tp_str = f"[{tp_str}]"
+    splitted_tp_str = tp_str.split()
+    s_term = splitted_tp_str[0]
+    p_term = splitted_tp_str[1]
+    o_term = tp_str.replace(s_term, '', 1).replace(p_term, '', 1).strip()
+    g_term = None
 
-    # evaluate the string representation to nested lists
-    tp = eval(tp_str)
-    return tp
+    # check whether it is a quad pattern
+    if ' <' in o_term:
+        splitted_o_term = o_term.split()
+        g_term = splitted_o_term[len(splitted_o_term)-1].strip()
+        o_term = o_term.replace(g_term, '').strip()
+
+    if g_term:
+        return s_term, p_term, o_term, g_term
+    else:
+        return s_term, p_term, o_term
 
 
 def translate_triple_pattern(cottas_file, tp_str):
