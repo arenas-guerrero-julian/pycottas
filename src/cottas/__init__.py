@@ -14,6 +14,7 @@ from .constants import file_ext_2_mime_type
 from .tp_translator import translate_triple_pattern
 from .utils import generate_cottas_info, get_file_extension, is_valid_index, verify_cottas_file
 from .cottas_store import COTTASStore
+from .cottas_document import COTTASDocument
 
 
 def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
@@ -24,7 +25,7 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
     mime_type = file_ext_2_mime_type[get_file_extension(file_path=rdf_file_path)]
     quad_found = False
 
-    create_query = f"""
+    create_query = """
                 CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)
             """
     triplestore = duckdb.connect()
@@ -37,14 +38,14 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
 
         if len(quad) == 3:
             # for empty quad
-            quad.append('')
+            quad.append(None)
         else:
             quad_found = True
         quads.append(quad)
 
         if i == 1000000:
             # bulk add quads
-            insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads VALUES (?, ?, ?, ?)"
+            insert_query = "SET preserve_insertion_order = false; INSERT INTO quads VALUES (?, ?, ?, ?)"
             triplestore.executemany(insert_query, quads)
 
             # reset quads
@@ -54,7 +55,7 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
             i += 1
 
     # bulk add quads
-    insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads VALUES (?, ?, ?, ?)"
+    insert_query = "SET preserve_insertion_order = false; INSERT INTO quads VALUES (?, ?, ?, ?)"
     triplestore.executemany(insert_query, quads)
 
     # export the triple table
