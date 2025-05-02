@@ -9,6 +9,9 @@ __email__ = "julian.arenas.guerrero@upm.es"
 import duckdb
 import pyoxigraph
 import os
+import pandas as pd
+
+from random import randint
 
 from .constants import file_ext_2_mime_type
 from .tp_translator import translate_triple_pattern
@@ -45,8 +48,13 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
 
         if i == 1000000:
             # bulk add quads
-            insert_query = "SET preserve_insertion_order = false; INSERT INTO quads VALUES (?, ?, ?, ?)"
-            triplestore.executemany(insert_query, quads)
+            # bulk add quads
+            quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt'])
+            temporal_table = f'temporal_quads_{randint(0, 1000000)}'
+            triplestore.register(temporal_table, quads_df)
+            insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads (SELECT st, pt, ot, gt FROM {temporal_table})"
+            triplestore.execute(insert_query)
+            triplestore.unregister(temporal_table)
 
             # reset quads
             quads = []
@@ -55,8 +63,12 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
             i += 1
 
     # bulk add quads
-    insert_query = "SET preserve_insertion_order = false; INSERT INTO quads VALUES (?, ?, ?, ?)"
-    triplestore.executemany(insert_query, quads)
+    quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt'])
+    temporal_table = f'temporal_quads_{randint(0, 1000000)}'
+    triplestore.register(temporal_table, quads_df)
+    insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads (SELECT st, pt, ot, gt FROM {temporal_table})"
+    triplestore.execute(insert_query)
+    triplestore.unregister(temporal_table)
 
     # export the triple table
     if quad_found:
