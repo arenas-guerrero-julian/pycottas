@@ -26,7 +26,7 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
     quad_found = False
 
     create_query = """
-                CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR NOT NULL)
+                CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR)
             """
     triplestore = duckdb.connect()
     triplestore.execute(create_query)
