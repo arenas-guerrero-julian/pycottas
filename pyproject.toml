@@ -3,13 +3,13 @@ requires = ['hatchling>=1.11.0']
 build-backend = 'hatchling.build'
 
 [project.urls]
-Documentation = 'https://cottas.readthedocs.io'
-Source = 'https://github.com/arenas-guerrero-julian/cottas'
-Tracker = 'https://github.com/arenas-guerrero-julian/cottas/issues'
-History = 'https://github.com/arenas-guerrero-julian/cottas/releases'
+Documentation = 'https://pycottas.readthedocs.io'
+Source = 'https://github.com/arenas-guerrero-julian/pycottas'
+Tracker = 'https://github.com/arenas-guerrero-julian/pycottas/issues'
+History = 'https://github.com/arenas-guerrero-julian/pycottas/releases'
 
 [project]
-name = 'cottas'
+name = 'pycottas'
 description = ''
 readme = 'README.md'
 keywords = []
@@ -45,4 +45,4 @@ dependencies = [
 ]
 
 [tool.hatch.version]
-path = 'src/cottas/_version.py'
+path = 'src/pycottas/_version.py'

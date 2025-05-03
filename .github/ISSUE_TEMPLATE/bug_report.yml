@@ -39,7 +39,7 @@ body:
       required: true
   - type: input
     attributes:
-      label: "COTTAS version:"
+      label: "pycottas version:"
       placeholder: e.g., 1.0.0
     validations:
       required: true

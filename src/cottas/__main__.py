@@ -16,7 +16,7 @@ EPILOG_TEXT = 'Copyright © 2023 Julián Arenas-Guerrero'
 
 if __name__ == "__main__":
     parser = ArgumentParser(
-        prog='COTTAS',
+        prog='pycottas',
         epilog=EPILOG_TEXT)
 
     subparsers = parser.add_subparsers(help='subcommand help', dest='subparser_name', required=True)
