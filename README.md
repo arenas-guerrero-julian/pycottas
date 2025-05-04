@@ -29,6 +29,31 @@ pip install pycottas
 
 We recommend to use **[virtual environments](https://docs.python.org/3/library/venv.html#)** to install pycottas.
 
+### Command Line
+
+Execute pycottas in the command line with:
+`python3 -m pycottas ...`
+
+Complete the command with one of the following operations ([check the docs]() for more details):
+
+```
+usage: pycottas [-h] {rdf2cottas,cottas2rdf,search,info,verify,cat,diff} ...
+
+positional arguments:
+  {rdf2cottas,cottas2rdf,search,info,verify,cat,diff}
+                        subcommand help
+    rdf2cottas          Compress an RDF file into COTTAS format
+    cottas2rdf          Decompress a COTTAS file to RDF (N-Triples)
+    search              Evaluate a triple pattern
+    info                Get the metadata of a COTTAS file
+    verify              Check whether a file is a valid COTTAS file
+    cat                 Merge multiple COTTAS files
+    diff                Subtract the triples in a COTTAS files from another
+
+options:
+  -h, --help            show this help message and exit
+```
+
 
 ## License :unlock:
 
