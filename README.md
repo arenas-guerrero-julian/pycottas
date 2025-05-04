@@ -49,7 +49,7 @@ graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
 res = graph.query("""
   PREFIX rdf: <http://xmlns.com/foaf/0.1/>
   SELECT DISTINCT ?s ?o WHERE {
-    ?s rdf:type ?o.
+    ?s rdf:type ?o .
   }""")
 print(res)
 ```
