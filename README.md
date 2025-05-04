@@ -32,6 +32,7 @@ We recommend to use **[virtual environments](https://docs.python.org/3/library/v
 ```python
 
 import pycottas
+from rdflib import Graph, URIRef
 
 pycottas.rdf2cottas('my_file.ttl', 'my_file.cottas', index='spo')
 res = pycottas.search('my_file.cottas', '?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
@@ -40,11 +41,13 @@ pycottas.cottas2rdf('my_file.cottas', 'my_file.nt')
 
 # COTTASDocument class for querying with triple patterns
 cottas_doc = pycottas.COTTASDocument('my_file.cottas')
-res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o', limit=10, offset=20)
+# the triple pattern can be a string or a tuple
+res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
+# limit and offset are optional
+res = cottas_doc.search((None, URIRef('<http://www.w3.org/1999/02/22-rdf-syntax-ns#type>'), None), limit=10, offset=20)
 print(res)
 
 # COTTASStore class for querying with SPARQL
-from rdflib import Graph
 graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
 res = graph.query("""
   PREFIX rdf: <http://xmlns.com/foaf/0.1/>
