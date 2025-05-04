@@ -10,7 +10,7 @@
 
 ## Features :sparkles:
 
-- Compression and decompression of RDF files.
+- **Compression** and **decompression** of RDF files.
 - Querying COTTAS files with **triple patterns**.
 - [RDFLib](https://github.com/RDFLib/rdflib) backend for querying COTTAS files with **[SPARQL](https://www.w3.org/TR/sparql11-query/)**.
 - Supports named graphs (**quads**).
@@ -30,14 +30,31 @@ pip install pycottas
 We recommend to use **[virtual environments](https://docs.python.org/3/library/venv.html#)** to install pycottas.
 
 ```python
+
+import pycottas
+
 pycottas.rdf2cottas('my_file.ttl', 'my_file.cottas', index='spo')
+res = pycottas.search('my_file.cottas', '?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
+print(res)
+pycottas.cottas2rdf('my_file.cottas', 'my_file.nt')
 
-pycottas.search('my_file.cottas', '?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
+# COTTASDocument class for querying with triple patterns
+cottas_doc = pycottas.COTTASDocument('my_fole.cottas')
+res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o', limit=10, offset=20)
+print(res)
 
-
+# COTTASStore class for querying with SPARQL
+graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
+res = graph.query("""
+  PREFIX rdf: <http://xmlns.com/foaf/0.1/>
+  SELECT DICTINCT ?s ?o WHERE {
+    ?s rdf:type ?o.
+  }""")
+print(res)
 ```
 
-Execute pycottas in the command line with:
+### Command Line
+To execute pycottas in the **command line** run:
 ```
 python3 -m pycottas ...
 ```
