@@ -12,7 +12,7 @@ History = 'https://github.com/arenas-guerrero-julian/pycottas/releases'
 name = 'pycottas'
 description = ''
 readme = 'README.md'
-keywords = []
+keywords = ['RDF', 'Knowledge Graph', 'Apache Parquet', 'Compression']
 authors = [
   {name = 'Julián Arenas-Guerrero', email = 'julian.arenas.guerrero@upm.es'}
 ]
