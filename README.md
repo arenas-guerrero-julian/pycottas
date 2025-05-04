@@ -32,7 +32,9 @@ We recommend to use **[virtual environments](https://docs.python.org/3/library/v
 ### Command Line
 
 Execute pycottas in the command line with:
-`python3 -m pycottas ...`
+```
+python3 -m pycottas ...
+```
 
 Complete the command with one of the following operations ([check the docs]() for more details):
 
