@@ -1,18 +1,24 @@
-- Rename table `quads` to `STT`
-
 # pycottas
 
-[![License](https://img.shields.io/pypi/l/pycottas.svg)](https://github.com/arenas-guerrero-julian/cottas/blob/main/LICENSE)
-[![Latest PyPI version](https://img.shields.io/pypi/v/cottas?style=flat)](https://pypi.python.org/pypi/cottas)
-[![Python Version](https://img.shields.io/pypi/pyversions/cottas.svg)](https://pypi.python.org/pypi/cott)
-[![PyPI status](https://img.shields.io:/pypi/status/cottas?)](https://pypi.python.org/pypi/cottas)
-[![Documentation Status](https://readthedocs.org/projects/cottas/badge/?version=latest)](https://cottas.readthedocs.io/en/latest/?badge=latest)
+[![License](https://img.shields.io/pypi/l/pycottas.svg)](https://github.com/arenas-guerrero-julian/pycottas/blob/main/LICENSE)
+[![Latest PyPI version](https://img.shields.io/pypi/v/cottas?style=flat)](https://pypi.python.org/pypi/pycottas)
+[![Python Version](https://img.shields.io/pypi/pyversions/cottas.svg)](https://pypi.python.org/pypi/pycottas)
+[![PyPI status](https://img.shields.io:/pypi/status/cottas?)](https://pypi.python.org/pypi/pycottas)
+[![Documentation Status](https://readthedocs.org/projects/pycottas/badge/?version=latest)](https://pycottas.readthedocs.io)
 
-**pycottas** is a toolkit for **[RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graph management in **compressed** space. It is based on a triple table representation of [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) using the [Apache Parquet](https://parquet.apache.org/) file format. The toolkit provides an **[HDT](https://www.rdfhdt.org/)**-like interface.
+**pycottas** is a library for working with compressed [RDF](https://www.w3.org/TR/rdf11-concepts/) files in the COTTAS format. COTTAS stores triples (or quads) in a triple table in the [Apache Parquet](https://parquet.apache.org/) format.
+
+## Features :sparkles:
+
+- Compression and decompression of RDF files.
+- Querying COTTAS files with triple patterns.
+- [RDFLib](https://github.com/RDFLib/rdflib) backend for querying COTTAS files with [SPARQL](https://www.w3.org/TR/sparql11-query/).
+- Supports named graphs (quads).
+- Can be used as a library or via command line.
 
 ## Documentation :bookmark_tabs:
 
-**[Read the documentation](https://pycottas.readthedocs.io/en/latest/documentation/)**.
+**[Read the documentation](https://pycottas.readthedocs.io)**.
 
 ## Getting Started :rocket:
 
@@ -23,40 +29,6 @@ pip install pycottas
 
 We recommend to use **[virtual environments](https://docs.python.org/3/library/venv.html#)** to install pycottas.
 
-### Command line
-
-Compress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html):
-```bash
-python3 -m pycottas rdf2cottas file.ttl file.cottas
-```
-
-Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over compressed [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html):
-```bash
-python3 -m pycottas search file.cottas '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>'
-```
-
-Uncompress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html):
-```bash
-python3 -m pycottas cottas2rdf file.cottas file.nt
-```
-
-### Library
-
-```python
-import pycottas
-
-# compress RDF-star
-pycottas.rdf_2_cottas('file.ttl', 'file.cottas')
-
-# evaluate triple pattern
-tp_df = pycottas.search('file.cottas', '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>')
-
-# uncompress RDF-star
-pycottas.cottas_2_rdf('file.cottas', 'file.nt')
-
-# merge two COTTAS files
-pycottas.cat('input_file_1.cottas', 'input_file_2.cottas', 'output.cottas')
-```
 
 ## License :unlock:
 
