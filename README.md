@@ -29,7 +29,13 @@ pip install pycottas
 
 We recommend to use **[virtual environments](https://docs.python.org/3/library/venv.html#)** to install pycottas.
 
-### Command Line
+```python
+pycottas.rdf2cottas('my_file.ttl', 'my_file.cottas', index='spo')
+
+pycottas.search('my_file.cottas', '?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
+
+
+```
 
 Execute pycottas in the command line with:
 ```
