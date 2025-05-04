@@ -1,33 +1,32 @@
-# COTTAS
+# pycottas
 
-**COTTAS** is a toolkit for **[RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html)** graph management in **compressed** space. It is based on a triple table representation of [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) using the [Apache Parquet](https://parquet.apache.org/) file format with [ZSTD](https://en.wikipedia.org/wiki/Zstd). The toolkit is built on top of [DuckDB](https://duckdb.org/) and provides an **[HDT](https://www.rdfhdt.org/)**-like interface.
+**pycottas** is a library for working with **compressed** **[RDF](https://www.w3.org/TR/rdf11-concepts/)** files in the **COTTAS** format. COTTAS stores triples (or quads) in a triple table in the [Apache Parquet](https://parquet.apache.org/) format. It is built on top of [DuckDB](https://duckdb.org/) and provides an **[HDT](https://www.rdfhdt.org/)**-like interface.
 
 ## Features
 
-- Compress/uncompress [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html).
-- Evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) in compressed space.
-- Merge and substract compressed files.
-- Executes via **command line** or as a **library**.
-- Runs on **Linux**, **Windows** and **macOS** systems.
+- **Compression** and **decompression** of RDF files.
+- Querying COTTAS files with **[triple patterns](https://www.w3.org/TR/sparql11-query/#sparqlTriplePatterns)**.
+- [RDFLib](https://github.com/RDFLib/rdflib) backend for querying COTTAS files with **[SPARQL](https://www.w3.org/TR/sparql11-query/)**.
+- Supports named graphs (**quads**).
+- Can be used as a **library** or via **command line**.
 
 ## COTTAS Files
 
-COTTAS is based on COlumnar Triple TAble storage with the [Apache Parquet](https://parquet.apache.org/) file format. A COTTAS file consists on a table with **s**, **p**, **o**, **g** columns representing triples (and [named graphs](https://www.w3.org/TR/rdf11-concepts/#dfn-named-graph)). In addition, an optional **id** column is necessary when evaluating [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html).
+**COTTAS** is based on ^^CO^^lumnar ^^T^^riple ^^TA^^ble ^^S^^torage with the [Apache Parquet](https://parquet.apache.org/) file format. A COTTAS file consists on a table with **s**, **p**, **o**, **g** columns representing triples (and [named graphs](https://www.w3.org/TR/rdf11-concepts/#dfn-named-graph)):
 
-- The **s**, **p**, **o**, **g** are filled with the [RDF-star terms](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-rdf-star-terms) of the triples.
-- When a triple belongs to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** is the empty string. If all the triples in the [dataset](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-dataset) belong to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** can be omitted.
-- The **id** column consists on the concatenation of the former columns. The **id** column is only necessary if evaluating [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over [datasets](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-dataset) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
+- The **s**, **p**, **o**, **g** are filled with the [RDF terms](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-term) of the triples/quads.
+- When a triple belongs to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** is *NULL*. If all the triples in the [dataset](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset) belong to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** can be omitted.
 
 ## Licenses
 
-**COTTAS** is available under the **[Apache License 2.0](https://github.com/morph-kgc/morph-kgc/blob/main/LICENSE)**.
+**pycottas** is available under the **[Apache License 2.0](https://github.com/arenas-guerrero-julian/pycottas/blob/main/LICENSE)**.
 
 The **documentation** is licensed under **[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/)**.
 
 ## Author
 
 - **[Julián Arenas-Guerrero](https://github.com/arenas-guerrero-julian/) - [julian.arenas.guerrero@upm.es](mailto:julian.arenas.guerrero@upm.es)**  
-*[Ontology Engineering Group](https://oeg.fi.upm.es)*, *[Universidad Politécnica de Madrid](https://www.upm.es/internacional)*.
+*[Universidad Politécnica de Madrid](https://www.upm.es/internacional)*.
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
