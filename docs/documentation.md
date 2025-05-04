@@ -2,211 +2,156 @@
 
 ## Installation
 
-In the following we describe different ways in which you can install COTTAS.
+In the following we describe different ways in which you can install pycottas.
 
 ### PyPi
 
-**[PyPi](https://pypi.org/project/cottas/)** is the fastest way to install COTTAS.
+**[PyPi](https://pypi.org/project/pycottas/)** is the fastest way to install pycottas.
 ```bash
-pip install cottas
+pip install pycottas
 ```
 
-We recommend to use **[virtual environments](https://docs.python.org/3/library/venv.html#)** to install COTTAS.
+We recommend to use **[virtual environments](https://docs.python.org/3/library/venv.html#)** to install pycottas.
 
 ### From Source
 
-You can also grab the latest source code from the **[GitHub repository](https://github.com/arenas-guerrero-julian/cottas)**.
+You can also grab the latest source code from the **[GitHub repository](https://github.com/arenas-guerrero-julian/pycottas)**.
 ```bash
-pip install git+https://github.com/arenas-guerrero-julian/cottas.git
+pip install git+https://github.com/arenas-guerrero-julian/pycottas.git
 ```
 
 ## Usage
 
-COTTAS can be executed from the command line or as a library. In the following it is described how to use COTTAS with both alternatives.
+pycottas can be executed from the command line or as a library. In the following it is described how to use pycottas with both alternatives.
 
 ### Command Line
 
-To execute COTTAS from the command line, it is necessary to call the `cottas` package, specifying the COTTAS operation to perform (rdf2cottas, search, cat, etc.), and providing a set of parameters.
+To execute COTTAS from the command line, it is necessary to call the `pycottas` package, specifying the pycottas operation to perform (`rdf2cottas`, `search`, `cat`, etc.), and providing a set of parameters.
+
+```bash
+$ python3 -m pycottas -h
+
+usage: pycottas {rdf2cottas,cottas2rdf,search,info,verify,cat,diff} ...
+
+positional arguments:
+  {rdf2cottas,cottas2rdf,search,info,verify,cat,diff}
+                        subcommand help
+    rdf2cottas          Compress an RDF file into COTTAS format
+    cottas2rdf          Decompress a COTTAS file to RDF (N-Triples)
+    search              Evaluate a triple pattern
+    info                Get the metadata of a COTTAS file
+    verify              Check whether a file is a valid COTTAS file
+    cat                 Merge multiple COTTAS files
+    diff                Subtract the triples in a COTTAS files from another
+```
 
 #### rdf2cottas
 
-Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTAS file.
 ```bash
-python3 -m cottas rdf2cottas file.ttl file.cottas
-```
+$ python3 -m pycottas rdf2cottas -h
 
-#### rdf2cottasNoID
+usage: pycottas rdf2cottas -r RDF_FILE -c COTTAS_FILE [-i INDEX]
 
-Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTAS file without **id** column. This achieves better compression ratio than creating the **id** column (with `rdf2cottas`), but it does not allow the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
-```bash
-python3 -m cottas rdf2cottasNoID file.ttl file.cottas
+options:
+  -r RDF_FILE, --rdf_file RDF_FILE
+                        Path to RDF file
+  -c COTTAS_FILE, --cottas_file COTTAS_FILE
+                        Path to COTTAS file
+  -i INDEX, --index INDEX
+                        Zonemap index, e.g.: `SPO`, `PSO`, `GPOS`
 ```
 
 #### cottas2rdf
 
-Uncompress a COTTAS file into an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/)).
 ```bash
-python3 -m cottas cottas2rdf file.cottas file.nt
+$ python3 -m pycottas cottas2rdf -h
+
+usage: pycottas cottas2rdf -c COTTAS_FILE -r RDF_FILE
+
+options:
+  -c COTTAS_FILE, --cottas_file COTTAS_FILE
+                        Path to COTTAS file
+  -r RDF_FILE, --rdf_file RDF_FILE
+                        Path to RDF file (N-Triples)
 ```
 
 #### search
 
-Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over a COTTAS file.
 ```bash
-python3 -m cottas search file.cottas '<< ?employee <http://ex.com/jobTitle> ?job >> <http://ex.com/accordingTo> <http://ex.com/employee/22>'
-```
+$ python3 -m pycottas search -h
 
-#### cat
+usage: pycottas search -c COTTAS_FILE -t TRIPLE_PATTERN [-r {table,tuples,to_csv}]
 
-Merge two COTTAS files into a new COTTAS file.
-```bash
-python3 -m cottas cat input_file_1.cottas input_file_2.cottas output_file.cottas
-```
-
-#### diff
-
-Substract a COTTAS file from another one into a new COTTAS file.
-```bash
-python3 -m cottas diff input_file_1.cottas input_file_2.cottas output_file.cottas
-```
-
-#### createID
-
-Add the **id** column to a COTTAS file. This increases the size of the COTTAS file, but it is necessary to evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
-```bash
-python3 -m cottas createID file.cottas
-```
-
-#### expand
-
-Similar to `createID`, but it will also include the [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) that are not asserted in the COTTAS file. This enables triple pattern evaluation over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) graphs using the [Separate Assertion mode](https://w3c.github.io/rdf-star/cg-spec/editors_draft.html#sa-mode-and-pg-mode).
-```bash
-python3 -m cottas expand file.cottas
-```
-
-#### removeID
-
-Remove the **id** column from a COTTAS file. This reduces the size of the COTTAS file, but the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
-```bash
-python3 -m cottas removeID file.cottas
-```
-
-#### shrink
-
-Similar to `removeID`, but it will also remove [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) that are not asserted in the COTTAS file.
-```bash
-python3 -m cottas shrink file.cottas
+options:
+  -c COTTAS_FILE, --cottas_file COTTAS_FILE
+                        Path to COTTAS file
+  -t TRIPLE_PATTERN, --triple_pattern TRIPLE_PATTERN
+                        Triple pattern, e.g., `?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o`
+  -r {table,tuples,to_csv}, --result_option {table,tuples,to_csv}
+                        What to do with the result set
 ```
 
 #### info
 
-Retrieve basic information and statistics from a COTTAS file.
 ```bash
-python3 -m cottas info file.cottas
+$ python3 -m pycottas info -h
+
+usage: pycottas info -c COTTAS_FILE
+
+options:
+  -c COTTAS_FILE, --cottas_file COTTAS_FILE
+                        Path to COTTAS file
 ```
 
 #### verify
 
-Check if a COTTAS file is correct.
 ```bash
-python3 -m cottas verify file.cottas
+$ python3 -m pycottas verify -h
+
+usage: pycottas verify -c COTTAS_FILE
+
+options:
+  -c COTTAS_FILE, --cottas_file COTTAS_FILE
+                        Path to COTTAS file
 ```
 
-### Library
+#### cat
 
-Import COTTAS.
-```python
-import cottas
+```bash
+$ python3 -m pycottas cat -h
+
+usage: pycottas cat --input_cottas_files INPUT_COTTAS_FILES [INPUT_COTTAS_FILES ...] --output_cottas_file OUTPUT_COTTAS_FILE [-i INDEX] [-r REMOVE_INPUT_FILES]
+
+options:
+  --input_cottas_files INPUT_COTTAS_FILES [INPUT_COTTAS_FILES ...]
+                        Path of the input COTTAS files
+  --output_cottas_file OUTPUT_COTTAS_FILE
+                        Path of the output COTTAS file
+  -i INDEX, --index INDEX
+                        Zonemap index, e.g.: `SPO`, `PSO`, `GPOS`
+  -r REMOVE_INPUT_FILES, --remove_input_files REMOVE_INPUT_FILES
+                        Whether to remove input COTTAS files after merging
 ```
 
-#### cottas.rdf_2_cottas
+#### diff
 
-**`cottas.rdf_2_cottas(rdf_file, cottas_file, create_id=True, expand=True, in_memory=True)`**
+```bash
+$ python3 -m pycottas diff -h
 
-Compress an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([Turtle](https://www.w3.org/TR/turtle/), [N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/), [RDF/XML](https://www.w3.org/TR/rdf-syntax-grammar/)) into a COTTAS file.
+usage: pycottas diff -c COTTAS_FILE -s SUBTRACT_COTTAS_FILE -o OUTPUT_COTTAS_FILE [-i INDEX] [-r REMOVE_INPUT_FILES]
 
-* _**rdf_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file.
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the output COTTAS file.
-* _**create_id**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, the **id** column will be included in the COTTAS file. Creating the **id** column results in larger COTTAS files, but it enables the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
-* _**expand**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, it will also include the [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) that are not asserted in the COTTAS file. This enables triple pattern evaluation over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) graphs using the [Separate Assertion mode](https://w3c.github.io/rdf-star/cg-spec/editors_draft.html#sa-mode-and-pg-mode).
-* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be performed in-memory, otherwise temporary files are created in the system (reducing memory consumption).
-
-#### cottas.cottas_2_rdf
-
-**`cottas.cottas_2_rdf(cottas_file, rdf_file, in_memory=True)`**
-
-Uncompress a COTTAS file into an [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file ([N-Triples](https://www.w3.org/TR/n-triples/), [N-Quads](https://www.w3.org/TR/n-quads/)).
-
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
-* _**rdf_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the output [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) file.
-* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be performed in-memory, otherwise temporary files are created in the system (reducing memory consumption).
-
-#### cottas.search
-
-**`cottas.search(cottas_file, triple_pattern)`**
-
-Evaluate a [triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) over a COTTAS file, returning a [DataFrame](https://pandas.pydata.org/docs/reference/api/pandas.DataFrame.html).
-
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
-* _**triple_pattern**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) [Triple pattern](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) to evaluate, e.g., '*<< ?employee \<http://ex.com/jobTitle> ?job >> \<http://ex.com/accordingTo> \<http://ex.com/employee/22>*'.
-
-#### cottas.cat
-
-**`cottas.cat(cottas_file_1, cottas_file_2, cottas_cat_file, in_memory=True)`**
-
-Merge two COTTAS files into a new COTTAS file.
-
-* _**cottas_file_1**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTAS file.
-* _**cottas_file_2**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTAS file.
-* _**cottas_cat_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the merged output COTTAS file.
-* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be performed in-memory, otherwise temporary files are created in the system (reducing memory consumption).
-
-#### cottas.diff
-
-**`cottas.diff(cottas_file_1, cottas_file_2, cottas_diff_file, in_memory=True)`**
-
-Substract a COTTAS file from another one into a new COTTAS file.
-
-* _**cottas_file_1**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTAS file.
-* _**cottas_file_2**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to an input COTTAS file.
-* _**cottas_diff_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the diff output COTTAS file.
-* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be performed in-memory, otherwise temporary files are created in the system (reducing memory consumption).
-
-#### cottas.create_id
-
-**`cottas.create_id(cottas_file, expand=False, in_memory=True)`**
-
-Add the **id** column to a COTTAS file. This increases the size of the COTTAS file, but it is necessary to evaluate [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted).
-
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input/output COTTAS file.
-* _**expand**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _False_) If _True_, it will also include the [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) that are not asserted in the COTTAS file enabling triple pattern evaluation over [RDF-star](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html) graphs using the [Separate Assertion mode](https://w3c.github.io/rdf-star/cg-spec/editors_draft.html#sa-mode-and-pg-mode).
-* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be performed in-memory, otherwise temporary files are created in the system (reducing memory consumption).
-
-#### cottas.remove_id
-
-**`cottas.remove_id(cottas_file, shrink=False, in_memory=True)`**
-
-Remove the **id** column from a COTTAS file. This reduces the size of the COTTAS file, but the evaluation of [triple patterns](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-triple-star-pattern) with [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) is not possible.
-
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input/output COTTAS file.
-* _**shrink**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _False_) If _True_, it will also remove [quoted triples](https://w3c.github.io/rdf-star/cg-spec/2021-12-17.html#dfn-quoted) that are not asserted in the COTTAS file.
-* _**in_memory**_: ([bool](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values), default _True_) If _True_, computations will be performed in-memory, otherwise temporary files are created in the system (reducing memory consumption).
-
-#### cottas.info
-
-**`cottas.info(cottas_file)`**
-
-Retrieve basic information and statistics from a COTTAS file, returning an [RDF](https://www.w3.org/TR/rdf11-concepts/) [string](https://docs.python.org/3/library/stdtypes.html#str).
-
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
-
-#### cottas.verify
-
-**`cottas.verify(cottas_file)`**
-
-Check if a COTTAS file is correct, returning a [boolean](https://docs.python.org/3/library/stdtypes.html#bltin-boolean-values).
-
-* _**cottas_file**_: ([str](https://docs.python.org/3/library/stdtypes.html#str)) Path to the input COTTAS file.
+options:
+  -c COTTAS_FILE, --cottas_file COTTAS_FILE
+                        Path to the COTTAS file
+  -s SUBTRACT_COTTAS_FILE, --subtract_cottas_file SUBTRACT_COTTAS_FILE
+                        Path to the COTTAS file to subtract
+  -o OUTPUT_COTTAS_FILE, --output_cottas_file OUTPUT_COTTAS_FILE
+                        Path to the output COTTAS file
+  -i INDEX, --index INDEX
+                        Zonemap index, e.g.: `SPO`, `PSO`, `GPOS`
+  -r REMOVE_INPUT_FILES, --remove_input_files REMOVE_INPUT_FILES
+                        Whether to remove the input COTTAS files after merging
+```
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
