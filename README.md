@@ -39,7 +39,7 @@ print(res)
 pycottas.cottas2rdf('my_file.cottas', 'my_file.nt')
 
 # COTTASDocument class for querying with triple patterns
-cottas_doc = pycottas.COTTASDocument('my_fole.cottas')
+cottas_doc = pycottas.COTTASDocument('my_file.cottas')
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o', limit=10, offset=20)
 print(res)
 
