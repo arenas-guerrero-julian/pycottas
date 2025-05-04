@@ -105,7 +105,7 @@ def cottas2rdf(cottas_file_path, rdf_file_path):
 
 
 def search(cottas_file_path, triple_pattern):
-    return duckdb.query(translate_triple_pattern(f"{cottas_file_path}", triple_pattern))
+    return duckdb.execute(translate_triple_pattern(f"{cottas_file_path}", triple_pattern)).fetchall()
 
 
 def cat(cottas_file_paths, cottas_cat_file_path, index='spo', remove_input_files=False):
