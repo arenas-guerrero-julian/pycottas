@@ -10,7 +10,7 @@ import duckdb
 import pyoxigraph
 
 from rdflib.util import from_n3
-from .tp_translator import translate_triple_pattern_tuple
+from .tp_translator import translate_triple_pattern
 from .utils import verify_cottas_file
 
 
@@ -59,7 +59,7 @@ class COTTASDocument():
         if len(pattern) == 4 and not self._is_quad_table:
             raise Exception("The COTTAS file is not a quad table, quad patterns are not valid.")
 
-        triples = duckdb.execute(translate_triple_pattern_tuple(self._cottas_path, pattern, limit, offset)).fetchall()
+        triples = duckdb.execute(translate_triple_pattern(self._cottas_path, pattern, limit, offset)).fetchall()
 
         if results_in_n3:
             return triples
