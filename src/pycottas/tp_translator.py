@@ -44,7 +44,7 @@ def translate_triple_pattern(cottas_file, tp, limit=None, offset=None):
     Given a COTTAS file and a user-defined triple pattern, translate the triple pattern to an SQL query over COTTAS.
 
     :param cottas_file: path to a COTTAS file
-    :param tp_str: a user-defined triple pattern
+    :param tp: a user-defined triple pattern
     :return: SQL query for the triple pattern
     """
 
