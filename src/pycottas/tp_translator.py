@@ -34,9 +34,9 @@ def _parse_tp(tp_str):
         o_term = o_term.replace(g_term, '').strip()
 
     if g_term:
-        return s_term, p_term, o_term, g_term
+        return [s_term, p_term, o_term, g_term]
     else:
-        return s_term, p_term, o_term
+        return [s_term, p_term, o_term]
 
 
 def translate_triple_pattern(cottas_file, tp, limit=None, offset=None):
