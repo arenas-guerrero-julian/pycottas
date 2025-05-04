@@ -28,7 +28,7 @@ if __name__ == "__main__":
 
     parse_cottas2rdf = subparsers.add_parser('cottas2rdf', help='Decompress a COTTAS file to RDF (N-Triples)', epilog=EPILOG_TEXT)
     parse_cottas2rdf.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
-    parse_cottas2rdf.add_argument('-r', '--rdf_file', type=str, required=True, help='Path to RDF file')
+    parse_cottas2rdf.add_argument('-r', '--rdf_file', type=str, required=True, help='Path to RDF file (N-Triples)')
 
     parse_cottas2rdf = subparsers.add_parser('search', help='Evaluate a triple pattern', epilog=EPILOG_TEXT)
     parse_cottas2rdf.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
