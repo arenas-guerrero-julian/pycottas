@@ -48,7 +48,16 @@ def translate_triple_pattern(cottas_file, tp, limit=None, offset=None):
     :return: SQL query for the triple pattern
     """
 
-    tp = _parse_tp(tp)
+    if type(tp) is str:
+        tp = _parse_tp(tp)
+    else:
+        tp_aux = []
+        for i in range(len(tp)):
+            if tp[i] is None:
+                tp_aux.append(f"?{i_pos[i]}")
+            else:
+                tp_aux.append(tp[i].n3())
+        tp = tp_aux
 
     tp_query = "SELECT "
     for i in range(len(tp)):
