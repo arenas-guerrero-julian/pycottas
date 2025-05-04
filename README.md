@@ -51,7 +51,8 @@ res = graph.query("""
   SELECT DISTINCT ?s ?o WHERE {
     ?s rdf:type ?o .
   }""")
-print(res)
+for row in res:
+    print(row)
 ```
 
 ### Command Line
