@@ -44,7 +44,6 @@ cottas_doc = pycottas.COTTASDocument('my_file.cottas')
 # the triple pattern can be a string or a tuple
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
 # limit and offset are optional
-res = pycottas.search('a.cottas', (None, URIRef('http://www.w3.org/ns/r2rml#termType'), None))
 res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None), limit=10, offset=20)
 print(res)
 
