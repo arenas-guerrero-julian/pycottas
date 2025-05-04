@@ -44,6 +44,7 @@ res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o
 print(res)
 
 # COTTASStore class for querying with SPARQL
+from rdflib import Graph
 graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
 res = graph.query("""
   PREFIX rdf: <http://xmlns.com/foaf/0.1/>
