@@ -1,8 +1,8 @@
-site_url: https://cottas.readthedocs.io
+site_url: https://pycottas.readthedocs.io
 
-site_name: COTTAS
+site_name: pycottas
 
-repo_url: https://github.com/oeg-upm/cottas
+repo_url: https://github.com/arenas-guerrero-julian/pycottas
 edit_uri: ""
 
 copyright: Copyright &copy; 2023 Julián Arenas-Guerrero | Universidad Politécnica de Madrid
@@ -11,8 +11,8 @@ theme:
   icon:
     repo: fontawesome/brands/github
   name: material
-  logo: assets/logo.png
-  favicon: assets/logo.png
+  #logo: assets/logo.png
+  #favicon: assets/logo.png
   palette:
     - media: "(prefers-color-scheme: light)"
       scheme: default
@@ -42,17 +42,17 @@ theme:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/oeg-upm/cottas
-      name: COTTAS on GitHub
+      link: https://github.com/arenas-guerrero-julian/pycottas
+      name: pycottas on GitHub
     - icon: fontawesome/brands/python
-      link: https://pypi.org/project/cottas/
-      name: COTTAS on PyPi
+      link: https://pypi.org/project/pycottas/
+      name: pycottas on PyPi
     - icon: fontawesome/solid/paper-plane
       link: mailto:<julian.arenas.guerrero@upm.es>
       name: Contact email
     - icon: fontawesome/brands/twitter
       link: https://twitter.com/ArenasGuerreroJ
-      name: COTTAS announcements on Twitter
+      name: pycottas announcements on Twitter
   generator: false
 
 extra_css:
