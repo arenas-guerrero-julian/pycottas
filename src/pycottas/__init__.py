@@ -52,7 +52,7 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
             quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt'])
             temporal_table = f'temporal_quads_{randint(0, 1000000)}'
             triplestore.register(temporal_table, quads_df)
-            insert_query = f"SET preserve_insertion_order = false; INSERT INTO quads (SELECT st, pt, ot, gt FROM {temporal_table})"
+            insert_query = f"SET preserve_insertion_order = false; SET enable_progress_bar=false; INSERT INTO quads (SELECT st, pt, ot, gt FROM {temporal_table})"
             triplestore.execute(insert_query)
             triplestore.unregister(temporal_table)
 
