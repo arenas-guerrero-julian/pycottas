@@ -66,6 +66,4 @@ markdown_extensions:
 
 nav:
   - Home: index.md
-  nav:
-  - Home: index.md
   - Documentation: documentation.md
