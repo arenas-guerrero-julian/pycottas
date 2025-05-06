@@ -64,10 +64,12 @@ if __name__ == "__main__":
 
     elif args.subparser_name == 'search':
         res = search(args.cottas_file, args.triple_pattern)
+        if len(res) == 0:
+            return None
         if args.result_option == 'table':
+            pass
+        elif args.result_option == 'tuples':
             print(res)
-        elif args.result_option == 'dict':
-            print(list(res.df().to_dict(orient='records')))
         elif args.result_option == 'to_csv':
             res.to_csv('cottas_search_result.csv')
         else:
