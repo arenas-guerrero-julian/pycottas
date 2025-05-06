@@ -6,9 +6,11 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
+from pandas import DataFrame
 from argparse import ArgumentParser
 
 from .__init__ import *
+from.constants import i_pos
 
 
 EPILOG_TEXT = 'Copyright © 2023 Julián Arenas-Guerrero'
@@ -33,7 +35,7 @@ if __name__ == "__main__":
     parse_cottas2rdf = subparsers.add_parser('search', help='Evaluate a triple pattern', epilog=EPILOG_TEXT)
     parse_cottas2rdf.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
     parse_cottas2rdf.add_argument('-t', '--triple_pattern', type=str, required=True, help='Triple pattern, e.g., `?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o`')
-    parse_cottas2rdf.add_argument('-r', '--result_option', choices=['table', 'tuples', 'to_csv'], help='What to do with the result set')
+    parse_cottas2rdf.add_argument('-r', '--result_option', default='tuples', choices=['tuples', 'table', 'to_csv'], help='What to do with the result set')
 
     parse_info = subparsers.add_parser('info', help='Get the metadata of a COTTAS file', epilog=EPILOG_TEXT)
     parse_info.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
@@ -63,17 +65,13 @@ if __name__ == "__main__":
         cottas2rdf(args.cottas_file, args.rdf_file)
 
     elif args.subparser_name == 'search':
-        res = search(args.cottas_file, args.triple_pattern)
-        if len(res) == 0:
-            return None
         if args.result_option == 'table':
-            pass
-        elif args.result_option == 'tuples':
-            print(res)
+            print(duckdb.query(translate_triple_pattern(f"{args.cottas_file}", args.triple_pattern)))
         elif args.result_option == 'to_csv':
-            res.to_csv('cottas_search_result.csv')
-        else:
-            print(res)
+            duckdb.query(translate_triple_pattern(f"{args.cottas_file}", args.triple_pattern)).df().to_csv(
+                'cottas_search.csv', index=False)
+        elif args.result_option == 'tuples':
+            print(search(args.cottas_file, args.triple_pattern))
 
     elif args.subparser_name == 'info':
         print(info(args.cottas_file))

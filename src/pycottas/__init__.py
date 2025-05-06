@@ -33,6 +33,7 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
             """
     triplestore = duckdb.connect()
     triplestore.execute(create_query)
+    triplestore.query("SET preserve_insertion_order = false; SET enable_progress_bar=false;")
 
     quads = []
     i = 0
@@ -52,7 +53,7 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
             quads_df = pd.DataFrame.from_records(quads, columns=['st', 'pt', 'ot', 'gt'])
             temporal_table = f'temporal_quads_{randint(0, 1000000)}'
             triplestore.register(temporal_table, quads_df)
-            insert_query = f"SET preserve_insertion_order = false; SET enable_progress_bar=false; INSERT INTO quads (SELECT st, pt, ot, gt FROM {temporal_table})"
+            insert_query = f"INSERT INTO quads (SELECT st, pt, ot, gt FROM {temporal_table})"
             triplestore.execute(insert_query)
             triplestore.unregister(temporal_table)
 
@@ -86,6 +87,7 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
 
 def cottas2rdf(cottas_file_path, rdf_file_path):
     f = open(rdf_file_path, 'w')
+    duckdb.query("SET enable_progress_bar=false;")
 
     has_named_graph = 'g' in list(duckdb.query(f"SELECT name FROM PARQUET_SCHEMA('{cottas_file_path}')").df()['name'])
     cur = duckdb.execute(f"SELECT s, p, o{', g' if has_named_graph else ''} FROM PARQUET_SCAN('{cottas_file_path}')")

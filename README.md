@@ -47,16 +47,15 @@ cottas_doc = pycottas.COTTASDocument('test/*.cottas')
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
 # limit and offset are optional
 res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None), limit=10, offset=20)
-# It is possible to query COTTAS files matching a glob pattern
 print(res)
 
 # COTTASStore class for querying with SPARQL
 graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
 res = graph.query("""
-  PREFIX rdf: <http://xmlns.com/foaf/0.1/>
+  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   SELECT DISTINCT ?s ?o WHERE {
     ?s rdf:type ?o .
-  }""")
+  } LIMIT 10""")
 for row in res:
     print(row)
 ```

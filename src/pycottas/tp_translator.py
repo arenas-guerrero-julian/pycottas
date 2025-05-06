@@ -6,13 +6,7 @@ __maintainer__ = "Julián Arenas-Guerrero"
 __email__ = "julian.arenas.guerrero@upm.es"
 
 
-# dict mapping RDF term positions to attribute names
-i_pos = {
-    0: 's',
-    1: 'p',
-    2: 'o',
-    3: 'g'
-}
+from.constants import i_pos
 
 
 def _parse_tp(tp_str):
