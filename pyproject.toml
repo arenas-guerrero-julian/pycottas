@@ -10,7 +10,7 @@ History = 'https://github.com/arenas-guerrero-julian/pycottas/releases'
 
 [project]
 name = 'pycottas'
-description = 'Python COTTAS library for compressing and querying RDF'
+description = 'Python COTTAS library for compressing and querying RDF.'
 readme = 'README.md'
 keywords = ['RDF', 'Knowledge Graph', 'Apache Parquet', 'Compression']
 authors = [
