@@ -49,7 +49,7 @@ def translate_triple_pattern(cottas_file, tp, limit=None, offset=None):
     """
 
     if type(tp) is str:
-        tp = _parse_tp(tp)
+        tp_tuple = _parse_tp(tp)
     else:
         tp_aux = []
         for i in range(len(tp)):
@@ -57,22 +57,23 @@ def translate_triple_pattern(cottas_file, tp, limit=None, offset=None):
                 tp_aux.append(f"?{i_pos[i]}")
             else:
                 tp_aux.append(tp[i].n3())
-        tp = tp_aux
+        tp_tuple = tp_aux
 
-    tp_query = "SELECT "
-    for i in range(len(tp)):
-        if tp[i].startswith('?'):
-            tp_query += f"{i_pos[i]} AS {tp[i][1:]}, "
-    tp_query = f"{tp_query[:-2]}\nFROM PARQUET_SCAN('{cottas_file}') WHERE "
+    if len(tp_tuple) == 3:
+        tp_query = f"SELECT s, p, o FROM PARQUET_SCAN('{cottas_file}') WHERE "
+    elif len(tp_tuple) == 4:
+        tp_query = f"SELECT s, p, o, g FROM PARQUET_SCAN('{cottas_file}') WHERE "
+    else:
+        raise TypeError("The pattern must be a tuple of length 3 (triple) or 4 (quad).")
 
     # build selection iterating over all positions in the triple pattern
     for i in range(4):
         # skip named graph if not in the triple pattern
-        if i < len(tp):
-            if not tp[i].startswith('?'):
+        if i < len(tp_tuple):
+            if not tp_tuple[i].startswith('?'):
                 # scape 'quotes'
-                tp[i] = tp[i].replace("'", "''")
-                tp_query += f"{i_pos[i]}='{tp[i]}' AND "
+                tp_tuple[i] = tp_tuple[i].replace("'", "''")
+                tp_query += f"{i_pos[i]}='{tp_tuple[i]}' AND "
 
     # remove final `AND ` and `WHERE `
     if tp_query.endswith('AND '):
