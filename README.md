@@ -1,6 +1,7 @@
 # pycottas
 
 [![License](https://img.shields.io/pypi/l/pycottas.svg)](https://github.com/arenas-guerrero-julian/pycottas/blob/main/LICENSE)
+[![DOI](https://zenodo.org/badge/633315029.svg)](https://doi.org/10.5281/zenodo.15350990)
 [![Latest PyPI version](https://img.shields.io/pypi/v/pycottas?style=flat)](https://pypi.python.org/pypi/pycottas)
 [![Python Version](https://img.shields.io/pypi/pyversions/pycottas.svg)](https://pypi.python.org/pypi/pycottas)
 [![PyPI status](https://img.shields.io:/pypi/status/pycottas?)](https://pypi.python.org/pypi/pycottas)
