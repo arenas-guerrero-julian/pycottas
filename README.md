@@ -23,7 +23,7 @@
 
 ## Getting Started :rocket:
 
-**[PyPi](https://pypi.org/project/pycottas/)** is the fastest way to install pycottas:
+**[PyPI](https://pypi.org/project/pycottas/)** is the fastest way to install pycottas:
 ```bash
 pip install pycottas
 ```
