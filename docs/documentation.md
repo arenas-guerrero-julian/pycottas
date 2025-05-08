@@ -4,9 +4,9 @@
 
 In the following we describe different ways in which you can install pycottas.
 
-### PyPi
+### PyPI
 
-**[PyPi](https://pypi.org/project/pycottas/)** is the fastest way to install pycottas.
+**[PyPI](https://pypi.org/project/pycottas/)** is the fastest way to install pycottas.
 ```bash
 pip install pycottas
 ```
