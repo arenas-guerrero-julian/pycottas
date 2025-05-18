@@ -62,6 +62,10 @@ markdown_extensions:
   - md_in_html
   - attr_list
   - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
 
 
 nav:
