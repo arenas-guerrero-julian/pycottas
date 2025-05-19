@@ -148,7 +148,7 @@ Class for evaluating [triple patterns](https://www.w3.org/TR/sparql11-query/#spa
   
     Path to the COTTAS file.
 
-``` py title="Example: Querying COTTAS files with triple patterns using COTTASDocument" hl_lines="5"
+``` py title="Example: Querying COTTAS files with triple patterns using COTTASDocument" hl_lines="4"
 from pycottas import COTTASDocument
 from rdflib import Graph, URIRef
 
@@ -178,7 +178,7 @@ print(res)
   
     Path to the COTTAS file.
 
-``` py title="Example: Querying COTTAS files with SPARQL using COTTASStore" hl_lines="5"
+``` py title="Example: Querying COTTAS files with SPARQL using COTTASStore" hl_lines="4"
 from pycottas import COTTASStore
 from rdflib import Graph
 
