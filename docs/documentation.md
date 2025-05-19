@@ -26,17 +26,115 @@ pip install git+https://github.com/arenas-guerrero-julian/pycottas.git
 
 #### rdf2cottas
 
+`{++pycottas.rdf2cottas(rdf_file_path, cottas_file_path, index='spo')++}`
+
+Compress an RDF file in plain text format to COTTAS. The compressed file is indexed for efficient querying.
+
+**`Parameters:`**
+
+* **rdf_file_path : *str***
+  
+    Path to the input RDF file. Supported formats:  N-Triples, N-Quads, Turtle, TriG, N3, and RDF/XML.
+
+* **cottas_file_path : *str***
+  
+    Path to the compressed COTTAS file.
+
+* **path : *{‘spo’, ‘sop’, ‘pso’, ‘pos’, ‘osp’, ‘ops’}, default ‘spo’***
+  
+    Computed index for the compressed file. For [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) index permutations include **`g`**, e.g., `spog`.
+  
 #### cottas2rdf
+
+`{++pycottas.cottas2rdf(cottas_file_path, rdf_file_path)++}`
+
+Uncompress a COTTAS file to RDF in plain text format. The output RDF is generated in N-Triples format.
+
+**`Parameters:`**
+
+* **cottas_file_path : *str***
+  
+    Path to the input COTTAS file.
+
+* **rdf_file_path : *str***
+  
+    Path to the output RDF file.
 
 #### search
 
+`{++pycottas.search(cottas_file_path, triple_pattern)++}`
+
+Evaluates a triple pattern over a COTTAS file.
+
+**`Parameters:`**
+
+* **cottas_file_path : *str***
+  
+    Path to the COTTAS file.
+
+* **triple_pattern : *str***
+  
+    Triple pattern.
+
 #### cat
+
+`{++pycottas.cat(cottas_file_paths, cottas_cat_file_path, index='spo', remove_input_files=False)++}`
+
+Merge multiple COTTAS files into one.
+
+**`Parameters:`**
+
+* **cottas_file_paths : *str***
+  
+    Paths to the COTTAS files to merge.
+
+* **cottas_cat_file_path : *str***
+  
+    Output COTTAS file.
 
 #### diff
 
+`{++pycottas.diff(cottas_file_1_path, cottas_file_2_path, cottas_diff_file_path, index='spo', remove_input_files=False)++}`
+
+Substract a COTTAS file from another.
+
+**`Parameters:`**
+
+* **cottas_file_1_path : *str***
+  
+    Initial COTTAS file.
+
+* **cottas_file_2_path : *str***
+  
+    COTTAS file to substract.
+
+* **cottas_diff_file_path : *str***
+  
+    Resulting COTTAS file.
+
 #### info
 
+`{++pycottas.info(cottas_file_path)++}`
+
+Gets the metadata of a COTTAS file.
+
+**`Parameters:`**
+
+* **cottas_file_path : *str***
+  
+    Path to the COTTAS file.
+
 #### verify
+
+`{++pycottas.verify(cottas_file_path)++}`
+
+Checks whether a COTTAS file is valid.
+
+**`Parameters:`**
+
+* **cottas_file_path : *str***
+  
+    Path to the COTTAS file.
 
 ### COTTASDocument
 
@@ -46,7 +144,7 @@ Class for evaluating [triple patterns](https://www.w3.org/TR/sparql11-query/#spa
 
 **`Parameters:`**
 
-* **path : str**
+* **path : *str***
   
     Path to the COTTAS file.
 
@@ -76,7 +174,7 @@ print(res)
 
 **`Parameters:`**
 
-* **path : str**
+* **path : *str***
   
     Path to the COTTAS file.
 
