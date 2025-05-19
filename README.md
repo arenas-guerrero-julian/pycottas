@@ -14,7 +14,7 @@
 - **Compression** and **decompression** of RDF files.
 - Querying COTTAS files with **[triple patterns](https://www.w3.org/TR/sparql11-query/#sparqlTriplePatterns)**.
 - [RDFLib](https://github.com/RDFLib/rdflib) backend for querying COTTAS files with **[SPARQL](https://www.w3.org/TR/sparql11-query/)**.
-- Supports named graphs (**quads**).
+- Supports [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) (**quads**).
 - Can be used as a **library** or via **command line**.
 
 ## Documentation :bookmark_tabs:
