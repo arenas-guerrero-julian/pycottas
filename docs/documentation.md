@@ -54,7 +54,7 @@ pycottas can be executed from the command line or as a library. In the following
   
     Path to the COTTAS file.
 
-`Example:**
+**Example:**
 
 ```python
 import pycottas
