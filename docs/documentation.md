@@ -50,7 +50,7 @@ pycottas can be executed from the command line or as a library. In the following
 
 * **path : str**
   
-  Path to the COTTAS file.
+    Path to the COTTAS file.
 
 ### Command Line
 
