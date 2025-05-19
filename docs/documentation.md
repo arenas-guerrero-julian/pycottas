@@ -40,6 +40,36 @@ pycottas can be executed from the command line or as a library. In the following
 
 #### verify
 
+#### COTTASDocument
+
+`{++pycottas.COTTASStore(path)++}`
+
+Class for evaluating [triple patterns](https://www.w3.org/TR/sparql11-query/#sparqlTriplePatterns) over COTTAS files. 
+
+**`Parameters:`**
+
+* **path : str**
+  
+    Path to the COTTAS file.
+
+**Example:**
+
+```python
+from pycottas import COTTASDocument
+from rdflib import Graph, URIRef
+
+# COTTASDocument class for querying with triple patterns
+store = COTTASDocument("my_file.cottas")
+
+# the triple pattern can be a string or a tuple
+res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
+
+# limit and offset are optional
+res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None), limit=10, offset=20)
+
+print(res)
+```
+
 ### RDFLib Store
 
 #### COTTASStore
@@ -62,13 +92,6 @@ from rdflib import Graph
 
 # COTTASStore class for querying with SPARQL
 store = COTTASStore("my_file.cottas")
-
-# Display some metadata about the HDT document itself
-print(f"""
-Number of triples: {len(store)}
-Number of subjects: {store.nb_subjects}
-Number of predicates: {store.nb_predicates}
-Number of objects: {store.nb_objects}""")
 
 graph = Graph(store)
 
