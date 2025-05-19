@@ -46,11 +46,32 @@ pycottas can be executed from the command line or as a library. In the following
 
 `{++pycottas.COTTASStore(path)++}`
 
+[RDFLib](https://github.com/RDFLib/rdflib) store backend to query COTTAS files with [SPARQL](https://www.w3.org/TR/sparql11-query/).
+
 **`Parameters:`**
 
 * **path : str**
   
     Path to the COTTAS file.
+
+`Example:**
+
+```python
+import pycottas
+from rdflib import Graph
+
+# COTTASStore class for querying with SPARQL
+graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
+
+res = graph.query("""
+  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  SELECT DISTINCT ?s ?o WHERE {
+    ?s rdf:type ?o .
+  } LIMIT 10""")
+
+for row in res:
+    print(row)
+```
 
 ### Command Line
 
