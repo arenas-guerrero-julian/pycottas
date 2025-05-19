@@ -61,7 +61,16 @@ import pycottas
 from rdflib import Graph
 
 # COTTASStore class for querying with SPARQL
-graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
+store=pycottas.COTTASStore("my_file.cottas")
+
+# Display some metadata about the HDT document itself
+print(f"""
+Number of triples: {len(store)}
+Number of subjects: {store.nb_subjects}
+Number of predicates: {store.nb_predicates}
+Number of objects: {store.nb_objects}""")
+
+graph = Graph(store)
 
 res = graph.query("""
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
