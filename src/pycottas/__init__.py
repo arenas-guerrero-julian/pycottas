@@ -148,9 +148,9 @@ def diff(cottas_file_1_path, cottas_file_2_path, cottas_diff_file_path, index='s
         os.remove(cottas_file_2_path)
 
 
-def info(cottas_file):
-    return generate_cottas_info(cottas_file)
+def info(cottas_file_path):
+    return generate_cottas_info(cottas_file_path)
 
 
-def verify(cottas_file):
-    return verify_cottas_file(cottas_file)
+def verify(cottas_file_path):
+    return verify_cottas_file(cottas_file_path)
