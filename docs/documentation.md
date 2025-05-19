@@ -47,6 +47,7 @@ pycottas can be executed from the command line or as a library. In the following
 `{++pycottas.COTTASStore(path)++}`
 
 `**Parameters:**`
+
 * **path : str**
   
   Path to the COTTAS file.
