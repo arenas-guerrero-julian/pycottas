@@ -184,7 +184,7 @@ from rdflib import Graph
 
 store = COTTASStore("my_file.cottas")
 
-graph = Graph(store) # (5)
+graph = Graph(store) # (1)
 
 res = graph.query("""
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -196,7 +196,7 @@ for row in res:
     print(row)
 ```
 
-5.  :rocket: From here `graph` can be used as a read-only **RDFLib store**.
+1.  :rocket: From here `graph` can be used as a read-only **RDFLib store**.
 
 
 ## Command Line
