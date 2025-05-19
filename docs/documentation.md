@@ -164,7 +164,7 @@ print(res)
 ```
 
 1.  :star2: Here the triple pattern is provided as a **string**.
-2.  :star2: Here the triple pattern is provided as **tuple of RDFLib terms** (`None` for variables).
+2.  :star2: Here the triple pattern is provided as a **tuple of RDFLib terms** (`None` for variables).
 
 ### COTTASStore
 
