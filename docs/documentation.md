@@ -155,16 +155,16 @@ from rdflib import Graph, URIRef
 store = COTTASDocument("my_file.cottas")
 
 # the triple pattern can be a string or a tuple
-res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o') # (1)
+res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o') (1)
 
 # limit and offset are optional
-res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None), limit=10, offset=20) # (2)
+res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None), limit=10, offset=20) (2)
 
 print(res)
 ```
 
-1.  Here the triple pattern is provided as a **string**.
-2.  Here the triple pattern is provided as **tuple of RDFLib terms** (`None` for variables).
+1.  :small_red_triangle_down: Here the triple pattern is provided as a **string**.
+2.  :small_red_triangle_down: Here the triple pattern is provided as **tuple of RDFLib terms** (`None` for variables).
 
 ### COTTASStore
 
