@@ -101,7 +101,7 @@ for row in res:
     print(row)
 ```
 
-### Command Line
+## Command Line
 
 To execute COTTAS from the command line, it is necessary to call the `pycottas` package, specifying the pycottas operation to perform (`rdf2cottas`, `search`, `cat`, etc.), and providing a set of parameters.
 
@@ -230,7 +230,7 @@ options:
                         Whether to remove the input COTTAS files after merging
 ```
 
-### Tricks
+## Tricks
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
