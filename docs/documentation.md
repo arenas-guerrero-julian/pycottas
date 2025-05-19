@@ -152,7 +152,6 @@ Class for evaluating [triple patterns](https://www.w3.org/TR/sparql11-query/#spa
 from pycottas import COTTASDocument
 from rdflib import Graph, URIRef
 
-# COTTASDocument class for querying with triple patterns
 store = COTTASDocument("my_file.cottas")
 
 # the triple pattern can be a string or a tuple
@@ -180,7 +179,6 @@ print(res)
 from pycottas import COTTASStore
 from rdflib import Graph
 
-# COTTASStore class for querying with SPARQL
 store = COTTASStore("my_file.cottas")
 
 graph = Graph(store)
@@ -199,7 +197,7 @@ for row in res:
 
 To execute COTTAS from the command line, it is necessary to call the `pycottas` package, specifying the pycottas operation to perform (`rdf2cottas`, `search`, `cat`, etc.), and providing a set of parameters.
 
-```bash
+``` sh hl_lines="1"
 $ python3 -m pycottas -h
 
 usage: pycottas {rdf2cottas,cottas2rdf,search,info,verify,cat,diff} ...
@@ -218,7 +216,7 @@ positional arguments:
 
 #### rdf2cottas
 
-```bash
+``` sh hl_lines="1"
 $ python3 -m pycottas rdf2cottas -h
 
 usage: pycottas rdf2cottas -r RDF_FILE -c COTTAS_FILE [-i INDEX]
@@ -234,7 +232,7 @@ options:
 
 #### cottas2rdf
 
-```bash
+``` sh hl_lines="1"
 $ python3 -m pycottas cottas2rdf -h
 
 usage: pycottas cottas2rdf -c COTTAS_FILE -r RDF_FILE
@@ -248,7 +246,7 @@ options:
 
 #### search
 
-```bash
+``` sh hl_lines="1"
 $ python3 -m pycottas search -h
 
 usage: pycottas search -c COTTAS_FILE -t TRIPLE_PATTERN [-r {table,tuples,to_csv}]
@@ -264,7 +262,7 @@ options:
 
 #### info
 
-```bash
+``` sh hl_lines="1"
 $ python3 -m pycottas info -h
 
 usage: pycottas info -c COTTAS_FILE
@@ -276,7 +274,7 @@ options:
 
 #### verify
 
-```bash
+``` sh hl_lines="1"
 $ python3 -m pycottas verify -h
 
 usage: pycottas verify -c COTTAS_FILE
@@ -288,7 +286,7 @@ options:
 
 #### cat
 
-```bash
+``` sh hl_lines="1"
 $ python3 -m pycottas cat -h
 
 usage: pycottas cat --input_cottas_files INPUT_COTTAS_FILES [INPUT_COTTAS_FILES ...] --output_cottas_file OUTPUT_COTTAS_FILE [-i INDEX] [-r REMOVE_INPUT_FILES]
@@ -306,7 +304,7 @@ options:
 
 #### diff
 
-```bash
+``` sh hl_lines="1"
 $ python3 -m pycottas diff -h
 
 usage: pycottas diff -c COTTAS_FILE -s SUBTRACT_COTTAS_FILE -o OUTPUT_COTTAS_FILE [-i INDEX] [-r REMOVE_INPUT_FILES]
