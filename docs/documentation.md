@@ -20,11 +20,9 @@ You can also grab the latest source code from the **[GitHub repository](https://
 pip install git+https://github.com/arenas-guerrero-julian/pycottas.git
 ```
 
-## Usage
+## API reference
 
-pycottas can be executed from the command line or as a library. In the following it is described how to use pycottas with both alternatives.
-
-### Library
+### General Functions
 
 #### rdf2cottas
 
@@ -40,7 +38,7 @@ pycottas can be executed from the command line or as a library. In the following
 
 #### verify
 
-#### COTTASDocument
+### COTTASDocument
 
 `{++pycottas.COTTASStore(path)++}`
 
@@ -70,9 +68,7 @@ res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-n
 print(res)
 ```
 
-### RDFLib Store
-
-#### COTTASStore
+### COTTASStore
 
 `{++pycottas.COTTASStore(path)++}`
 
