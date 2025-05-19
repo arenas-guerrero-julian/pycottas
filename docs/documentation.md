@@ -57,11 +57,11 @@ pycottas can be executed from the command line or as a library. In the following
 **Example:**
 
 ```python
-import pycottas
+from pycottas import COTTASStore
 from rdflib import Graph
 
 # COTTASStore class for querying with SPARQL
-store=pycottas.COTTASStore("my_file.cottas")
+store = COTTASStore("my_file.cottas")
 
 # Display some metadata about the HDT document itself
 print(f"""
