@@ -196,7 +196,7 @@ for row in res:
     print(row)
 ```
 
-5. :rocket: From here `graph` can be used as a read-only **RDFLib store**.
+5.  :rocket: From here `graph` can be used as a read-only **RDFLib store**.
 
 
 ## Command Line
