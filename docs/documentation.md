@@ -24,6 +24,28 @@ pip install git+https://github.com/arenas-guerrero-julian/pycottas.git
 
 pycottas can be executed from the command line or as a library. In the following it is described how to use pycottas with both alternatives.
 
+### Library
+
+#### rdf2cottas
+
+#### cottas2rdf
+
+#### search
+
+#### cat
+
+#### diff
+
+#### info
+
+#### verify
+
+### RDFLib Store
+
+#### COTTASStore
+
+{*pycottas.COTTASStore(path)}
+
 ### Command Line
 
 To execute COTTAS from the command line, it is necessary to call the `pycottas` package, specifying the pycottas operation to perform (`rdf2cottas`, `search`, `cat`, etc.), and providing a set of parameters.
@@ -152,6 +174,8 @@ options:
   -r REMOVE_INPUT_FILES, --remove_input_files REMOVE_INPUT_FILES
                         Whether to remove the input COTTAS files after merging
 ```
+
+### Tricks
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
