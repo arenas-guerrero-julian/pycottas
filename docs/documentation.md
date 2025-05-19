@@ -163,8 +163,8 @@ res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-n
 print(res)
 ```
 
-1.  :small_red_triangle_down: Here the triple pattern is provided as a **string**.
-2.  :small_red_triangle_down: Here the triple pattern is provided as **tuple of RDFLib terms** (`None` for variables).
+1.  :star2: Here the triple pattern is provided as a **string**.
+2.  :star2: Here the triple pattern is provided as **tuple of RDFLib terms** (`None` for variables).
 
 ### COTTASStore
 
@@ -184,7 +184,7 @@ from rdflib import Graph
 
 store = COTTASStore("my_file.cottas")
 
-graph = Graph(store)
+graph = Graph(store) # (5)
 
 res = graph.query("""
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -195,6 +195,9 @@ res = graph.query("""
 for row in res:
     print(row)
 ```
+
+5. :rocket: From here `graph` can be used as a read-only **RDFLib store**.
+
 
 ## Command Line
 
