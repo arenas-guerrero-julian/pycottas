@@ -74,7 +74,7 @@ Evaluate a [triple pattern](https://www.w3.org/TR/sparql11-query/#sparqlTriplePa
 
 * **triple_pattern : *str*, list or tuple**
   
-    Triple pattern. It can be a string or a with the RDF terms in N3 syntax and variable names starting by `?`. Alternatively, it can be a list or tuple of RDFLib terms with variables given by `None`. The pattern can be a *quad pattern* in the case of querying an [RDF dataset](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
+    Triple pattern. It can be a string or a list or tuple with a sequence of RDFLib (subject, predicate, object) terms with variables given by `None`. The pattern can be a *quad pattern* in the case of querying an [RDF dataset](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
 
 #### cat
 
