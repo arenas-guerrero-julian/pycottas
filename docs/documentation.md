@@ -20,7 +20,7 @@ You can also grab the latest source code from the **[GitHub repository](https://
 pip install git+https://github.com/arenas-guerrero-julian/pycottas.git
 ```
 
-## API reference
+## API Reference
 
 ### General Functions
 
@@ -28,7 +28,7 @@ pip install git+https://github.com/arenas-guerrero-julian/pycottas.git
 
 `{++pycottas.rdf2cottas(rdf_file_path, cottas_file_path, index='spo')++}`
 
-Compress an RDF file in plain text format to COTTAS. The compressed file is indexed for efficient querying.
+Compress an RDF file in plain text format into COTTAS. The compressed file is indexed for efficient querying.
 
 **`Parameters:`**
 
@@ -38,17 +38,17 @@ Compress an RDF file in plain text format to COTTAS. The compressed file is inde
 
 * **cottas_file_path : *str***
   
-    Path to the compressed COTTAS file.
+    Path to the output COTTAS file.
 
 * **path : *{‘spo’, ‘sop’, ‘pso’, ‘pos’, ‘osp’, ‘ops’}, default ‘spo’***
   
-    Computed index for the compressed file. For [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) index permutations include **`g`**, e.g., `spog`.
+    Computed index for the compressed COTTAS file. For [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) index permutations include **`g`**, e.g., `spog`.
   
 #### cottas2rdf
 
 `{++pycottas.cottas2rdf(cottas_file_path, rdf_file_path)++}`
 
-Uncompress a COTTAS file to RDF in plain text format. The output RDF is generated in N-Triples format.
+Uncompress a COTTAS file to RDF in N-Triples format.
 
 **`Parameters:`**
 
@@ -58,13 +58,13 @@ Uncompress a COTTAS file to RDF in plain text format. The output RDF is generate
 
 * **rdf_file_path : *str***
   
-    Path to the output RDF file.
+    Path to the output RDF file (N-Triples).
 
 #### search
 
 `{++pycottas.search(cottas_file_path, triple_pattern)++}`
 
-Evaluates a triple pattern over a COTTAS file.
+Evaluate a [triple pattern](https://www.w3.org/TR/sparql11-query/#sparqlTriplePatterns) over a COTTAS file.
 
 **`Parameters:`**
 
@@ -72,9 +72,9 @@ Evaluates a triple pattern over a COTTAS file.
   
     Path to the COTTAS file.
 
-* **triple_pattern : *str***
+* **triple_pattern : *str*, list or tuple**
   
-    Triple pattern.
+    Triple pattern. It can be a string or a with the RDF terms in N3 syntax and variable names starting by `?`. Alternatively, it can be a list or tuple of RDFLib terms with variables given by `None`. The pattern can be a *quad pattern* in the case of querying an [RDF dataset](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
 
 #### cat
 
