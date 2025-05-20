@@ -47,11 +47,11 @@ res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o
 
 # COTTASStore class for querying with SPARQL
 graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
-res = graph.query("""
+res = graph.query('''
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   SELECT DISTINCT ?s ?o WHERE {
     ?s rdf:type ?o .
-  } LIMIT 10""")
+  } LIMIT 10''')
 for row in res:
     print(row)
 ```
