@@ -368,7 +368,7 @@ options:
 
 Multiple COTTAS files can be simultaneously accessed with *list parameters* and *glob patterns*. Check [here](https://duckdb.org/docs/stable/data/multiple_files/overview.html#glob-syntax) the syntax for glob patterns.
 
-``` py title="Example: Accessing multiple files with list parameters and glob patterns" hl_lines="3"
+``` py title="Example: Accessing multiple files with list parameters and glob patterns" hl_lines="3 5 7"
 from pycottas import COTTASDocument
 
 store = COTTASDocument(['file1.cottas', 'file2.cottas', 'file3.cottas']) # (1)
