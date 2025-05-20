@@ -19,7 +19,7 @@
 
 ## Documentation :bookmark_tabs:
 
-**[Read the documentation](https://pycottas.readthedocs.io)**.
+**[Read the documentation](https://pycottas.readthedocs.io/en/latest/documentation/)**.
 
 ## Getting Started :rocket:
 
@@ -61,7 +61,7 @@ for row in res:
     print(row)
 ```
 
-To execute via **command line** check the docs.
+To execute via **command line** check the [docs](https://pycottas.readthedocs.io/en/latest/documentation/#command-line).
 
 ## License :unlock:
 
