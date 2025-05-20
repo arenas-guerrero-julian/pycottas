@@ -181,7 +181,7 @@ Class for evaluating [triple patterns](https://www.w3.org/TR/sparql11-query/#spa
 from pycottas import COTTASDocument
 from rdflib import Graph, URIRef
 
-store = COTTASDocument('my_file.cottas')
+cottas_doc = COTTASDocument('my_file.cottas')
 
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o') # (1)
 res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None)) # (2)
@@ -371,11 +371,11 @@ Multiple COTTAS files can be simultaneously accessed with *list parameters* and 
 ``` py title="Example: Accessing multiple files with list parameters and glob patterns" hl_lines="3 5"
 from pycottas import COTTASDocument
 
-store = COTTASDocument(['file1.cottas', 'file2.cottas', 'file3.cottas']) # (1)
+cottas_doc = COTTASDocument(['file1.cottas', 'file2.cottas', 'file3.cottas']) # (1)
 
-store = COTTASDocument('some_dir/*.cottas') # (2)
+cottas_doc = COTTASDocument('some_dir/*.cottas') # (2)
 
-store = COTTASDocument(['dir1/*.cottas', 'dir2/*.cottas']) # (3)
+cottas_doc = COTTASDocument(['dir1/*.cottas', 'dir2/*.cottas']) # (3)
 
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
 ```
