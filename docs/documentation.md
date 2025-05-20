@@ -99,7 +99,7 @@ Merge multiple COTTAS files into one.
 
 * **cottas_file_paths : *str***
   
-    Paths to the COTTAS files to merge.
+    Paths to the input COTTAS files to merge.
 
 * **cottas_cat_file_path : *str***
   
@@ -183,17 +183,22 @@ from rdflib import Graph, URIRef
 
 store = COTTASDocument("my_file.cottas")
 
-# the triple pattern can be a string or a tuple
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o') # (1)
+res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None)) # (2)
 
-# limit and offset are optional
-res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None), limit=10, offset=20) # (2)
+# limit and offset
+res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o', limit=10, offset=20) # (3)
+
+# RDF terms in the result set can be in N3 (default) or as RDFLib terms 
+res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o', results_in_n3=False) # (4)
 
 print(res)
 ```
 
 1.  :star2: Triple pattern as a **string**.
 2.  :star2: Triple pattern as a **tuple of RDFLib terms** (`None` for variables).
+3.  :star2: Limit and offset can be optionally provided for pagination.
+3.  :star2: The RDF terms in the result set are RDFLib terms.
 
 ### COTTASStore
 
