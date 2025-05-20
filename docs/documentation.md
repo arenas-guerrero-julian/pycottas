@@ -40,7 +40,7 @@ Compress an RDF file in plain text format into COTTAS. The compressed file is in
   
     Path to the output COTTAS file.
 
-* **path : *{‘spo’, ‘sop’, ‘pso’, ‘pos’, ‘osp’, ‘ops’}, default ‘spo’***
+* **index : *{‘spo’, ‘sop’, ‘pso’, ‘pos’, ‘osp’, ‘ops’}, default ‘spo’***
   
     Computed index for the compressed COTTAS file. For [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) index permutations include **`g`**, e.g., `spog`.
   
@@ -72,9 +72,9 @@ Evaluate a [triple pattern](https://www.w3.org/TR/sparql11-query/#sparqlTriplePa
   
     Path to the COTTAS file.
 
-* **triple_pattern : *str*, list or tuple**
+* **triple_pattern : *str*, *list* or *tuple***
   
-    Triple pattern. It can be a string or a list or tuple with a sequence of RDFLib (subject, predicate, object) terms with variables given by `None`. The pattern can be a *quad pattern* in the case of querying an [RDF dataset](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
+    The triple pattern can be a string or a list or tuple with the sequence of [RDFLib](https://github.com/RDFLib/rdflib) (subject, predicate, object) terms with variables given by `None`. The pattern can be a *quad pattern* in the case of querying an [RDF dataset](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
 
 #### cat
 
@@ -90,7 +90,15 @@ Merge multiple COTTAS files into one.
 
 * **cottas_cat_file_path : *str***
   
-    Output COTTAS file.
+    Path to the output COTTAS file. 
+
+* **index : *{‘spo’, ‘sop’, ‘pso’, ‘pos’, ‘osp’, ‘ops’}, default ‘spo’***
+  
+    Computed index for the merged COTTAS file. For [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) index permutations include **`g`**, e.g., `spog`.
+
+* **remove_input_files : *bool, default False***
+  
+    Whether to remove the input COTTAS files after merging.
 
 #### diff
 
@@ -102,21 +110,29 @@ Substract a COTTAS file from another.
 
 * **cottas_file_1_path : *str***
   
-    Initial COTTAS file.
+    Path to the initial COTTAS file.
 
 * **cottas_file_2_path : *str***
   
-    COTTAS file to substract.
+    Path to the COTTAS file to substract.
 
 * **cottas_diff_file_path : *str***
   
-    Resulting COTTAS file.
+    Path to the output COTTAS file.
+
+* **index : *{‘spo’, ‘sop’, ‘pso’, ‘pos’, ‘osp’, ‘ops’}, default ‘spo’***
+  
+    Computed index for the resulting COTTAS file. For [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) index permutations include **`g`**, e.g., `spog`.
+
+* **remove_input_files : *bool, default False***
+  
+    Whether to remove the input COTTAS files after subtracting.
 
 #### info
 
 `{++pycottas.info(cottas_file_path)++}`
 
-Gets the metadata of a COTTAS file.
+Query COTTAS file metadata.
 
 **`Parameters:`**
 
@@ -128,7 +144,7 @@ Gets the metadata of a COTTAS file.
 
 `{++pycottas.verify(cottas_file_path)++}`
 
-Checks whether a COTTAS file is valid.
+Check whether a COTTAS file is valid.
 
 **`Parameters:`**
 
