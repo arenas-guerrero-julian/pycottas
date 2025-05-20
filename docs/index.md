@@ -15,7 +15,7 @@
 **COTTAS** is based on *CO*lumnar *T*riple *TA*ble *S*torage with the [Apache Parquet](https://parquet.apache.org/) file format. A COTTAS file consists on a table with **s**, **p**, **o**, **g** columns representing triples (and [named graphs](https://www.w3.org/TR/rdf11-concepts/#dfn-named-graph)):
 
 - The **s**, **p**, **o**, **g** are filled with the [RDF terms](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-term) of the triples/quads.
-- When a triple belongs to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** is *NULL*. If all the triples in the [dataset](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset) belong to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** can be omitted.
+- When a triple belongs to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** is *NULL*. If all the triples in the [RDF dataset](https://www.w3.org/TR/rdf11-concepts/#dfn-rdf-dataset) belong to the [default graph](https://www.w3.org/TR/rdf11-concepts/#dfn-default-graph), **g** can be omitted.
 
 ## Licenses
 
