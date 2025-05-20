@@ -28,7 +28,7 @@ pip install git+https://github.com/arenas-guerrero-julian/pycottas.git
 
 `{++pycottas.rdf2cottas(rdf_file_path, cottas_file_path, index='spo')++}`
 
-Compress an RDF file in plain text format into COTTAS. The compressed file is indexed for efficient querying.
+Compress an RDF file in a plain text format into COTTAS. The compressed file is indexed for efficient querying.
 
 **`Parameters:`**
 
@@ -75,6 +75,19 @@ Evaluate a [triple pattern](https://www.w3.org/TR/sparql11-query/#sparqlTriplePa
 * **triple_pattern : *str*, *list* or *tuple***
   
     The triple pattern can be a string or a list or tuple with the sequence of [RDFLib](https://github.com/RDFLib/rdflib) (subject, predicate, object) terms with variables given by `None`. The pattern can be a *quad pattern* in the case of querying an [RDF dataset](https://www.w3.org/TR/rdf11-concepts/#section-dataset).
+
+``` py title="Example: Querying COTTAS files with triple patterns" hl_lines="4 5"
+import pycottas
+from rdflib import URIRef
+
+res = pycottas.search('my_file.cottas', '?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o') # (1)
+res = pycottas.search('my_file.cottas', (None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None)) # (2)
+
+print(res)
+```
+
+1.  :star2: Triple pattern as a **string**.
+2.  :star2: Triple pattern as a **tuple of RDFLib terms** (`None` for variables).
 
 #### cat
 
@@ -179,8 +192,8 @@ res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-n
 print(res)
 ```
 
-1.  :star2: Here the triple pattern is provided as a **string**.
-2.  :star2: Here the triple pattern is provided as a **tuple of RDFLib terms** (`None` for variables).
+1.  :star2: Triple pattern as a **string**.
+2.  :star2: Triple pattern as a **tuple of RDFLib terms** (`None` for variables).
 
 ### COTTASStore
 
