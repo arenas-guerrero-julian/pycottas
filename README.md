@@ -42,13 +42,8 @@ pycottas.cottas2rdf('my_file.cottas', 'my_file.nt')
 
 # COTTASDocument class for querying with triple patterns
 cottas_doc = pycottas.COTTASDocument('my_file.cottas')
-# It is possible to create a document from multiple COTTAS files matching a glob pattern
-cottas_doc = pycottas.COTTASDocument('test/*.cottas')
-# the triple pattern can be a string or a tuple
+# the triple pattern can be a string (below) or a tuple of RDFLib terms
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
-# limit and offset are optional
-res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None), limit=10, offset=20)
-print(res)
 
 # COTTASStore class for querying with SPARQL
 graph = Graph(store=pycottas.COTTASStore("my_file.cottas"))
