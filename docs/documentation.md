@@ -371,10 +371,18 @@ Multiple COTTAS files can be simultaneously accessed with *list parameters* and 
 ``` py title="Example: Accessing multiple files with list parameters and glob patterns" hl_lines="3"
 from pycottas import COTTASDocument
 
-store = COTTASDocument('my_file.cottas')
+store = COTTASDocument(['file1.cottas', 'file2.cottas', 'file3.cottas']) # (1)
+
+store = COTTASDocument('some_dir/*.cottas') # (2)
+
+store = COTTASDocument(['dir1/*.cottas', 'dir2/*.cottas']) # (3)
 
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
 ```
+
+1.  :rocket: Query three COTTAS files and treat them as a single one.
+2.  :rocket: Query all COTTAS files that match the glob pattern.
+3.  :rocket: Query all COTTAS files from two specific directories.
 
 ### Remote Files
 
@@ -387,8 +395,6 @@ store = COTTASDocument('https://some.url/my_file.cottas')
 
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
 ```
-
-
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
