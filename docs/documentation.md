@@ -99,7 +99,7 @@ Merge multiple COTTAS files into one.
 
 * **cottas_file_paths : *str***
   
-    Paths to the input COTTAS files to merge.
+    Paths of the input COTTAS files to merge. E.g., `['file1.cottas', 'file2.cottas']`.
 
 * **cottas_cat_file_path : *str***
   
