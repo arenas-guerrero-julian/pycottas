@@ -181,7 +181,7 @@ Class for evaluating [triple patterns](https://www.w3.org/TR/sparql11-query/#spa
 from pycottas import COTTASDocument
 from rdflib import Graph, URIRef
 
-store = COTTASDocument("my_file.cottas")
+store = COTTASDocument('my_file.cottas')
 
 res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o') # (1)
 res = cottas_doc.search((None, URIRef('http://www.w3.org/1999/02/22-rdf-syntax-ns#type'), None)) # (2)
@@ -216,15 +216,15 @@ print(res)
 from pycottas import COTTASStore
 from rdflib import Graph
 
-store = COTTASStore("my_file.cottas")
+store = COTTASStore('my_file.cottas')
 
 graph = Graph(store) # (1)
 
-res = graph.query("""
+res = graph.query('''
   PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   SELECT DISTINCT ?s ?o WHERE {
     ?s rdf:type ?o .
-  } LIMIT 10""")
+  } LIMIT 10''')
 
 for row in res:
     print(row)
@@ -363,6 +363,32 @@ options:
 ```
 
 ## Tricks
+
+### Multiple Files
+
+Multiple COTTAS files can be simultaneously accessed with *list parameters* and *glob patterns*. Check [here](https://duckdb.org/docs/stable/data/multiple_files/overview.html#glob-syntax) the syntax for glob patterns.
+
+``` py title="Example: Accessing multiple files with list parameters and glob patterns" hl_lines="3"
+from pycottas import COTTASDocument
+
+store = COTTASDocument('my_file.cottas')
+
+res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
+```
+
+### Remote Files
+
+COTTAS files can be read over HTTP.
+
+``` py title="Example: Accessing a file over HTTP" hl_lines="3"
+from pycottas import COTTASDocument
+
+store = COTTASDocument('https://some.url/my_file.cottas')
+
+res = cottas_doc.search('?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?o')
+```
+
+
 
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
