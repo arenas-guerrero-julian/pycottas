@@ -67,3 +67,16 @@ To execute via **command line** check the [docs](https://pycottas.readthedocs.io
 - **[Julián Arenas-Guerrero](https://github.com/arenas-guerrero-julian/) - [julian.arenas.guerrero@upm.es](mailto:julian.arenas.guerrero@upm.es)**
 
 *[Universidad Politécnica de Madrid](https://www.upm.es/internacional)*.
+
+## Citing :speech_balloon:
+
+If you used pycottas in your work, please cite the **ISWC paper**:
+
+```bib
+@inproceedings{arenas2025cottas,
+  title     = {{COTTAS: Columnar Triple Table Storage for Efficient and Compressed RDF Management}},
+  author    = {Arenas-Guerrero, Julián and Ferrada, Sebastián},
+  booktitle = {Proceedings of the 24th International Semantic Web Conference, ISWC},
+  year      = {2025},
+}
+```
