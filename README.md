@@ -76,7 +76,8 @@ If you used pycottas in your work, please cite the **[ISWC paper](https://www.re
 @inproceedings{arenas2025cottas,
   title     = {{COTTAS: Columnar Triple Table Storage for Efficient and Compressed RDF Management}},
   author    = {Arenas-Guerrero, Julián and Ferrada, Sebastián},
-  booktitle = {Proceedings of the 24th International Semantic Web Conference, ISWC},
+  booktitle = {Proceedings of the 24th International Semantic Web Conference},
   year      = {2025},
+  publisher = {Springer Nature Switzerland},
 }
 ```
