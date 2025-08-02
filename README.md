@@ -70,7 +70,7 @@ To execute via **command line** check the [docs](https://pycottas.readthedocs.io
 
 ## Citing :speech_balloon:
 
-If you used pycottas in your work, please cite the **[ISWC paper](https://www.researchgate.net/profile/Julian_Arenas-Guerrero/publication/394146089_COTTAS_Columnar_Triple_Table_Storage_for_Efficient_and_Compressed_RDF_Management/links/688b7410d26c2f6f56d71667/COTTAS-Columnar-Triple-Table-Storage-for-Efficient-and-Compressed-RDF-Management.pdf?origin=publicationDetail&_sg%5B0%5D=cbHy3nejio22UaFokTJTKnURSf5wYV0crJtQ8pAryjeNpj-8odPjns2zrN9pPWjjy9Vz2strK3xAZhg12XLLfw.m5GZ8H8xuq-3T22No3-8MbsxN4DaXbYC9XBJtmb2YqA-gs_XzYOrosFMPAQomVsNyMa5HGM3P9DfqaiZtWI44A&_sg%5B1%5D=aAhtCdTPSEItp6DG1HaxClJn3ijFnR3dC0B1b6NRSbft_B-M_LUeKQjdZBdyB5wjQrVwkn7dNhEN3QHxfJa64wheKE8lZMkD0etQBnXIViua.m5GZ8H8xuq-3T22No3-8MbsxN4DaXbYC9XBJtmb2YqA-gs_XzYOrosFMPAQomVsNyMa5HGM3P9DfqaiZtWI44A&_iepl=&_rtd=eyJjb250ZW50SW50ZW50IjoibWFpbkl0ZW0ifQ%3D%3D&_tp=eyJjb250ZXh0Ijp7ImZpcnN0UGFnZSI6InB1YmxpY2F0aW9uIiwicGFnZSI6InB1YmxpY2F0aW9uIiwicG9zaXRpb24iOiJwYWdlSGVhZGVyIn19)**:
+If you used pycottas in your work, please cite the **[ISWC paper](https://sferrada.com/publication/2025-iswc-arenas-guerrero-cottas/2025-iswc-arenas-guerrero-cottas.pdf)**:
 
 ```bib
 @inproceedings{arenas2025cottas,
