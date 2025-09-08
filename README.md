@@ -19,7 +19,7 @@
 
 ## Documentation :bookmark_tabs:
 
-**[Read the documentation](https://pycottas.readthedocs.io/en/latest/documentation.html)**.
+**[Read the documentation](https://pycottas.readthedocs.io/en/latest/documentation)**.
 
 ## Getting Started :rocket:
 
