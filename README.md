@@ -56,7 +56,7 @@ for row in res:
     print(row)
 ```
 
-To execute via **command line** check the [docs](https://pycottas.readthedocs.io/en/latest/documentation.html#command-line).
+To execute via **command line** check the [docs](https://pycottas.readthedocs.io/en/latest/documentation#command-line).
 
 ## License :unlock:
 
