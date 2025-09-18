@@ -28,5 +28,19 @@ The **documentation** is licensed under **[CC BY-SA 4.0](https://creativecommons
 - **[Julián Arenas-Guerrero](https://github.com/arenas-guerrero-julian/) - [julian.arenas.guerrero@upm.es](mailto:julian.arenas.guerrero@upm.es)**  
 *[Universidad Politécnica de Madrid](https://www.upm.es/internacional)*.
 
+## Citing
+
+If you used pycottas in your work, please cite the **[ISWC paper](https://sferrada.com/publication/2025-iswc-arenas-guerrero-cottas/2025-iswc-arenas-guerrero-cottas.pdf)**:
+
+``` bib
+@inproceedings{arenas2025cottas,
+  title     = {{COTTAS: Columnar Triple Table Storage for Efficient and Compressed RDF Management}},
+  author    = {Arenas-Guerrero, Julián and Ferrada, Sebastián},
+  booktitle = {Proceedings of the 24th International Semantic Web Conference},
+  year      = {2025},
+  publisher = {Springer Nature Switzerland},
+}
+```
+
 
 ![OEG](assets/logo-oeg.png){ width="150" align=left } ![UPM](assets/logo-upm.png){ width="161" align=right }
