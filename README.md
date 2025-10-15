@@ -1,4 +1,10 @@
-# pycottas
+<p align="center">
+  <picture>
+    <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/arenas-guerrero-julian/pycottas/main/logo/logo_inverse.png">
+    <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/arenas-guerrero-julian/pycottas/main/logo/logo.png">
+    <img alt="3xmap-studio"  height="150" src="https://raw.githubusercontent.com/morph-kgc/3xmap-studio/main/logo/logo.png">
+  </picture>
+</p>
 
 [![License](https://img.shields.io/pypi/l/pycottas)](https://github.com/arenas-guerrero-julian/pycottas/blob/main/LICENSE)
 [![DOI](https://zenodo.org/badge/633315029.svg)](https://doi.org/10.5281/zenodo.15350990)
