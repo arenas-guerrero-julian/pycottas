@@ -221,9 +221,8 @@ store = COTTASStore('my_file.cottas')
 graph = Graph(store) # (1)
 
 res = graph.query('''
-  PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
   SELECT DISTINCT ?s ?o WHERE {
-    ?s rdf:type ?o .
+    ?s a ?o .
   } LIMIT 10''')
 
 for row in res:
