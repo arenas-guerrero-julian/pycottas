@@ -20,7 +20,7 @@ If you want to use `pycottas-endpoint` as a CLI you can install with the optiona
 pip install "pycottas-endpoint[cli]"
 ```
 
-## COTTAS SPARQL endpoint
+## Run SPARQL Endpoint
 
 Use `pycottas-endpoint` as a command line interface (CLI) in your terminal to quickly serve one or multiple COTTAS files as a SPARQL endpoint.
 
@@ -32,6 +32,6 @@ pycottas-endpoint serve '*.cottas'
 
 Then access the YASGUI SPARQL editor on http://localhost:8000
 
-## ✨ Deploy your SPARQL endpoint
+## Further Reading
 
-Check the [pycottas-endpoint GitHub repository](https://github.com/arenas-guerrero-julian/pycottas-endpoint) to see how to deploy your SPARQL endpoint, and define custom SPARQL functions.
+See all the information in the [pycottas-endpoint GitHub repository](https://github.com/arenas-guerrero-julian/pycottas-endpoint).
