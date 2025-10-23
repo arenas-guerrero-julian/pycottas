@@ -62,7 +62,7 @@ for row in res:
     print(row)
 ```
 
-To execute via **command line** check the [docs](https://pycottas.readthedocs.io/en/latest/documentation#command-line). It is also possible to serve COTTAS files as an SPARQL endpoint with [pycottas-endpoint](https://github.com/arenas-guerrero-julian/pycottas). 
+To execute via **command line** check the [docs](https://pycottas.readthedocs.io/en/latest/documentation#command-line). It is also possible to serve COTTAS files as an SPARQL endpoint with [pycottas-endpoint](https://github.com/arenas-guerrero-julian/pycottas-endpoint). 
 
 ## License :unlock:
 
