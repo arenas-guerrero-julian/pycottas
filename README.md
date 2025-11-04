@@ -79,11 +79,14 @@ To execute via **command line** check the [docs](https://pycottas.readthedocs.io
 If you used pycottas in your work, please cite the **[ISWC paper](https://sferrada.com/publication/2025-iswc-arenas-guerrero-cottas/2025-iswc-arenas-guerrero-cottas.pdf)**:
 
 ```bib
-@inproceedings{arenas2025cottas,
+@inproceedings{arenas2026cottas,
   title     = {{COTTAS: Columnar Triple Table Storage for Efficient and Compressed RDF Management}},
   author    = {Arenas-Guerrero, Julián and Ferrada, Sebastián},
   booktitle = {Proceedings of the 24th International Semantic Web Conference},
-  year      = {2025},
+  year      = {2026},
   publisher = {Springer Nature Switzerland},
+  isbn      = {978-3-032-09530-5},
+  pages     = {313--331},
+  doi       = {10.1007/978-3-032-09530-5_18},
 }
 ```
