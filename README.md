@@ -76,7 +76,7 @@ To execute via **command line** check the [docs](https://pycottas.readthedocs.io
 
 ## Citing :speech_balloon:
 
-If you used pycottas in your work, please cite the **[ISWC paper](https://sferrada.com/publication/2025-iswc-arenas-guerrero-cottas/2025-iswc-arenas-guerrero-cottas.pdf)**:
+If you used pycottas in your work, please cite the **[ISWC paper](https://oa.upm.es/91920/1/arenas2026cottas.pdf)**:
 
 ```bib
 @inproceedings{arenas2026cottas,
