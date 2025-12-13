@@ -22,6 +22,7 @@
 - [RDFLib](https://github.com/RDFLib/rdflib) store backend for querying COTTAS files with **[SPARQL](https://www.w3.org/TR/sparql11-query/)**.
 - Supports [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) (**quads**).
 - Can be used as a **library** or via **command line**.
+- Serve COTTAS files as an [SPARQL endpoint](https://github.com/arenas-guerrero-julian/pycottas-endpoint).
 
 ## Documentation :bookmark_tabs:
 
