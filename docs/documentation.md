@@ -26,7 +26,7 @@ pip install git+https://github.com/arenas-guerrero-julian/pycottas.git
 
 #### rdf2cottas
 
-`{++pycottas.rdf2cottas(rdf_file_path, cottas_file_path, index='spo')++}`
+`{++pycottas.rdf2cottas(rdf_file_path, cottas_file_path, index='spo', disk=False)++}`
 
 Compress an RDF file in a plain text format into COTTAS. The compressed file is indexed for efficient querying.
 
@@ -43,7 +43,11 @@ Compress an RDF file in a plain text format into COTTAS. The compressed file is 
 * **index : *{‘spo’, ‘sop’, ‘pso’, ‘pos’, ‘osp’, ‘ops’}, default ‘spo’***
   
     Computed index for the compressed COTTAS file. For [RDF datasets](https://www.w3.org/TR/rdf11-concepts/#section-dataset) index permutations include **`g`**, e.g., `spog`.
+
+* **disk : *bool, default False***
   
+    Whether to use on-disk storage.
+
 #### cottas2rdf
 
 `{++pycottas.cottas2rdf(cottas_file_path, rdf_file_path)++}`
@@ -261,12 +265,14 @@ $ python3 -m pycottas rdf2cottas -h
 usage: pycottas rdf2cottas -r RDF_FILE -c COTTAS_FILE [-i INDEX]
 
 options:
+  -h, --help            show this help message and exit
   -r RDF_FILE, --rdf_file RDF_FILE
                         Path to RDF file
   -c COTTAS_FILE, --cottas_file COTTAS_FILE
                         Path to COTTAS file
   -i INDEX, --index INDEX
                         Zonemap index, e.g.: `SPO`, `PSO`, `GPOS`
+  -d DISK, --disk DISK  Whether to use on-disk storage
 ```
 
 #### cottas2rdf

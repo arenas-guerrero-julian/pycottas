@@ -27,6 +27,7 @@ if __name__ == "__main__":
     parse_rdf2cottas.add_argument('-r', '--rdf_file', type=str, required=True, help='Path to RDF file')
     parse_rdf2cottas.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
     parse_rdf2cottas.add_argument('-i', '--index', type=str, required=False, default='SPO', help='Zonemap index, e.g.: `SPO`, `PSO`, `GPOS`')
+    parse_rdf2cottas.add_argument('-d', '--disk', type=bool, required=False, default=False, help='Whether to use on-disk storage')
 
     parse_cottas2rdf = subparsers.add_parser('cottas2rdf', help='Decompress a COTTAS file to RDF (N-Triples)', epilog=EPILOG_TEXT)
     parse_cottas2rdf.add_argument('-c', '--cottas_file', type=str, required=True, help='Path to COTTAS file')
@@ -59,7 +60,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.subparser_name == 'rdf2cottas':
-        rdf2cottas(args.rdf_file, args.cottas_file, args.index)
+        rdf2cottas(args.rdf_file, args.cottas_file, args.index, args.disk)
 
     elif args.subparser_name == 'cottas2rdf':
         cottas2rdf(args.cottas_file, args.rdf_file)

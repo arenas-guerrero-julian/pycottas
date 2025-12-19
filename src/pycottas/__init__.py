@@ -20,7 +20,7 @@ from .cottas_store import COTTASStore
 from .cottas_document import COTTASDocument
 
 
-def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
+def rdf2cottas(rdf_file_path, cottas_file_path, index='spo', disk=False):
     if index and not is_valid_index(index):
         print(f"Index `{index}` is not valid.")
         return
@@ -28,10 +28,12 @@ def rdf2cottas(rdf_file_path, cottas_file_path, index='spo'):
     mime_type = file_ext_2_mime_type[get_file_extension(file_path=rdf_file_path)]
     quad_found = False
 
+    db_connection = 'pycottas.duckdb' if disk else ':memory:'
+    triplestore = duckdb.connect(db_connection)
+
     create_query = """
                 CREATE TABLE quads (s VARCHAR NOT NULL, p VARCHAR NOT NULL, o VARCHAR NOT NULL, g VARCHAR)
             """
-    triplestore = duckdb.connect()
     triplestore.execute(create_query)
     triplestore.query("SET preserve_insertion_order = false; SET enable_progress_bar=false;")
 
